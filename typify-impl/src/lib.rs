@@ -12,7 +12,7 @@ use log::info;
 use output::OutputSpace;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote, ToTokens};
-use schemars::schema::{Metadata, RootSchema, Schema};
+use schemars::schema::{Metadata, RootSchema, Schema, SingleOrVec, SubschemaValidation};
 use thiserror::Error;
 use type_entry::{
     StructPropertyState, TypeEntry, TypeEntryDetails, TypeEntryNative, TypeEntryNewtype,
@@ -628,7 +628,7 @@ impl TypeSpace {
         let mut external_references = vec![];
         for def in &defs {
             for reference in get_references(&def.1) {
-                if reference.starts_with("#") {
+                if reference.starts_with("#") || reference.is_empty() {
                     continue;
                 }
                 let mut index = 0;
@@ -1215,6 +1215,78 @@ fn get_references(schema: &Schema) -> Vec<String> {
                 }
                 result.extend(prop_refs);
                 result.extend(pattern_refs);
+            }
+            if let Some(o) = &obj.array {
+                result.extend(
+                    o.contains
+                        .as_ref()
+                        .map(|s| get_references(s.as_ref()))
+                        .unwrap_or_default(),
+                );
+                result.extend(
+                    o.additional_items
+                        .as_ref()
+                        .map(|s| get_references(s.as_ref()))
+                        .unwrap_or_default(),
+                );
+                result.extend(
+                    o.items
+                        .as_ref()
+                        .map(|s| match s {
+                            SingleOrVec::Single(v) => get_references(v.as_ref()),
+                            SingleOrVec::Vec(v) => v.iter().map(get_references).flatten().collect(),
+                        })
+                        .unwrap_or_default(),
+                );
+            }
+            if let Some(SubschemaValidation {
+                all_of,
+                any_of,
+                one_of,
+                not,
+                if_schema,
+                then_schema,
+                else_schema,
+            }) = obj.subschemas.as_ref().map(AsRef::as_ref)
+            {
+                result.extend(
+                    all_of
+                        .as_ref()
+                        .map(|s| s.iter().map(get_references).flatten().collect()),
+                );
+                result.extend(
+                    any_of
+                        .as_ref()
+                        .map(|s| s.iter().map(get_references).flatten().collect()),
+                );
+                result.extend(
+                    one_of
+                        .as_ref()
+                        .map(|s| s.iter().map(get_references).flatten().collect()),
+                );
+                result.extend(
+                    not.as_ref()
+                        .map(|s| get_references(s.as_ref()))
+                        .unwrap_or_default(),
+                );
+                result.extend(
+                    if_schema
+                        .as_ref()
+                        .map(|s| get_references(s.as_ref()))
+                        .unwrap_or_default(),
+                );
+                result.extend(
+                    then_schema
+                        .as_ref()
+                        .map(|s| get_references(s.as_ref()))
+                        .unwrap_or_default(),
+                );
+                result.extend(
+                    else_schema
+                        .as_ref()
+                        .map(|s| get_references(s.as_ref()))
+                        .unwrap_or_default(),
+                );
             }
             result
         }
