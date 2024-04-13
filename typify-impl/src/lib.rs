@@ -8,8 +8,10 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;
 
 use conversions::SchemaCache;
+use iref::Iri;
 use log::info;
 use output::OutputSpace;
+use pathdiff::diff_paths;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote, ToTokens};
 use schemars::schema::{Metadata, RootSchema, Schema, SingleOrVec, SubschemaValidation};
@@ -631,28 +633,20 @@ impl TypeSpace {
                 if reference.starts_with("#") || reference.is_empty() {
                     continue;
                 }
-                let mut index = 0;
-                for (c1, c2) in schema
-                    .extensions
-                    .get("id")
-                    .expect("missing 'id' attribute in schema definition")
-                    .as_str()
-                    .unwrap()
-                    .chars()
-                    .zip(reference.chars())
-                {
-                    if c1 != c2 {
-                        break;
-                    }
-                    index += 1;
-                }
-                let difference = &reference[index..];
-                let file_path = self.file_path.parent().unwrap().join(
-                    difference
-                        .split("#")
-                        .next()
-                        .expect("expect '#' before path to external reference"),
-                );
+                let id = Iri::new(
+                    schema
+                        .extensions
+                        .get("id")
+                        .expect("missing 'id' attribute in schema definition")
+                        .as_str()
+                        .unwrap(),
+                )
+                .unwrap();
+                let reff = Iri::new(&reference).unwrap();
+
+                let relpath =
+                    diff_paths(reff.path().as_str(), id.path().parent_or_empty().as_str()).unwrap();
+                let file_path = self.file_path.parent().unwrap().join(&relpath);
                 let content = std::fs::read_to_string(&file_path).expect(&format!(
                     "Failed to open input file: {}",
                     &file_path.display()
