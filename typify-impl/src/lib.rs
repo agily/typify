@@ -14,7 +14,9 @@ use output::OutputSpace;
 use pathdiff::diff_paths;
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote, ToTokens};
-use schemars::schema::{Metadata, RootSchema, Schema, SingleOrVec, SubschemaValidation};
+use schemars::schema::{
+    Metadata, RootSchema, Schema, SchemaObject, SingleOrVec, SubschemaValidation,
+};
 use thiserror::Error;
 use type_entry::{
     StructPropertyState, TypeEntry, TypeEntryDetails, TypeEntryNative, TypeEntryNewtype,
@@ -394,6 +396,20 @@ impl TypeSpacePatch {
     }
 }
 
+/// Retrieves id of the schema from possible places
+fn get_schema_id(schema: &SchemaObject) -> Option<String> {
+    schema
+        .metadata
+        .as_ref()
+        .and_then(|m| m.id.clone())
+        .or_else(|| {
+            schema
+                .extensions
+                .get("id")
+                .map(|id| id.as_str().unwrap().to_string())
+        })
+}
+
 impl TypeSpace {
     /// Create a new TypeSpace with custom settings
     pub fn new(settings: &TypeSpaceSettings) -> Self {
@@ -627,21 +643,15 @@ impl TypeSpace {
             .and_then(|m| m.title.as_ref())
             .is_some();
 
+        let s_id = get_schema_id(&schema).expect("missing 'id' attribute in schema definition");
+
         let mut external_references = vec![];
         for def in &defs {
             for reference in get_references(&def.1) {
                 if reference.starts_with("#") || reference.is_empty() {
                     continue;
                 }
-                let id = Iri::new(
-                    schema
-                        .extensions
-                        .get("id")
-                        .expect("missing 'id' attribute in schema definition")
-                        .as_str()
-                        .unwrap(),
-                )
-                .unwrap();
+                let id = Iri::new(&s_id).unwrap();
                 let reff = Iri::new(&reference).unwrap();
 
                 let relpath =
@@ -675,20 +685,11 @@ impl TypeSpace {
                     ),
                     definition_schema.clone(),
                 ));
-                let id = root_schema
-                    .schema
-                    .extensions
-                    .get("id")
-                    .as_ref()
-                    .expect("missing 'id' attribute in schema definition")
-                    .as_str()
-                    .unwrap()
-                    .to_string();
                 fetch_external_definitions(
                     &root_schema,
                     definition_schema,
                     &file_path,
-                    &id,
+                    &s_id,
                     &mut external_references,
                 );
             }
