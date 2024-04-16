@@ -4,7 +4,7 @@
 
 #![deny(missing_docs)]
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::path::PathBuf;
 
 use conversions::SchemaCache;
@@ -17,6 +17,8 @@ use quote::{format_ident, quote, ToTokens};
 use schemars::schema::{
     Metadata, RootSchema, Schema, SchemaObject, SingleOrVec, SubschemaValidation,
 };
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use thiserror::Error;
 use type_entry::{
     StructPropertyState, TypeEntry, TypeEntryDetails, TypeEntryNative, TypeEntryNewtype,
@@ -624,12 +626,17 @@ impl TypeSpace {
     /// Add all the types contained within a RootSchema including any
     /// referenced types and the top-level type (if there is one and it has a
     /// title).
+    // pub fn add_root_schema(&mut self, schema: RRootSchema) -> Result<Option<TypeId>> {
+    //     let RRootSchema{
+    //         root: schema,
+    //         untracked
+    //     } = schema;
     pub fn add_root_schema(&mut self, schema: RootSchema) -> Result<Option<TypeId>> {
         let RootSchema {
             meta_schema: _,
-            schema,
+            schema: schema_0,
             definitions,
-        } = schema;
+        } = schema.clone();
 
         let mut defs = definitions
             .into_iter()
@@ -637,66 +644,29 @@ impl TypeSpace {
             .collect::<Vec<_>>();
 
         // Does the root type have a name (otherwise... ignore it)
-        let root_type = schema
+        let root_type = schema_0
             .metadata
             .as_ref()
             .and_then(|m| m.title.as_ref())
             .is_some();
 
-        let s_id = get_schema_id(&schema).expect("missing 'id' attribute in schema definition");
+        let s_id = get_schema_id(&schema_0).expect("missing 'id' attribute in schema definition");
 
         let mut external_references = vec![];
-        for def in &defs {
-            for reference in get_references(&def.1) {
-                if reference.starts_with("#") || reference.is_empty() {
-                    continue;
-                }
-                let id = Iri::new(&s_id).unwrap();
-                let reff = Iri::new(&reference).unwrap();
-
-                let relpath =
-                    diff_paths(reff.path().as_str(), id.path().parent_or_empty().as_str()).unwrap();
-                let file_path = self.file_path.parent().unwrap().join(&relpath);
-                let content = std::fs::read_to_string(&file_path).expect(&format!(
-                    "Failed to open input file: {}",
-                    &file_path.display()
-                ));
-
-                let root_schema = serde_json::from_str::<RootSchema>(&content)
-                    .expect("Failed to parse input file as JSON Schema");
-
-                let definition_schema = root_schema
-                    .definitions
-                    .get(
-                        reference
-                            .split('/')
-                            .last()
-                            .expect("unexpected end of reference"),
-                    )
-                    .unwrap()
-                    .clone();
-                external_references.push((
-                    RefKey::Def(
-                        reference
-                            .split('/')
-                            .last()
-                            .expect("unexpected end of reference")
-                            .to_string(),
-                    ),
-                    definition_schema.clone(),
-                ));
-                fetch_external_definitions(
-                    &root_schema,
-                    definition_schema,
-                    &file_path,
-                    &s_id,
-                    &mut external_references,
-                );
-            }
+        for (_, def) in &defs {
+            fetch_external_definitions(
+                &schema,
+                def.clone(),
+                &self.file_path,
+                &s_id,
+                &mut external_references,
+                &Default::default(),
+                true,
+            );
         }
         defs.extend(external_references.into_iter());
         if root_type {
-            defs.push((RefKey::Root, schema.into()));
+            defs.push((RefKey::Root, schema_0.into()));
         }
 
         self.add_ref_types_impl(defs)?;
@@ -1092,64 +1062,26 @@ fn fetch_external_definitions(
     base_path: &PathBuf,
     base_id: &str,
     external_references: &mut Vec<(RefKey, Schema)>,
+    untracked: &HashMap<String, serde_json::Value>,
+    first_run: bool,
 ) {
     for reference in get_references(&definition) {
+        let id = Iri::new(&base_id).unwrap();
+        let reff = Iri::new(&reference).unwrap();
+        let fragment = reff
+          .fragment()
+          .as_ref()
+          .unwrap()
+          .to_string()
+          .split("/")
+          .filter_map(|s| (!s.is_empty()).then_some(s.to_string()))
+          .collect::<Vec<_>>();
+        
         if reference.starts_with("#") {
-            let d = base_schema
-                .definitions
-                .get(reference.split('/').last().unwrap())
-                .cloned()
-                .unwrap();
-            external_references.push((
-                RefKey::Def(
-                    reference
-                        .split('/')
-                        .last()
-                        .expect("unexpected end of reference")
-                        .to_string(),
-                ),
-                d.clone(),
-            ));
-            fetch_external_definitions(
-                base_schema,
-                d.clone(),
-                base_path,
-                base_id,
-                external_references,
-            );
-        } else {
-            let mut index = 0;
-            for (c1, c2) in base_id.chars().zip(reference.chars()) {
-                if c1 != c2 {
-                    break;
-                }
-                index += 1;
+            if first_run {
+                continue;
             }
-            let difference = &reference[index..];
-            let file_path = base_path.parent().unwrap().join(
-                difference
-                    .split("#")
-                    .next()
-                    .expect("expect '#' before path to external reference"),
-            );
-            let content = std::fs::read_to_string(&file_path).expect(&format!(
-                "Failed to open input file: {}",
-                &file_path.display()
-            ));
-
-            let root_schema = serde_json::from_str::<RootSchema>(&content)
-                .expect("Failed to parse input file as JSON Schema");
-
-            let definition_schema = root_schema
-                .definitions
-                .get(
-                    reference
-                        .split('/')
-                        .last()
-                        .expect("unexpected end of reference"),
-                )
-                .unwrap()
-                .clone();
+            let definition_schema = fetch_defenition(base_schema, untracked, &reference, &fragment);
             external_references.push((
                 RefKey::Def(
                     reference
@@ -1160,24 +1092,78 @@ fn fetch_external_definitions(
                 ),
                 definition_schema.clone(),
             ));
-            let id = root_schema
-                .schema
-                .extensions
-                .get("id")
-                .as_ref()
-                .unwrap()
-                .as_str()
-                .unwrap()
-                .to_string();
+            fetch_external_definitions(
+                base_schema,
+                definition_schema.clone(),
+                base_path,
+                base_id,
+                external_references,
+                untracked,
+                false,
+            );
+        } else {
+            let relpath =
+                diff_paths(reff.path().as_str(), id.path().parent_or_empty().as_str()).unwrap();
+            let file_path = base_path.parent().unwrap().join(&relpath);
+            let content = std::fs::read_to_string(&file_path).expect(&format!(
+                "Failed to open input file: {}",
+                &file_path.display()
+            ));
+
+            let root_schema = serde_json::from_str::<RRootSchema>(&content)
+                .expect("Failed to parse input file as JSON Schema");
+            let RRootSchema {
+                root: root_schema,
+                untracked,
+            } = root_schema;
+
+            let definition_schema = fetch_defenition(&root_schema, &untracked, &reference, &fragment);
+
+            external_references.push((
+                RefKey::Def(
+                    reference
+                        .split('/')
+                        .last()
+                        .expect("unexpected end of reference")
+                        .to_string(),
+                ),
+                definition_schema.clone(),
+            ));
+            let s_id = get_schema_id(&root_schema.schema).expect("missing 'id' attribute in schema definition");
+
             fetch_external_definitions(
                 &root_schema,
                 definition_schema,
                 &file_path,
-                id.as_str(),
+                s_id.as_str(),
                 external_references,
+                &untracked,
+                false,
             )
         }
     }
+}
+
+fn fetch_defenition(base_schema: &RootSchema, untracked: &HashMap<String, Value>, reference: &String, fragment: &Vec<String>) -> Schema {
+    let definition_schema = if fragment[0] == "definitions" {
+        base_schema
+          .definitions
+          .get(
+              reference
+                .split('/')
+                .last()
+                .expect("unexpected end of reference"),
+          )
+          .unwrap()
+          .clone()
+    } else {
+        let mut value = untracked.get(&fragment[0]).unwrap();
+        for x in fragment.iter().skip(1) {
+            value = value.as_object().unwrap().get(x).unwrap();
+        }
+        serde_json::from_value(value.clone()).unwrap()
+    };
+    definition_schema
 }
 
 fn get_references(schema: &Schema) -> Vec<String> {
@@ -1287,6 +1273,15 @@ fn get_references(schema: &Schema) -> Vec<String> {
         }
         _ => vec![],
     }
+}
+
+/// doc
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct RRootSchema {
+    #[serde(flatten)]
+    root: RootSchema,
+    #[serde(flatten)]
+    untracked: HashMap<String, serde_json::Value>,
 }
 
 #[cfg(test)]
