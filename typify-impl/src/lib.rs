@@ -4,7 +4,7 @@
 
 #![deny(missing_docs)]
 
-use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;
 
 use conversions::SchemaCache;
@@ -17,8 +17,6 @@ use quote::{format_ident, quote, ToTokens};
 use schemars::schema::{
     Metadata, RootSchema, Schema, SchemaObject, SingleOrVec, SubschemaValidation,
 };
-use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use thiserror::Error;
 use type_entry::{
     StructPropertyState, TypeEntry, TypeEntryDetails, TypeEntryNative, TypeEntryNewtype,
@@ -626,31 +624,54 @@ impl TypeSpace {
     /// Add all the types contained within a RootSchema including any
     /// referenced types and the top-level type (if there is one and it has a
     /// title).
-    // pub fn add_root_schema(&mut self, schema: RRootSchema) -> Result<Option<TypeId>> {
-    //     let RRootSchema{
-    //         root: schema,
-    //         untracked
-    //     } = schema;
-    pub fn add_root_schema(&mut self, schema: RootSchema) -> Result<Option<TypeId>> {
+      pub fn add_root_schema(&mut self, schema: RootSchema) -> Result<Option<TypeId>> {
         let RootSchema {
             meta_schema: _,
-            schema: schema_0,
+            schema: schema_object,
             definitions,
         } = schema.clone();
+
+        let s_id = get_schema_id(&schema_object);
+
+        let untracked = schema_object
+            .extensions
+            .clone()
+            .into_iter()
+            .filter_map(|(_, value)| {
+                if !value.is_object() {
+                    None
+                } else {
+                    let object = value.as_object().unwrap();
+                    Some(
+                        object
+                            .iter()
+                            .filter_map(|(key, value)| {
+                                if let Ok(schema) = serde_json::from_value::<Schema>(value.clone())
+                                {
+                                    Some((RefKey::Def(key.clone()), schema))
+                                } else {
+                                    None
+                                }
+                            })
+                            .collect::<Vec<_>>(),
+                    )
+                }
+            })
+            .flatten()
+            .collect::<Vec<_>>();
 
         let mut defs = definitions
             .into_iter()
             .map(|(key, schema)| (RefKey::Def(key), schema))
+            .chain(untracked)
             .collect::<Vec<_>>();
 
         // Does the root type have a name (otherwise... ignore it)
-        let root_type = schema_0
+        let root_type = schema_object
             .metadata
             .as_ref()
             .and_then(|m| m.title.as_ref())
             .is_some();
-
-        let s_id = get_schema_id(&schema_0).expect("missing 'id' attribute in schema definition");
 
         let mut external_references = vec![];
         for (_, def) in &defs {
@@ -660,13 +681,12 @@ impl TypeSpace {
                 &self.file_path,
                 &s_id,
                 &mut external_references,
-                &Default::default(),
                 true,
             );
         }
         defs.extend(external_references.into_iter());
         if root_type {
-            defs.push((RefKey::Root, schema_0.into()));
+            defs.push((RefKey::Root, schema_object.into()));
         }
 
         self.add_ref_types_impl(defs)?;
@@ -1060,28 +1080,21 @@ fn fetch_external_definitions(
     base_schema: &RootSchema,
     definition: Schema,
     base_path: &PathBuf,
-    base_id: &str,
+    base_id: &Option<String>,
     external_references: &mut Vec<(RefKey, Schema)>,
-    untracked: &HashMap<String, serde_json::Value>,
     first_run: bool,
 ) {
-    for reference in get_references(&definition) {
-        let id = Iri::new(&base_id).unwrap();
-        let reff = Iri::new(&reference).unwrap();
-        let fragment = reff
-          .fragment()
-          .as_ref()
-          .unwrap()
-          .to_string()
-          .split("/")
-          .filter_map(|s| (!s.is_empty()).then_some(s.to_string()))
-          .collect::<Vec<_>>();
-        
+    for mut reference in get_references(&definition) {
+        if reference.is_empty(){
+            continue
+        }
         if reference.starts_with("#") {
             if first_run {
                 continue;
             }
-            let definition_schema = fetch_defenition(base_schema, untracked, &reference, &fragment);
+            reference.remove(0);
+            let fragment = reference.split("/").into_iter().map(|s|s.to_string()).collect();
+            let definition_schema = fetch_defenition(base_schema, &reference, &fragment);
             external_references.push((
                 RefKey::Def(
                     reference
@@ -1098,10 +1111,20 @@ fn fetch_external_definitions(
                 base_path,
                 base_id,
                 external_references,
-                untracked,
                 false,
             );
         } else {
+            let base_id = base_id.as_ref().expect("missing 'id' attribute in schema definition");
+            let id = Iri::new(base_id).unwrap();
+            let reff = Iri::new(&reference).unwrap();
+            let fragment = reff
+              .fragment()
+              .as_ref()
+              .unwrap()
+              .to_string()
+              .split("/")
+              .filter_map(|s| (!s.is_empty()).then_some(s.to_string()))
+              .collect::<Vec<_>>();
             let relpath =
                 diff_paths(reff.path().as_str(), id.path().parent_or_empty().as_str()).unwrap();
             let file_path = base_path.parent().unwrap().join(&relpath);
@@ -1110,14 +1133,9 @@ fn fetch_external_definitions(
                 &file_path.display()
             ));
 
-            let root_schema = serde_json::from_str::<RRootSchema>(&content)
+            let root_schema = serde_json::from_str::<RootSchema>(&content)
                 .expect("Failed to parse input file as JSON Schema");
-            let RRootSchema {
-                root: root_schema,
-                untracked,
-            } = root_schema;
-
-            let definition_schema = fetch_defenition(&root_schema, &untracked, &reference, &fragment);
+            let definition_schema = fetch_defenition(&root_schema, &reference, &fragment);
 
             external_references.push((
                 RefKey::Def(
@@ -1129,35 +1147,38 @@ fn fetch_external_definitions(
                 ),
                 definition_schema.clone(),
             ));
-            let s_id = get_schema_id(&root_schema.schema).expect("missing 'id' attribute in schema definition");
+            let s_id = get_schema_id(&root_schema.schema);
 
             fetch_external_definitions(
                 &root_schema,
                 definition_schema,
                 &file_path,
-                s_id.as_str(),
+                &s_id,
                 external_references,
-                &untracked,
                 false,
             )
         }
     }
 }
 
-fn fetch_defenition(base_schema: &RootSchema, untracked: &HashMap<String, Value>, reference: &String, fragment: &Vec<String>) -> Schema {
+fn fetch_defenition(
+    base_schema: &RootSchema,
+    reference: &String,
+    fragment: &Vec<String>,
+) -> Schema {
     let definition_schema = if fragment[0] == "definitions" {
         base_schema
-          .definitions
-          .get(
-              reference
-                .split('/')
-                .last()
-                .expect("unexpected end of reference"),
-          )
-          .unwrap()
-          .clone()
+            .definitions
+            .get(
+                reference
+                    .split('/')
+                    .last()
+                    .expect("unexpected end of reference"),
+            )
+            .unwrap()
+            .clone()
     } else {
-        let mut value = untracked.get(&fragment[0]).unwrap();
+        let mut value = base_schema.schema.extensions.get(&fragment[0]).unwrap();
         for x in fragment.iter().skip(1) {
             value = value.as_object().unwrap().get(x).unwrap();
         }
@@ -1178,8 +1199,7 @@ fn get_references(schema: &Schema) -> Vec<String> {
                     .properties
                     .values()
                     .into_iter()
-                    .map(|p| get_references(p))
-                    .flatten()
+                    .flat_map(|p| get_references(p))
                     .collect::<Vec<_>>();
                 if let Some(additional_props) = &o.additional_properties {
                     result.extend(get_references(&additional_props));
@@ -1188,8 +1208,7 @@ fn get_references(schema: &Schema) -> Vec<String> {
                     .pattern_properties
                     .values()
                     .into_iter()
-                    .map(|p| get_references(p))
-                    .flatten()
+                    .flat_map(|p| get_references(p))
                     .collect::<Vec<_>>();
                 if let Some(property_names) = &o.property_names {
                     result.extend(get_references(&property_names))
@@ -1215,7 +1234,7 @@ fn get_references(schema: &Schema) -> Vec<String> {
                         .as_ref()
                         .map(|s| match s {
                             SingleOrVec::Single(v) => get_references(v.as_ref()),
-                            SingleOrVec::Vec(v) => v.iter().map(get_references).flatten().collect(),
+                            SingleOrVec::Vec(v) => v.iter().flat_map(get_references).collect(),
                         })
                         .unwrap_or_default(),
                 );
@@ -1233,17 +1252,17 @@ fn get_references(schema: &Schema) -> Vec<String> {
                 result.extend(
                     all_of
                         .as_ref()
-                        .map(|s| s.iter().map(get_references).flatten().collect()),
+                        .map(|s| s.iter().flat_map(get_references).collect()),
                 );
                 result.extend(
                     any_of
                         .as_ref()
-                        .map(|s| s.iter().map(get_references).flatten().collect()),
+                        .map(|s| s.iter().flat_map(get_references).collect()),
                 );
                 result.extend(
                     one_of
                         .as_ref()
-                        .map(|s| s.iter().map(get_references).flatten().collect()),
+                        .map(|s| s.iter().flat_map(get_references).collect()),
                 );
                 result.extend(
                     not.as_ref()
@@ -1269,19 +1288,10 @@ fn get_references(schema: &Schema) -> Vec<String> {
                         .unwrap_or_default(),
                 );
             }
-            result
+            dbg!(result)
         }
         _ => vec![],
     }
-}
-
-/// doc
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct RRootSchema {
-    #[serde(flatten)]
-    root: RootSchema,
-    #[serde(flatten)]
-    untracked: HashMap<String, serde_json::Value>,
 }
 
 #[cfg(test)]
