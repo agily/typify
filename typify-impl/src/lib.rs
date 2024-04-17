@@ -624,7 +624,7 @@ impl TypeSpace {
     /// Add all the types contained within a RootSchema including any
     /// referenced types and the top-level type (if there is one and it has a
     /// title).
-      pub fn add_root_schema(&mut self, schema: RootSchema) -> Result<Option<TypeId>> {
+    pub fn add_root_schema(&mut self, schema: RootSchema) -> Result<Option<TypeId>> {
         let RootSchema {
             meta_schema: _,
             schema: schema_object,
@@ -1085,15 +1085,19 @@ fn fetch_external_definitions(
     first_run: bool,
 ) {
     for mut reference in get_references(&definition) {
-        if reference.is_empty(){
-            continue
+        if reference.is_empty() {
+            continue;
         }
         if reference.starts_with("#") {
             if first_run {
                 continue;
             }
             reference.remove(0);
-            let fragment = reference.split("/").into_iter().map(|s|s.to_string()).collect();
+            let fragment = reference
+                .split("/")
+                .into_iter()
+                .map(|s| s.to_string())
+                .collect();
             let definition_schema = fetch_defenition(base_schema, &reference, &fragment);
             external_references.push((
                 RefKey::Def(
@@ -1114,17 +1118,19 @@ fn fetch_external_definitions(
                 false,
             );
         } else {
-            let base_id = base_id.as_ref().expect("missing 'id' attribute in schema definition");
+            let base_id = base_id
+                .as_ref()
+                .expect("missing 'id' attribute in schema definition");
             let id = Iri::new(base_id).unwrap();
             let reff = Iri::new(&reference).unwrap();
             let fragment = reff
-              .fragment()
-              .as_ref()
-              .unwrap()
-              .to_string()
-              .split("/")
-              .filter_map(|s| (!s.is_empty()).then_some(s.to_string()))
-              .collect::<Vec<_>>();
+                .fragment()
+                .as_ref()
+                .unwrap()
+                .to_string()
+                .split("/")
+                .filter_map(|s| (!s.is_empty()).then_some(s.to_string()))
+                .collect::<Vec<_>>();
             let relpath =
                 diff_paths(reff.path().as_str(), id.path().parent_or_empty().as_str()).unwrap();
             let file_path = base_path.parent().unwrap().join(&relpath);
