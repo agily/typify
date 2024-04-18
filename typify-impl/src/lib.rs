@@ -7,7 +7,9 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;
 
+use crate::merge::merge_all;
 use conversions::SchemaCache;
+use iref::iri::{Fragment, FragmentBuf};
 use iref::Iri;
 use log::info;
 use output::OutputSpace;
@@ -1097,6 +1099,7 @@ fn fetch_external_definitions(
                 .split("/")
                 .into_iter()
                 .map(|s| s.to_string())
+                .filter(|s| !s.is_empty())
                 .collect();
             let definition_schema = fetch_defenition(base_schema, &reference, &fragment);
             external_references.push((
@@ -1126,7 +1129,7 @@ fn fetch_external_definitions(
             let fragment = reff
                 .fragment()
                 .as_ref()
-                .unwrap()
+                .unwrap_or(&FragmentBuf::new("".to_string()).unwrap().as_fragment())
                 .to_string()
                 .split("/")
                 .filter_map(|s| (!s.is_empty()).then_some(s.to_string()))
@@ -1172,6 +1175,9 @@ fn fetch_defenition(
     reference: &String,
     fragment: &Vec<String>,
 ) -> Schema {
+    if fragment.is_empty(){
+        return Schema::Object(base_schema.schema.clone())
+    }
     let definition_schema = if fragment[0] == "definitions" {
         base_schema
             .definitions
@@ -1207,6 +1213,7 @@ fn get_references(schema: &Schema) -> Vec<String> {
                     .into_iter()
                     .flat_map(|p| get_references(p))
                     .collect::<Vec<_>>();
+                result.extend(prop_refs);
                 if let Some(additional_props) = &o.additional_properties {
                     result.extend(get_references(&additional_props));
                 }
@@ -1219,7 +1226,6 @@ fn get_references(schema: &Schema) -> Vec<String> {
                 if let Some(property_names) = &o.property_names {
                     result.extend(get_references(&property_names))
                 }
-                result.extend(prop_refs);
                 result.extend(pattern_refs);
             }
             if let Some(o) = &obj.array {
@@ -1240,7 +1246,9 @@ fn get_references(schema: &Schema) -> Vec<String> {
                         .as_ref()
                         .map(|s| match s {
                             SingleOrVec::Single(v) => get_references(v.as_ref()),
-                            SingleOrVec::Vec(v) => v.iter().flat_map(get_references).collect(),
+                            SingleOrVec::Vec(v) => {
+                                v.iter().flat_map(get_references).collect::<Vec<_>>()
+                            }
                         })
                         .unwrap_or_default(),
                 );
@@ -1258,17 +1266,35 @@ fn get_references(schema: &Schema) -> Vec<String> {
                 result.extend(
                     all_of
                         .as_ref()
-                        .map(|s| s.iter().flat_map(get_references).collect()),
+                        .map(|s| {
+                            s.iter()
+                                .flat_map(get_references)
+                                .collect::<Vec<_>>()
+                                .into_iter()
+                        })
+                        .unwrap_or_default(),
                 );
                 result.extend(
                     any_of
                         .as_ref()
-                        .map(|s| s.iter().flat_map(get_references).collect()),
+                        .map(|s| {
+                            s.iter()
+                                .flat_map(get_references)
+                                .collect::<Vec<_>>()
+                                .into_iter()
+                        })
+                        .unwrap_or_default(),
                 );
                 result.extend(
                     one_of
                         .as_ref()
-                        .map(|s| s.iter().flat_map(get_references).collect()),
+                        .map(|s| {
+                            s.iter()
+                                .flat_map(get_references)
+                                .collect::<Vec<_>>()
+                                .into_iter()
+                        })
+                        .unwrap_or_default(),
                 );
                 result.extend(
                     not.as_ref()
@@ -1294,7 +1320,7 @@ fn get_references(schema: &Schema) -> Vec<String> {
                         .unwrap_or_default(),
                 );
             }
-            dbg!(result)
+            result
         }
         _ => vec![],
     }
