@@ -362,14 +362,7 @@ impl TypeSpace {
                 object: None,
                 reference: Some(reference),
                 extensions: _,
-            } => {
-                let r = if reference.starts_with('#') {
-                    reference.clone()
-                } else {
-                    format!("#{reference}")
-                };
-                self.convert_reference(metadata, &r)
-            }
+            } => self.convert_reference(metadata, &reference),
 
             // Accept references that... for some reason... include the type.
             // TODO this could be generalized to validate any redundant
