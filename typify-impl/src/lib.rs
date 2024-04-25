@@ -4,7 +4,7 @@
 
 #![deny(missing_docs)]
 
-use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;
 
 use conversions::SchemaCache;
@@ -23,7 +23,6 @@ use type_entry::{
     StructPropertyState, TypeEntry, TypeEntryDetails, TypeEntryNative, TypeEntryNewtype,
     WrappedValue,
 };
-use crate::merge::merge_all;
 
 use crate::util::{sanitize, Case};
 
@@ -1243,8 +1242,7 @@ fn fetch_defenition(
         for x in fragment.iter().skip(1) {
             value = value.as_object().unwrap().get(x).unwrap();
         }
-        let mut r = serde_json::from_value(value.clone()).unwrap();
-        r
+        serde_json::from_value(value.clone()).unwrap()
     };
     definition_schema
 }
@@ -1399,8 +1397,12 @@ fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<
                     .unwrap_or_default()
                     .to_string_lossy()
                     .replace("..\\", "Parent");
-                *reference = format!("{}{}", dif, reference.split("/").last().unwrap_or_default())
-                    .replace(".json", "\\");
+                let mut r = format!("{}{}", dif, reference.split("/").last().unwrap_or_default())
+                  .replace(".json", "\\");
+                if r.ends_with("\\"){
+                    r.pop();
+                }
+                *reference = r;
             });
             if let Some(o) = obj.object.as_mut() {
                 for (_, s) in o.properties.iter_mut() {

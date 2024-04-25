@@ -910,10 +910,7 @@ impl TypeSpace {
                 // use std::io::Write;
                 // write!(std::fs::File::create("out2.txt").unwrap(), "{:#?}", self)
                 //   .expect("TODO: panic message");
-                dbg!(&type_name);
-                dbg!(&metadata);
-                dbg!(&enum_values);
-                dbg!(&validation);
+               
                 Err(Error::InvalidSchema {
                     type_name: type_name.into_option(),
                     reason: "empty enum array".to_string(),
