@@ -841,7 +841,8 @@ impl TypeSpace {
                     None
                 }
                 serde_json::Value::String(value) if validator.is_valid(value) => {
-                    let (name, rename) = recase(value, Case::Pascal);
+                // serde_json::Value::String(value) => {
+                let (name, rename) = recase(value, Case::Pascal);
                     Some(Ok(Variant {
                         name,
                         rename,
@@ -864,6 +865,13 @@ impl TypeSpace {
             if has_null {
                 self.convert_null(metadata)
             } else {
+                // use std::io::Write;
+                // write!(std::fs::File::create("out2.txt").unwrap(), "{:#?}", self)
+                //   .expect("TODO: panic message");
+                dbg!(&type_name);
+                dbg!(&metadata);
+                dbg!(&enum_values);
+                dbg!(&validation);
                 Err(Error::InvalidSchema {
                     type_name: type_name.into_option(),
                     reason: "empty enum array".to_string(),

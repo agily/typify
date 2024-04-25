@@ -23,6 +23,7 @@ use type_entry::{
     StructPropertyState, TypeEntry, TypeEntryDetails, TypeEntryNative, TypeEntryNewtype,
     WrappedValue,
 };
+use crate::merge::merge_all;
 
 use crate::util::{sanitize, Case};
 
@@ -695,12 +696,20 @@ impl TypeSpace {
                     .unwrap_or_default()
                     .to_string_lossy()
                     .replace("..\\", "Parent");
-                let ref_name = format!(
-                    "{}{}",
-                    relpath,
-                    reference.split("/").last().unwrap_or_default()
-                )
-                .replace(".json", "\\");
+                let ref_name = if relpath.ends_with("\\") {
+                    format!(
+                        "{}{}",
+                        relpath,
+                        reference.split("/").last().unwrap_or_default()
+                    )
+                } else {
+                    format!(
+                        "{}\\{}",
+                        relpath,
+                        reference.split("/").last().unwrap_or_default()
+                    )
+                }
+                .replace(".json", "\\").trim_matches('\\').replace("\\\\", "\\").to_string();
                 replace_reference(&mut schema, &id, &s_id);
                 ext_refs.push((RefKey::Def(ref_name), schema));
             }
@@ -709,6 +718,10 @@ impl TypeSpace {
         if root_type {
             defs.push((RefKey::Root, schema_object.into()));
         }
+
+        // use std::io::Write;
+        // write!(std::fs::File::create("out.txt").unwrap(), "{:#?}", defs)
+        //     .expect("TODO: panic message");
 
         self.add_ref_types_impl(defs)?;
 
@@ -1099,7 +1112,7 @@ impl<'a> TypeNewtype<'a> {
 
 fn fetch_external_definitions(
     base_schema: &RootSchema,
-    definition: Schema,
+    definition: Schema, //cluster
     base_path: &PathBuf,
     base_id: &Option<String>,
     external_references: &mut BTreeMap<RefKey, (Schema, PathBuf, Option<String>)>,
@@ -1109,7 +1122,7 @@ fn fetch_external_definitions(
         if reference.is_empty() {
             continue;
         }
-        if reference.starts_with("#") {
+        if reference.starts_with("#") { //#defenitions/Sku
             if first_run {
                 continue;
             }
@@ -1122,7 +1135,7 @@ fn fetch_external_definitions(
                 .collect();
             let definition_schema = fetch_defenition(base_schema, &reference, &fragment);
             let key = RefKey::Def(
-                reference, // .split('/')
+                format!("{}{}",base_id.clone().unwrap(), reference), // .split('/')
                           // .last()
                           // .expect("unexpected end of reference")
                           // .to_string(),
@@ -1172,6 +1185,11 @@ fn fetch_external_definitions(
             let root_schema = serde_json::from_str::<RootSchema>(&content)
                 .expect("Failed to parse input file as JSON Schema");
             let definition_schema = fetch_defenition(&root_schema, &reference, &fragment);
+            if reference == "https://schema.management.azure.com/schemas/2017-09-07-privatepreview/Microsoft.Kusto.json#/resourceDefinitions/clusters".to_string(){
+                // dbg!(&base_schema);
+                // dbg!(&root_schema);
+                // dbg!(&definition_schema);
+            }
             let key = RefKey::Def(
                 reference, // .split('/')
                           // .last()
@@ -1225,7 +1243,8 @@ fn fetch_defenition(
         for x in fragment.iter().skip(1) {
             value = value.as_object().unwrap().get(x).unwrap();
         }
-        serde_json::from_value(value.clone()).unwrap()
+        let mut r = serde_json::from_value(value.clone()).unwrap();
+        r
     };
     definition_schema
 }
@@ -1367,6 +1386,10 @@ fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<
             obj.reference.as_mut().map(|reference| {
                 let mut r = reference.clone();
                 if r.starts_with("#") {
+                    if id == base_id {
+                        *reference = reference.split("/").last().unwrap_or_default().to_string();
+                        return;
+                    }
                     r = id.clone().unwrap();
                 }
                 let b_id = base_id.clone().unwrap();
