@@ -81,6 +81,7 @@ fn merge_schema(a: &Schema, b: &Schema, defs: &BTreeMap<RefKey, Schema>) -> Sche
 /// incompatible (i.e. if there is no data that can satisfy them both
 /// simultaneously) then this returns Err.
 fn try_merge_schema(a: &Schema, b: &Schema, defs: &BTreeMap<RefKey, Schema>) -> Result<Schema, ()> {
+    // dbg!((a,b));
     match (a, b) {
         (Schema::Bool(false), _) | (_, Schema::Bool(false)) => Err(()),
         (Schema::Bool(true), other) | (other, Schema::Bool(true)) => Ok(other.clone()),
@@ -152,6 +153,11 @@ fn merge_schema_object(
         serde_json::to_string_pretty(a).unwrap(),
         serde_json::to_string_pretty(b).unwrap(),
     );
+    // println!(
+    //     "merging {}\n{}",
+    //     serde_json::to_string_pretty(a).unwrap(),
+    //     serde_json::to_string_pretty(b).unwrap(),
+    // );
 
     assert!(a.reference.is_none());
     assert!(b.reference.is_none());
@@ -252,10 +258,11 @@ fn merge_so_enum_values(
         (None, None) => Ok(None),
         (None, Some(values)) | (Some(values), None) => Ok(Some(values)),
         (Some(aa), Some(bb)) => {
-            let values = aa
-                .into_iter()
-                .filter(|value| bb.contains(value))
-                .collect::<Vec<_>>();
+            // let values = aa
+            //     .into_iter()
+            //     .filter(|value| bb.contains(value))
+            //     .collect::<Vec<_>>();
+            let values = merge_and_remove_duplicates(aa,bb);
 
             if values.is_empty() {
                 Err(())
@@ -264,6 +271,15 @@ fn merge_so_enum_values(
             }
         }
     }
+}
+
+fn merge_and_remove_duplicates(mut vector1: Vec<serde_json::Value>, vector2: Vec<serde_json::Value>) -> Vec<serde_json::Value> {
+    for num in vector2 {
+        if !vector1.contains(&num) {
+            vector1.push(num);
+        }
+    }
+    vector1
 }
 
 pub(crate) fn merge_with_subschemas(

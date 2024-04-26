@@ -4,6 +4,7 @@
 
 #![deny(missing_docs)]
 
+// use std::alloc::System;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;
 
@@ -18,6 +19,7 @@ use quote::{format_ident, quote, ToTokens};
 use schemars::schema::{
     Metadata, RootSchema, Schema, SchemaObject, SingleOrVec, SubschemaValidation,
 };
+// use stats_alloc::{INSTRUMENTED_SYSTEM, Region, StatsAlloc};
 use thiserror::Error;
 use type_entry::{
     StructPropertyState, TypeEntry, TypeEntryDetails, TypeEntryNative, TypeEntryNewtype,
@@ -25,7 +27,8 @@ use type_entry::{
 };
 
 use crate::util::{sanitize, Case};
-
+// #[global_allocator]
+// static GLOBAL: &StatsAlloc<System> = &INSTRUMENTED_SYSTEM;
 #[cfg(test)]
 mod test_util;
 
@@ -472,7 +475,7 @@ impl TypeSpace {
                 .insert(ref_name.clone(), TypeId(base_id + index as u64));
             self.definitions.insert(ref_name.clone(), schema.clone());
         }
-
+        // panic!("win");
         // Convert all types; note that we use the type id assigned from the
         // previous step because each type may create additional types. This
         // effectively is doing the work of `add_type_with_name` but for a
@@ -532,12 +535,15 @@ impl TypeSpace {
     }
 
     fn convert_ref_type(&mut self, type_name: Name, schema: Schema, type_id: TypeId) -> Result<()> {
+        // let reg = Region::new(&GLOBAL);
         let (mut type_entry, metadata) = self.convert_schema(type_name.clone(), &schema)?;
+        // dbg!(reg.change());
         let default = metadata
             .as_ref()
             .and_then(|m| m.default.as_ref())
             .cloned()
             .map(WrappedValue::new);
+        // dbg!(reg.change());
         let type_entry = match &mut type_entry.details {
             // The types that are already named are good to go.
             TypeEntryDetails::Enum(details) => {
@@ -557,13 +563,19 @@ impl TypeSpace {
             // simple alias to another type in this list of definitions
             // (which may nor may not have already been converted). We
             // simply create a newtype with that type ID.
-            TypeEntryDetails::Reference(type_id) => TypeEntryNewtype::from_metadata(
-                self,
-                type_name,
-                metadata,
-                type_id.clone(),
-                schema.clone(),
-            ),
+            TypeEntryDetails::Reference(type_id) => {
+                // dbg!(reg.change());
+                // dbg!(&metadata);
+                // dbg!(&schema);
+                // dbg!(&type_name);
+                TypeEntryNewtype::from_metadata(
+                    self,
+                    type_name,
+                    metadata,
+                    type_id.clone(),
+                    schema.clone(),
+                )
+            },
 
             // For types that don't have names, this is effectively a type
             // alias which we treat as a newtype.
@@ -575,6 +587,10 @@ impl TypeSpace {
                     metadata
                 );
                 let subtype_id = self.assign_type(type_entry);
+                // dbg!(&metadata);
+                // dbg!(&schema);
+                // dbg!(reg.change());
+                // dbg!(&type_name);
                 TypeEntryNewtype::from_metadata(
                     self,
                     type_name,
@@ -678,7 +694,7 @@ impl TypeSpace {
         for (_, def) in &defs {
             fetch_external_definitions(
                 &schema,
-                def.clone(),
+                def,
                 &self.file_path,
                 &s_id,
                 &mut external_references,
@@ -717,11 +733,7 @@ impl TypeSpace {
         if root_type {
             defs.push((RefKey::Root, schema_object.into()));
         }
-
-        // use std::io::Write;
-        // write!(std::fs::File::create("out.txt").unwrap(), "{:#?}", defs)
-        //     .expect("TODO: panic message");
-
+        
         self.add_ref_types_impl(defs)?;
 
         if root_type {
@@ -1111,7 +1123,7 @@ impl<'a> TypeNewtype<'a> {
 
 fn fetch_external_definitions(
     base_schema: &RootSchema,
-    definition: Schema, //cluster
+    definition: &Schema,
     base_path: &PathBuf,
     base_id: &Option<String>,
     external_references: &mut BTreeMap<RefKey, (Schema, PathBuf, Option<String>)>,
@@ -1134,7 +1146,7 @@ fn fetch_external_definitions(
                 .collect();
             let definition_schema = fetch_defenition(base_schema, &reference, &fragment);
             let key = RefKey::Def(
-                format!("{}{}",base_id.clone().unwrap(), reference), // .split('/')
+                format!("{}{}",base_id.as_ref().unwrap(), reference), // .split('/')
                           // .last()
                           // .expect("unexpected end of reference")
                           // .to_string(),
@@ -1152,7 +1164,7 @@ fn fetch_external_definitions(
                 );
                 fetch_external_definitions(
                     base_schema,
-                    definition_schema.clone(),
+                    &definition_schema,
                     base_path,
                     base_id,
                     external_references,
@@ -1207,7 +1219,7 @@ fn fetch_external_definitions(
 
                 fetch_external_definitions(
                     &root_schema,
-                    definition_schema,
+                    &definition_schema,
                     &file_path,
                     &s_id,
                     external_references,
