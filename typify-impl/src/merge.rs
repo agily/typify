@@ -256,7 +256,7 @@ fn merge_so_enum_values(
             //     .into_iter()
             //     .filter(|value| bb.contains(value))
             //     .collect::<Vec<_>>();
-            let values = merge_and_remove_duplicates(aa,bb);
+            let values = merge_and_remove_duplicates(aa, bb);
 
             if values.is_empty() {
                 Err(())
@@ -267,7 +267,10 @@ fn merge_so_enum_values(
     }
 }
 
-fn merge_and_remove_duplicates(mut vector1: Vec<serde_json::Value>, vector2: Vec<serde_json::Value>) -> Vec<serde_json::Value> {
+fn merge_and_remove_duplicates(
+    mut vector1: Vec<serde_json::Value>,
+    vector2: Vec<serde_json::Value>,
+) -> Vec<serde_json::Value> {
     for num in vector2 {
         if !vector1.contains(&num) {
             vector1.push(num);

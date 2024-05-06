@@ -895,7 +895,7 @@ impl TypeSpace {
                 }
                 // serde_json::Value::String(value) if validator.is_valid(value) => {
                 serde_json::Value::String(value) => {
-                let (name, rename) = recase(value, Case::Pascal);
+                    let (name, rename) = recase(value, Case::Pascal);
                     Some(Ok(Variant {
                         name,
                         rename,
@@ -921,7 +921,7 @@ impl TypeSpace {
                 // use std::io::Write;
                 // write!(std::fs::File::create("out2.txt").unwrap(), "{:#?}", self)
                 //   .expect("TODO: panic message");
-               
+
                 Err(Error::InvalidSchema {
                     type_name: type_name.into_option(),
                     reason: "empty enum array".to_string(),
@@ -1008,9 +1008,9 @@ impl TypeSpace {
                         .and_then(|m| m.default.as_ref())
                         .and_then(|v| v.as_f64())
                     {
-                        // if default < *imin || default > *imax {
-                        //     return Err(Error::InvalidValue);
-                        // }
+                        if default < *imin || default > *imax {
+                            return Err(Error::InvalidValue);
+                        }
                     }
                     return Ok((TypeEntry::new_integer(ty), metadata));
                 }
@@ -1031,12 +1031,17 @@ impl TypeSpace {
             // f64 here, but we're already constrained by the schemars
             // representation so ... it's probably the best we can do at
             // the moment.
-            match (default.as_f64(), min, max) {
+            let d = match default {
+                serde_json::Value::Number(a) => a.as_f64(),
+                serde_json::Value::String(a) => a.parse().ok(),
+                _ => None,
+            };
+            match (d, min, max) {
                 (Some(_), None, None) => Some(()),
                 (Some(value), None, Some(fmax)) if value <= fmax => Some(()),
                 (Some(value), Some(fmin), None) if value >= fmin => Some(()),
                 (Some(value), Some(fmin), Some(fmax)) if value >= fmin && value <= fmax => Some(()),
-                _ => Some(()),
+                _ => None,
             }
             .ok_or(Error::InvalidValue)?;
         }

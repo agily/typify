@@ -475,7 +475,6 @@ impl TypeSpace {
                 .insert(ref_name.clone(), TypeId(base_id + index as u64));
             self.definitions.insert(ref_name.clone(), schema.clone());
         }
-        // panic!("win");
         // Convert all types; note that we use the type id assigned from the
         // previous step because each type may create additional types. This
         // effectively is doing the work of `add_type_with_name` but for a
@@ -535,15 +534,12 @@ impl TypeSpace {
     }
 
     fn convert_ref_type(&mut self, type_name: Name, schema: Schema, type_id: TypeId) -> Result<()> {
-        // let reg = Region::new(&GLOBAL);
         let (mut type_entry, metadata) = self.convert_schema(type_name.clone(), &schema)?;
-        // dbg!(reg.change());
         let default = metadata
             .as_ref()
             .and_then(|m| m.default.as_ref())
             .cloned()
             .map(WrappedValue::new);
-        // dbg!(reg.change());
         let type_entry = match &mut type_entry.details {
             // The types that are already named are good to go.
             TypeEntryDetails::Enum(details) => {
@@ -563,19 +559,13 @@ impl TypeSpace {
             // simple alias to another type in this list of definitions
             // (which may nor may not have already been converted). We
             // simply create a newtype with that type ID.
-            TypeEntryDetails::Reference(type_id) => {
-                // dbg!(reg.change());
-                // dbg!(&metadata);
-                // dbg!(&schema);
-                // dbg!(&type_name);
-                TypeEntryNewtype::from_metadata(
-                    self,
-                    type_name,
-                    metadata,
-                    type_id.clone(),
-                    schema.clone(),
-                )
-            },
+            TypeEntryDetails::Reference(type_id) => TypeEntryNewtype::from_metadata(
+                self,
+                type_name,
+                metadata,
+                type_id.clone(),
+                schema.clone(),
+            ),
 
             // For types that don't have names, this is effectively a type
             // alias which we treat as a newtype.
@@ -587,10 +577,6 @@ impl TypeSpace {
                     metadata
                 );
                 let subtype_id = self.assign_type(type_entry);
-                // dbg!(&metadata);
-                // dbg!(&schema);
-                // dbg!(reg.change());
-                // dbg!(&type_name);
                 TypeEntryNewtype::from_metadata(
                     self,
                     type_name,
@@ -724,7 +710,10 @@ impl TypeSpace {
                         reference.split("/").last().unwrap_or_default()
                     )
                 }
-                .replace(".json", "\\").trim_matches('\\').replace("\\\\", "\\").to_string();
+                .replace(".json", "\\")
+                .trim_matches('\\')
+                .replace("\\\\", "\\")
+                .to_string();
                 replace_reference(&mut schema, &id, &s_id);
                 ext_refs.push((RefKey::Def(ref_name), schema));
             }
@@ -733,7 +722,7 @@ impl TypeSpace {
         if root_type {
             defs.push((RefKey::Root, schema_object.into()));
         }
-        
+
         self.add_ref_types_impl(defs)?;
 
         if root_type {
@@ -1133,7 +1122,7 @@ fn fetch_external_definitions(
         if reference.is_empty() {
             continue;
         }
-        if reference.starts_with("#") { //#defenitions/Sku
+        if reference.starts_with("#") {
             if first_run {
                 continue;
             }
@@ -1145,12 +1134,7 @@ fn fetch_external_definitions(
                 .filter(|s| !s.is_empty())
                 .collect();
             let definition_schema = fetch_defenition(base_schema, &reference, &fragment);
-            let key = RefKey::Def(
-                format!("{}{}",base_id.as_ref().unwrap(), reference), // .split('/')
-                          // .last()
-                          // .expect("unexpected end of reference")
-                          // .to_string(),
-            );
+            let key = RefKey::Def(format!("{}{}", base_id.as_ref().unwrap(), reference));
             if external_references.contains_key(&key) {
                 continue;
             } else {
@@ -1196,11 +1180,6 @@ fn fetch_external_definitions(
             let root_schema = serde_json::from_str::<RootSchema>(&content)
                 .expect("Failed to parse input file as JSON Schema");
             let definition_schema = fetch_defenition(&root_schema, &reference, &fragment);
-            if reference == "https://schema.management.azure.com/schemas/2017-09-07-privatepreview/Microsoft.Kusto.json#/resourceDefinitions/clusters".to_string(){
-                // dbg!(&base_schema);
-                // dbg!(&root_schema);
-                // dbg!(&definition_schema);
-            }
             let key = RefKey::Def(
                 reference, // .split('/')
                           // .last()
@@ -1410,8 +1389,8 @@ fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<
                     .to_string_lossy()
                     .replace("..\\", "Parent");
                 let mut r = format!("{}{}", dif, reference.split("/").last().unwrap_or_default())
-                  .replace(".json", "\\");
-                if r.ends_with("\\"){
+                    .replace(".json", "\\");
+                if r.ends_with("\\") {
                     r.pop();
                 }
                 *reference = r;
