@@ -266,18 +266,10 @@ fn merge_so_enum_values(
     }
 }
 
-pub(crate) fn merge_with_subschemas(
-    schema_object: SchemaObject,
-    maybe_subschemas: Option<&SubschemaValidation>,
-    defs: &BTreeMap<RefKey, Schema>,
-) -> SchemaObject {
-    try_merge_with_subschemas(schema_object, maybe_subschemas, defs).unwrap()
-}
-
 /// Merge the schema with a subschema validation object. It's important that
 /// the return value reduces the complexity of the problem so avoid infinite
 /// recursion.
-fn try_merge_with_subschemas(
+pub(crate) fn try_merge_with_subschemas(
     mut schema_object: SchemaObject,
     maybe_subschemas: Option<&SubschemaValidation>,
     defs: &BTreeMap<RefKey, Schema>,
@@ -1222,7 +1214,10 @@ fn roughly_object(a: Option<&ObjectValidation>, b: Option<&ObjectValidation>) ->
     }
 }
 
-fn roughly_properties(a: &BTreeMap<String, Schema>, b: &BTreeMap<String, Schema>) -> bool {
+fn roughly_properties(
+    a: &schemars::Map<String, Schema>,
+    b: &schemars::Map<String, Schema>,
+) -> bool {
     a.len() == b.len()
         && a.iter()
             .zip(b.iter())
