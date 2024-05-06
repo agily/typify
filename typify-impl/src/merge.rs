@@ -81,7 +81,6 @@ fn merge_schema(a: &Schema, b: &Schema, defs: &BTreeMap<RefKey, Schema>) -> Sche
 /// incompatible (i.e. if there is no data that can satisfy them both
 /// simultaneously) then this returns Err.
 fn try_merge_schema(a: &Schema, b: &Schema, defs: &BTreeMap<RefKey, Schema>) -> Result<Schema, ()> {
-    // dbg!((a,b));
     match (a, b) {
         (Schema::Bool(false), _) | (_, Schema::Bool(false)) => Err(()),
         (Schema::Bool(true), other) | (other, Schema::Bool(true)) => Ok(other.clone()),
@@ -153,11 +152,6 @@ fn merge_schema_object(
         serde_json::to_string_pretty(a).unwrap(),
         serde_json::to_string_pretty(b).unwrap(),
     );
-    // println!(
-    //     "merging {}\n{}",
-    //     serde_json::to_string_pretty(a).unwrap(),
-    //     serde_json::to_string_pretty(b).unwrap(),
-    // );
 
     assert!(a.reference.is_none());
     assert!(b.reference.is_none());
@@ -293,7 +287,7 @@ pub(crate) fn merge_with_subschemas(
 /// Merge the schema with a subschema validation object. It's important that
 /// the return value reduces the complexity of the problem so avoid infinite
 /// recursion.
-fn try_merge_with_subschemas(
+pub(crate) fn try_merge_with_subschemas(
     mut schema_object: SchemaObject,
     maybe_subschemas: Option<&SubschemaValidation>,
     defs: &BTreeMap<RefKey, Schema>,
@@ -1238,7 +1232,10 @@ fn roughly_object(a: Option<&ObjectValidation>, b: Option<&ObjectValidation>) ->
     }
 }
 
-fn roughly_properties(a: &BTreeMap<String, Schema>, b: &BTreeMap<String, Schema>) -> bool {
+fn roughly_properties(
+    a: &schemars::Map<String, Schema>,
+    b: &schemars::Map<String, Schema>,
+) -> bool {
     a.len() == b.len()
         && a.iter()
             .zip(b.iter())
