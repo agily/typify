@@ -266,18 +266,6 @@ fn merge_so_enum_values(
     }
 }
 
-fn merge_and_remove_duplicates(
-    mut vector1: Vec<serde_json::Value>,
-    vector2: Vec<serde_json::Value>,
-) -> Vec<serde_json::Value> {
-    for num in vector2 {
-        if !vector1.contains(&num) {
-            vector1.push(num);
-        }
-    }
-    vector1
-}
-
 /// Merge the schema with a subschema validation object. It's important that
 /// the return value reduces the complexity of the problem so avoid infinite
 /// recursion.
