@@ -252,12 +252,11 @@ fn merge_so_enum_values(
         (None, None) => Ok(None),
         (None, Some(values)) | (Some(values), None) => Ok(Some(values)),
         (Some(aa), Some(bb)) => {
-            // let values = aa
-            //     .into_iter()
-            //     .filter(|value| bb.contains(value))
-            //     .collect::<Vec<_>>();
-            let values = merge_and_remove_duplicates(aa, bb);
-
+            let values = aa
+                .into_iter()
+                .filter(|value| bb.contains(value))
+                .collect::<Vec<_>>();
+            
             if values.is_empty() {
                 Err(())
             } else {
@@ -277,14 +276,6 @@ fn merge_and_remove_duplicates(
         }
     }
     vector1
-}
-
-pub(crate) fn merge_with_subschemas(
-    schema_object: SchemaObject,
-    maybe_subschemas: Option<&SubschemaValidation>,
-    defs: &BTreeMap<RefKey, Schema>,
-) -> SchemaObject {
-    try_merge_with_subschemas(schema_object, maybe_subschemas, defs).unwrap()
 }
 
 /// Merge the schema with a subschema validation object. It's important that

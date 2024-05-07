@@ -546,8 +546,8 @@ impl TypeSpace {
                             serde_json::to_string_pretty(&merged_schema).unwrap(),
                         );
 
-                        let (type_entry, _) =
-                            self.convert_schema_object(type_name, original_schema, &merged_schema)?;
+                        let (type_entry, _) = 
+                          self.convert_schema_object(type_name, original_schema, &merged_schema)?;
                         Ok((type_entry, &None))
                     }
 
@@ -893,8 +893,8 @@ impl TypeSpace {
                     has_null = true;
                     None
                 }
-                // serde_json::Value::String(value) if validator.is_valid(value) => {
-                serde_json::Value::String(value) => {
+                serde_json::Value::String(value) if validator.is_valid(value) => {
+                    // serde_json::Value::String(value) => {
                     let (name, rename) = recase(value, Case::Pascal);
                     Some(Ok(Variant {
                         name,
