@@ -737,15 +737,6 @@ impl TypeSpace {
 
         let g = construct_graph(&graph);
         let mut root_indexes = vec![];
-        // for r in roots {
-        //     if let Some(index) = g.node_indices().find(|i| g[*i] == &r){
-        //     if g.neighbors_directed(index, Direction::Incoming).count() == 0{
-        //         root_indexes.push(index);
-        //     }
-        //     } else{
-        //         dbg!(r);
-        //     }
-        // }
         for index in g
             .node_indices()
             .filter(|i| g.neighbors_directed(*i, Direction::Incoming).count() == 0)
@@ -753,11 +744,12 @@ impl TypeSpace {
             root_indexes.push(index);
         }
 
-        self.add_ref_types_impl(defs)?;
         let file = std::fs::File::create("tree.txt").unwrap();
         for root_index in root_indexes {
             write_graph_with(&g, root_index, &file, &PrintConfig::from_env()).unwrap();
         }
+        
+        self.add_ref_types_impl(defs)?;
 
         if root_type {
             Ok(self.ref_to_id.get(&RefKey::Root).cloned())

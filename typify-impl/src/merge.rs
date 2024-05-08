@@ -4,6 +4,7 @@ use std::{
     collections::{BTreeMap, BTreeSet},
     iter::repeat,
 };
+use std::ops::Deref;
 
 use log::debug;
 use schemars::schema::{
@@ -11,7 +12,8 @@ use schemars::schema::{
     SingleOrVec, StringValidation, SubschemaValidation,
 };
 
-use crate::{util::ref_key, validate::schema_value_validate, RefKey};
+use crate::{util::ref_key, validate::schema_value_validate, RefKey, Name};
+use crate::convert::validate_enum_string;
 
 /// Merge all schemas in array of schemas. If the result is unsatisfiable, this
 /// returns `Schema::Bool(false)`.
@@ -126,7 +128,15 @@ fn try_merge_schema(a: &Schema, b: &Schema, defs: &BTreeMap<RefKey, Schema>) -> 
                 .get(&key)
                 .unwrap_or_else(|| panic!("unresolved reference: {}", ref_name));
             let merged_schema = try_merge_schema(resolved, other, defs)?;
-
+            match &merged_schema {
+                Schema::Object(SchemaObject{enum_values: Some(values), string: validation, ..}) => {
+                    let (has_null, vec) = validate_enum_string(&Name::Unknown, values, validation.as_ref().map(|a|a.deref())).unwrap();
+                    if !has_null && vec.is_empty(){
+                        panic!("an invalid scheme was obtained after merging with the scheme by reference: {ref_name},\n as a result the scheme was obtained: {:#?}", merged_schema)
+                    }
+                }
+                _ => {}
+            }
             // If we merge a referenced schema with another schema **and**
             // the resulting schema is equivalent to the referenced schema
             // (i.e. the other schema is identical or less permissive) then we
