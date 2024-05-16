@@ -4,8 +4,7 @@
 
 #![deny(missing_docs)]
 
-// use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::path::PathBuf;
 
 use conversions::SchemaCache;
@@ -14,10 +13,10 @@ use iref::Iri;
 use log::info;
 use output::OutputSpace;
 use pathdiff::diff_paths;
-// use petgraph::{Direction, Graph};
+use petgraph::{Direction, Graph};
 use proc_macro2::TokenStream;
-// use ptree::graph::write_graph_with;
-// use ptree::PrintConfig;
+use ptree::graph::write_graph_with;
+use ptree::PrintConfig;
 use quote::{format_ident, quote, ToTokens};
 use schemars::schema::{
     Metadata, RootSchema, Schema, SchemaObject, SingleOrVec, SubschemaValidation,
@@ -677,23 +676,21 @@ impl TypeSpace {
             .as_ref()
             .and_then(|m| m.title.as_ref())
             .is_some();
-        // let mut graph: HashMap<String, HashSet<String>> = HashMap::new();
+        let mut graph: HashMap<String, HashSet<String>> = HashMap::new();
         let mut external_references = BTreeMap::new();
-        // for (k, def) in &defs {
-        for (_, def) in &defs {
-
-                // let key = match k {
-            //     RefKey::Root => "root".to_string(),
-            //     RefKey::Def(v) => v.clone(),
-            // };
+        for (k, def) in &defs {
+            let key = match k {
+                RefKey::Root => "root".to_string(),
+                RefKey::Def(v) => v.clone(),
+            };
             fetch_external_definitions(
                 &schema,
                 def,
-                // key,
+                key,
                 &self.file_path,
                 &s_id,
                 &mut external_references,
-                // &mut graph,
+                &mut graph,
                 true,
             );
         }
@@ -738,19 +735,19 @@ impl TypeSpace {
             defs.push((RefKey::Root, schema_object.into()));
         }
 
-        // let g = construct_graph(&graph);
-        // let mut root_indexes = vec![];
-        // for index in g
-        //     .node_indices()
-        //     .filter(|i| g.neighbors_directed(*i, Direction::Incoming).count() == 0)
-        // {
-        //     root_indexes.push(index);
-        // }
+        let g = construct_graph(&graph);
+        let mut root_indexes = vec![];
+        for index in g
+            .node_indices()
+            .filter(|i| g.neighbors_directed(*i, Direction::Incoming).count() == 0)
+        {
+            root_indexes.push(index);
+        }
 
-        // let file = std::fs::File::create("tree.txt").unwrap();
-        // for root_index in root_indexes {
-        //     write_graph_with(&g, root_index, &file, &PrintConfig::from_env()).unwrap();
-        // }
+        let file = std::fs::File::create("tree.txt").unwrap();
+        for root_index in root_indexes {
+            write_graph_with(&g, root_index, &file, &PrintConfig::from_env()).unwrap();
+        }
 
         self.add_ref_types_impl(defs)?;
 
@@ -1142,21 +1139,21 @@ impl<'a> TypeNewtype<'a> {
 fn fetch_external_definitions(
     base_schema: &RootSchema,
     definition: &Schema,
-    // key: String,
+    key: String,
     base_path: &PathBuf,
     base_id: &Option<String>,
     external_references: &mut BTreeMap<RefKey, (Schema, PathBuf, Option<String>)>,
-    // graph: &mut HashMap<String, HashSet<String>>,
+    graph: &mut HashMap<String, HashSet<String>>,
     first_run: bool,
 ) {
-    // let mut node = HashSet::new();
+    let mut node = HashSet::new();
     for mut reference in get_references(&definition) {
         if reference.is_empty() {
             continue;
         }
         if reference.starts_with("#") {
             if first_run {
-                // node.insert(reference.split("/").last().unwrap().to_string());
+                node.insert(reference.split("/").last().unwrap().to_string());
                 continue;
             }
             reference.remove(0);
@@ -1168,9 +1165,8 @@ fn fetch_external_definitions(
                 .collect();
             let definition_schema = fetch_defenition(base_schema, &reference, &fragment);
             let k = format!("{}{}", base_id.as_ref().unwrap(), reference);
-            // node.insert(k.clone());
-            let key = RefKey::Def(k);
-            // let key = RefKey::Def(k.clone());
+            node.insert(k.clone());
+            let key = RefKey::Def(k.clone());
             if external_references.contains_key(&key) {
                 continue;
             } else {
@@ -1185,11 +1181,11 @@ fn fetch_external_definitions(
                 fetch_external_definitions(
                     base_schema,
                     &definition_schema,
-                    // k,
+                    k,
                     base_path,
                     base_id,
                     external_references,
-                    // graph,
+                    graph,
                     false,
                 );
             }
@@ -1228,25 +1224,25 @@ fn fetch_external_definitions(
                     key,
                     (definition_schema.clone(), file_path.clone(), s_id.clone()),
                 );
-                // node.insert(reference.clone());
+                node.insert(reference.clone());
                 fetch_external_definitions(
                     &root_schema,
                     &definition_schema,
-                    // reference,
+                    reference,
                     &file_path,
                     &s_id,
                     external_references,
-                    // graph,
+                    graph,
                     false,
                 )
             }
         }
     }
-    // if let Some(n) = graph.get_mut(&key) {
-    //     n.extend(node);
-    // } else {
-    //     graph.insert(key, node);
-    // }
+    if let Some(n) = graph.get_mut(&key) {
+        n.extend(node);
+    } else {
+        graph.insert(key, node);
+    }
 }
 
 fn fetch_defenition(
@@ -1407,7 +1403,6 @@ fn get_references(schema: &Schema) -> Vec<String> {
     }
 }
 
-// dif(self.file_path, reference) -> .replace("..\\", "Parent") -> + .split("/").last() 👍
 fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<String>) {
     match schema {
         Schema::Bool(_) => {}
@@ -1511,24 +1506,24 @@ fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<
     }
 }
 
-// fn construct_graph(packages: &HashMap<String, HashSet<String>>) -> Graph<&String, &String> {
-//     let nudes: HashSet<_> = packages
-//         .iter()
-//         .flat_map(|(name, dependency)| dependency.iter().chain(Some(name)))
-//         .collect();
-//     let mut deps = Graph::new();
-//     for nude in nudes {
-//         deps.add_node(nude);
-//     }
-//     for (name, dependencies) in packages {
-//         let root_node = deps.node_indices().find(|i| deps[*i] == name).unwrap();
-//         for dep in dependencies {
-//             let dep_node = deps.node_indices().find(|i| deps[*i] == dep).unwrap();
-//             deps.add_edge(root_node, dep_node, name);
-//         }
-//     }
-//     deps
-// }
+fn construct_graph(packages: &HashMap<String, HashSet<String>>) -> Graph<&String, &String> {
+    let nudes: HashSet<_> = packages
+        .iter()
+        .flat_map(|(name, dependency)| dependency.iter().chain(Some(name)))
+        .collect();
+    let mut deps = Graph::new();
+    for nude in nudes {
+        deps.add_node(nude);
+    }
+    for (name, dependencies) in packages {
+        let root_node = deps.node_indices().find(|i| deps[*i] == name).unwrap();
+        for dep in dependencies {
+            let dep_node = deps.node_indices().find(|i| deps[*i] == dep).unwrap();
+            deps.add_edge(root_node, dep_node, name);
+        }
+    }
+    deps
+}
 
 #[cfg(test)]
 mod tests {
