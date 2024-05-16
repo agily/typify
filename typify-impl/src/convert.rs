@@ -546,8 +546,8 @@ impl TypeSpace {
                             serde_json::to_string_pretty(&merged_schema).unwrap(),
                         );
 
-                        let (type_entry, _) = 
-                          self.convert_schema_object(type_name, original_schema, &merged_schema)?;
+                        let (type_entry, _) =
+                            self.convert_schema_object(type_name, original_schema, &merged_schema)?;
                         Ok((type_entry, &None))
                     }
 
@@ -1854,40 +1854,43 @@ impl TypeSpace {
     }
 }
 
-pub fn validate_enum_string(type_name: &Name, enum_values: &[serde_json::Value], validation: Option<&StringValidation>) -> Result<(bool, Vec<Variant>)> {
+pub fn validate_enum_string(
+    type_name: &Name,
+    enum_values: &[serde_json::Value],
+    validation: Option<&StringValidation>,
+) -> Result<(bool, Vec<Variant>)> {
     let mut has_null = false;
 
     let validator = StringValidator::new(&type_name, validation)?;
 
     let variants = enum_values
-      .iter()
-      .flat_map(|value| match value {
-          // It would be odd to have multiple null values, but we don't
-          // need to worry about it.
-          serde_json::Value::Null => {
-              has_null = true;
-              None
-          }
-          serde_json::Value::String(value) if validator.is_valid(value) => {
-              // serde_json::Value::String(value) => {
-              let (name, rename) = recase(value, Case::Pascal);
-              Some(Ok(Variant {
-                  name,
-                  rename,
-                  description: None,
-                  details: VariantDetails::Simple,
-              }))
-          }
+        .iter()
+        .flat_map(|value| match value {
+            // It would be odd to have multiple null values, but we don't
+            // need to worry about it.
+            serde_json::Value::Null => {
+                has_null = true;
+                None
+            }
+            serde_json::Value::String(value) if validator.is_valid(value) => {
+                let (name, rename) = recase(value, Case::Pascal);
+                Some(Ok(Variant {
+                    name,
+                    rename,
+                    description: None,
+                    details: VariantDetails::Simple,
+                }))
+            }
 
-          // Ignore enum variants whose strings don't match the given
-          // constraints. If we wanted to get fancy we could include
-          // these variants in the enum but exclude them from the FromStr
-          // conversion... but that seems like unnecessary swag.
-          serde_json::Value::String(_) => None,
+            // Ignore enum variants whose strings don't match the given
+            // constraints. If we wanted to get fancy we could include
+            // these variants in the enum but exclude them from the FromStr
+            // conversion... but that seems like unnecessary swag.
+            serde_json::Value::String(_) => None,
 
-          _ => Some(Err(Error::BadValue("string".to_string(), value.clone()))),
-      })
-      .collect::<Result<Vec<Variant>>>()?;
+            _ => Some(Err(Error::BadValue("string".to_string(), value.clone()))),
+        })
+        .collect::<Result<Vec<Variant>>>()?;
     Ok((has_null, variants))
 }
 

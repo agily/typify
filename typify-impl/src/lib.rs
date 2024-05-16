@@ -748,7 +748,7 @@ impl TypeSpace {
         for root_index in root_indexes {
             write_graph_with(&g, root_index, &file, &PrintConfig::from_env()).unwrap();
         }
-        
+
         self.add_ref_types_impl(defs)?;
 
         if root_type {
@@ -1214,12 +1214,7 @@ fn fetch_external_definitions(
             let root_schema = serde_json::from_str::<RootSchema>(&content)
                 .expect("Failed to parse input file as JSON Schema");
             let definition_schema = fetch_defenition(&root_schema, &reference, &fragment);
-            let key = RefKey::Def(
-                reference.clone(), // .split('/')
-                                   // .last()
-                                   // .expect("unexpected end of reference")
-                                   // .to_string(),
-            );
+            let key = RefKey::Def(reference.clone());
             if external_references.contains_key(&key) {
                 continue;
             } else {
