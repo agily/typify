@@ -786,7 +786,7 @@ impl TypeSpace {
                 let relpath = diff_paths(&path, self.file_path.parent().unwrap())
                     .unwrap_or_default()
                     .to_string_lossy()
-                    .replace("..\\", "Parent");
+                    .replace(format!("..{LINE_SEPARATOR}").as_str(), "Parent");
                 let ref_name = if relpath.ends_with("\\") {
                     format!(
                         "{}{}",
@@ -1218,7 +1218,7 @@ fn fetch_external_definitions(
             if first_run {
                 continue;
             }
-            
+
             reference.remove(0);
             let fragment = reference
                 .split("/")
