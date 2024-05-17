@@ -1218,6 +1218,7 @@ fn fetch_external_definitions(
             if first_run {
                 continue;
             }
+            
             reference.remove(0);
             let fragment = reference
                 .split("/")
@@ -1454,6 +1455,13 @@ fn get_references(schema: &Schema) -> Vec<String> {
     }
 }
 
+#[cfg(target_os = "windows")]
+const LINE_SEPARATOR: &str = "\\";
+
+#[cfg(not(target_os = "windows"))]
+const LINE_SEPARATOR: &str = "/";
+
+
 fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<String>) {
     match schema {
         Schema::Bool(_) => {}
@@ -1473,10 +1481,10 @@ fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<
                 let dif = diff_paths(reff.path().as_str(), id.path().parent_or_empty().as_str())
                     .unwrap_or_default()
                     .to_string_lossy()
-                    .replace("..\\", "Parent");
+                    .replace(format!("..{LINE_SEPARATOR}").as_str(), "Parent");
                 let mut r = format!("{}{}", dif, reference.split("/").last().unwrap_or_default())
-                    .replace(".json", "\\");
-                if r.ends_with("\\") {
+                    .replace(".json", LINE_SEPARATOR);
+                if r.ends_with(LINE_SEPARATOR) {
                     r.pop();
                 }
                 *reference = r;
