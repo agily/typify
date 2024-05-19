@@ -782,6 +782,7 @@ impl TypeSpace {
         }
 
         for (reference, (mut schema, path, id)) in external_references {
+            let path = path.canonicalize().unwrap();
             if let RefKey::Def(reference) = reference {
                 let path = path.canonicalize().unwrap();
                 let relpath = diff_paths(&path, self.file_path.parent().unwrap())
@@ -1467,7 +1468,7 @@ const LINE_SEPARATOR: &str = "\\";
 const LINE_SEPARATOR_CHAR: char = '\\';
 
 #[cfg(not(target_os = "windows"))]
-const LINE_SEPARATOR: char = '/';
+const LINE_SEPARATOR: &str = "/";
 
 #[cfg(not(target_os = "windows"))]
 const LINE_SEPARATOR_CHAR: char = '/';
