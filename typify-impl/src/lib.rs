@@ -788,7 +788,7 @@ impl TypeSpace {
                     .unwrap_or_default()
                     .to_string_lossy()
                     .replace(format!("..{LINE_SEPARATOR}").as_str(), "Parent");
-                let ref_name = if relpath.ends_with("/") {
+                let ref_name = if relpath.ends_with(LINE_SEPARATOR) {
                     format!(
                         "{}{}",
                         relpath,
@@ -796,23 +796,20 @@ impl TypeSpace {
                     )
                 } else {
                     format!(
-                        "{}/{}",
+                        "{}{}{}",
                         relpath,
+                        LINE_SEPARATOR,
                         reference.split("/").last().unwrap_or_default()
                     )
                 }
-                .replace(".json", "/")
-                .trim_matches('/')
-                .replace("//", "/")
+                .replace(".json", LINE_SEPARATOR.to_string().as_str())
+                .trim_matches(LINE_SEPARATOR_CHAR)
+                .replace(
+                    format!("{LINE_SEPARATOR}{LINE_SEPARATOR}").as_str(),
+                    LINE_SEPARATOR,
+                )
                 .to_string();
                 replace_reference(&mut schema, &id, &s_id);
-                if reference == "https://schema.management.azure.com/schemas/2014-04-01-preview/Microsoft.VisualStudio.json#/definitions/ExtensionResourcePlan" {
-                    dbg!(&id);
-                    dbg!(&path);
-                    dbg!(&relpath);
-                    dbg!(&ref_name);
-                    dbg!(&reference);
-                }
                 ext_refs.push((RefKey::Def(ref_name), schema));
             }
         }
@@ -1466,8 +1463,14 @@ fn get_references(schema: &Schema) -> Vec<String> {
 #[cfg(target_os = "windows")]
 const LINE_SEPARATOR: &str = "\\";
 
+#[cfg(target_os = "windows")]
+const LINE_SEPARATOR_CHAR: char = '\\';
+
 #[cfg(not(target_os = "windows"))]
-const LINE_SEPARATOR: &str = "/";
+const LINE_SEPARATOR: char = '/';
+
+#[cfg(not(target_os = "windows"))]
+const LINE_SEPARATOR_CHAR: char = '/';
 
 fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<String>) {
     match schema {
@@ -1489,14 +1492,9 @@ fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<
                     .unwrap_or_default()
                     .to_string_lossy()
                     .replace(format!("..{LINE_SEPARATOR}").as_str(), "Parent");
-                // if reference.contains("Microsoft.VisualStudio"){
-                //     dbg!(&b_id);
-                //     dbg!(&id);
-                //     dbg!(reff);
-                //     dbg!(&dif);
-                // }
+
                 let mut r = format!("{}{}", dif, reference.split("/").last().unwrap_or_default())
-                    .replace(".json", LINE_SEPARATOR);
+                    .replace(".json", LINE_SEPARATOR.to_string().as_str());
                 if r.ends_with(LINE_SEPARATOR) {
                     r.pop();
                 }
