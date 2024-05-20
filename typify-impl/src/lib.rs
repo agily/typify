@@ -764,7 +764,13 @@ impl TypeSpace {
             .as_ref()
             .and_then(|m| m.title.as_ref())
             .is_some();
+
+        if root_type {
+            defs.push((RefKey::Root, schema_object.into()));
+        }
+        
         let mut external_references = BTreeMap::new();
+
         for (_, def) in &defs {
             fetch_external_definitions(
                 &schema,
@@ -816,10 +822,6 @@ impl TypeSpace {
         }
 
         defs.extend(ext_refs.into_iter());
-
-        if root_type {
-            defs.push((RefKey::Root, schema_object.into()));
-        }
 
         self.add_ref_types_impl(defs)?;
 
@@ -1456,7 +1458,7 @@ fn get_references(schema: &Schema) -> Vec<String> {
                 );
             }
             result
-        }
+        },
         _ => vec![],
     }
 }
