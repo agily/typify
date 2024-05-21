@@ -906,7 +906,7 @@ impl TypeSpace {
 
                 Err(Error::InvalidSchema {
                     type_name: type_name.into_option(),
-                    reason: format!("empty enum array.\n As a result of merging schema with references^ \n{}", refs.join(",\n")),
+                    reason: format!("empty enum array.\n As a result of merging schema with references: \n{}", refs.join(",\n")),
                 })
             }
         } else {
