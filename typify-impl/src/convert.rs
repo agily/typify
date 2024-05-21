@@ -23,7 +23,7 @@ impl TypeSpace {
         &mut self,
         type_name: Name,
         schema: &'a Schema,
-        refs: Option<Vec<String>>,
+        refs: &mut Option<Vec<String>>,
     ) -> Result<(TypeEntry, &'a Option<Box<Metadata>>)> {
         info!(
             "convert_schema {:?} {}",
@@ -49,7 +49,7 @@ impl TypeSpace {
         type_name: Name,
         original_schema: &'a Schema,
         schema: &'a SchemaObject,
-        refs: Option<Vec<String>>,
+        refs: &mut Option<Vec<String>>,
     ) -> Result<(TypeEntry, &'a Option<Box<Metadata>>)> {
         if let Some(type_entry) = self.convert_rust_extension(schema) {
             return Ok((type_entry, &schema.metadata));
@@ -184,7 +184,7 @@ impl TypeSpace {
                 metadata,
                 enum_values,
                 string.as_ref().map(Box::as_ref),
-                refs.unwrap_or_default()
+                refs.as_ref().unwrap_or(&vec![])
             ),
 
             // Integers
@@ -414,7 +414,7 @@ impl TypeSpace {
                 reference: Some(reference),
                 extensions: _,
             } => {
-                let mut rr = refs.unwrap_or_default();
+                let mut rr = refs.clone().unwrap_or_default();
                 let mut def = self.definitions.get(&ref_key(reference)).unwrap();
                 let mut new_schema = Schema::Object(SchemaObject {
                     reference: None,
@@ -441,7 +441,7 @@ impl TypeSpace {
                         break;
                     }
                 }
-                let (type_entry, _) = self.convert_schema(type_name, &new_schema, Some(rr)).unwrap();
+                let (type_entry, _) = self.convert_schema(type_name, &new_schema, &mut Some(rr)).unwrap();
                 Ok((type_entry, metadata))
             }
 
@@ -466,7 +466,7 @@ impl TypeSpace {
                 object: None,
                 reference: None,
                 extensions: _,
-            } => self.convert_unknown_enum(type_name, original_schema, metadata, enum_values, refs.unwrap_or_default()),
+            } => self.convert_unknown_enum(type_name, original_schema, metadata, enum_values, refs.as_ref().unwrap_or(&vec![])),
 
             // Subschemas
             SchemaObject {
@@ -557,7 +557,7 @@ impl TypeSpace {
                         );
 
                         let (type_entry, _) =
-                            self.convert_schema_object(type_name, original_schema, &merged_schema, Some(refs))?;
+                            self.convert_schema_object(type_name, original_schema, &merged_schema, &mut Some(refs))?;
                         Ok((type_entry, &None))
                     }
 
@@ -881,7 +881,7 @@ impl TypeSpace {
         metadata: &'a Option<Box<Metadata>>,
         enum_values: &[serde_json::Value],
         validation: Option<&StringValidation>,
-        refs: Vec<String>,
+        refs: &Vec<String>,
     ) -> Result<(TypeEntry, &'a Option<Box<Metadata>>)> {
         // We expect all enum values to be either a string **or** a null. We
         // gather them all up and then choose to either be an enum of simple
@@ -1178,14 +1178,14 @@ impl TypeSpace {
         original_schema: &'a Schema,
         metadata: &'a Option<Box<Metadata>>,
         subschemas: &[Schema],
-        refs: Option<Vec<String>>,
+        refs: &mut Option<Vec<String>>,
     ) -> Result<(TypeEntry, &'a Option<Box<Metadata>>)> {
         debug!(
             "all_of {}",
             serde_json::to_string_pretty(subschemas).unwrap()
         );
         if let Some(ty) =
-            self.maybe_singleton_subschema(type_name.clone(), original_schema, subschemas, refs.clone())
+            self.maybe_singleton_subschema(type_name.clone(), original_schema, subschemas, refs)
         {
             return Ok((ty, metadata));
         }
@@ -1247,7 +1247,7 @@ impl TypeSpace {
         // the more expansive numeric type.
 
         let (merged_schema, mut rr) = merge_all(subschemas, &self.definitions);
-        rr.extend(refs.unwrap_or_default().into_iter());
+        rr.extend(refs.clone().unwrap_or_default().into_iter());
         if let Schema::Bool(false) = &merged_schema {
             self.convert_never(type_name, original_schema)
         } else {
@@ -1256,7 +1256,7 @@ impl TypeSpace {
             merged_schema.metadata = metadata.clone();
 
             let (type_entry, _) =
-                self.convert_schema_object(type_name, original_schema, &merged_schema, Some(rr))?;
+                self.convert_schema_object(type_name, original_schema, &merged_schema, &mut Some(rr))?;
             Ok((type_entry, &None))
         }
     }
@@ -1267,13 +1267,13 @@ impl TypeSpace {
         original_schema: &'a Schema,
         metadata: &'a Option<Box<Metadata>>,
         subschemas: &'a [Schema],
-        refs: Option<Vec<String>>,
+        refs: &mut Option<Vec<String>>,
     ) -> Result<(TypeEntry, &'a Option<Box<Metadata>>)> {
         // Rust can emit "anyOf":[{"$ref":"#/definitions/C"},{"type":"null"}
         // for Option. We match this here because the mutual exclusion check
         // below may fail for cases such as Option<T> where T is defined to be,
         // say, (). In such a case, both variants are actually null.
-        if let Some(ty) = self.maybe_option(type_name.clone(), metadata, subschemas, refs.clone()) {
+        if let Some(ty) = self.maybe_option(type_name.clone(), metadata, subschemas, refs) {
             return Ok((ty, metadata));
         }
 
@@ -1356,7 +1356,7 @@ impl TypeSpace {
         original_schema: &'a Schema,
         metadata: &'a Option<Box<schemars::schema::Metadata>>,
         subschemas: &'a [Schema],
-        refs: Option<Vec<String>>,
+        refs: &mut Option<Vec<String>>,
     ) -> Result<(TypeEntry, &'a Option<Box<Metadata>>)> {
         debug!(
             "one_of {}",
@@ -1374,14 +1374,14 @@ impl TypeSpace {
         // but putting schemas into a predictable form.
 
         let ty = self
-            .maybe_option(type_name.clone(), metadata, subschemas, refs.clone())
+            .maybe_option(type_name.clone(), metadata, subschemas, refs)
             .or_else(|| {
                 self.maybe_externally_tagged_enum(
                     type_name.clone(),
                     original_schema,
                     metadata,
                     subschemas,
-                    refs.clone(),
+                    refs,
                 )
             })
             .or_else(|| {
@@ -1390,7 +1390,7 @@ impl TypeSpace {
                     original_schema,
                     metadata,
                     subschemas,
-                    refs.clone(),
+                    refs,
                 )
             })
             .or_else(|| {
@@ -1402,7 +1402,7 @@ impl TypeSpace {
                 )
             })
             .or_else(|| {
-                self.maybe_singleton_subschema(type_name.clone(), original_schema, subschemas, refs.clone())
+                self.maybe_singleton_subschema(type_name.clone(), original_schema, subschemas, refs)
             })
             .map_or_else(
                 || self.untagged_enum(type_name, original_schema, metadata, subschemas, refs),
@@ -1434,7 +1434,7 @@ impl TypeSpace {
         original_schema: &'a Schema,
         metadata: &'a Option<Box<schemars::schema::Metadata>>,
         subschema: &'a Schema,
-        refs: Option<Vec<String>>,
+        refs: &mut Option<Vec<String>>,
     ) -> Result<(TypeEntry, &'a Option<Box<Metadata>>)> {
         match subschema {
             // This is a weird construct, but simple enough to handle.
@@ -1723,7 +1723,7 @@ impl TypeSpace {
         original_schema: &'a Schema,
         schema: &'a SchemaObject,
         enum_values: &[serde_json::Value],
-        refs: Option<Vec<String>>,
+        refs: &mut Option<Vec<String>>,
     ) -> Result<(TypeEntry, &'a Option<Box<Metadata>>)> {
         let type_schema = SchemaObject {
             enum_values: None,
@@ -1770,7 +1770,7 @@ impl TypeSpace {
         original_schema: &'a Schema,
         metadata: &'a Option<Box<Metadata>>,
         enum_values: &[serde_json::Value],
-        refs: Vec<String>,
+        refs: &Vec<String>,
     ) -> Result<(TypeEntry, &'a Option<Box<Metadata>>)> {
         // We're here because the schema didn't have a type; that's a bummer,
         // but we'll do our best to roll with the punches.
@@ -1832,7 +1832,7 @@ impl TypeSpace {
                         original_schema,
                         &typed_schema,
                         enum_values,
-                        Some(refs),
+                        &mut Some(refs.clone()),
                     )?;
                     Ok((
                         type_entry,
@@ -1857,7 +1857,7 @@ impl TypeSpace {
         type_name: Name,
         metadata: &'a Option<Box<Metadata>>,
         schema: &'_ Schema,
-        refs: Option<Vec<String>>,
+        refs: &mut Option<Vec<String>>,
     ) -> Result<(TypeEntry, &'a Option<Box<Metadata>>)> {
         let (ty, _) = self.convert_schema(type_name, schema, refs)?;
         let ty = self.type_to_option(ty);
@@ -1872,7 +1872,7 @@ impl TypeSpace {
         type_name: Name,
         _original_schema: &Schema,
         subschemas: &[Schema],
-        refs: Option<Vec<String>>,
+        refs: &mut Option<Vec<String>>,
     ) -> Option<TypeEntry> {
         match (subschemas.len(), subschemas.first()) {
             (1, Some(subschema)) => Some(self.convert_schema(type_name, subschema, refs).ok()?.0),
@@ -1952,7 +1952,7 @@ mod tests {
                 Name::Unknown,
                 &schemars::schema::Schema::Object(schema.schema.clone()),
                 &schema.schema,
-                None,
+                &mut None,
             )
             .unwrap();
         let output = ty.type_name(&type_space);
@@ -2080,7 +2080,7 @@ mod tests {
             Name::Unknown,
             &schemars::schema::Schema::Object(schema.clone()),
             &schema,
-            None,
+            &mut None,
         ) {
             Err(Error::InvalidValue) => (),
             _ => panic!("unexpected result"),
@@ -2113,7 +2113,7 @@ mod tests {
             Name::Unknown,
             &schemars::schema::Schema::Object(schema.clone()),
             &schema,
-            None,
+            &mut None,
         ) {
             Err(Error::InvalidValue) => (),
             _ => panic!("unexpected result"),
