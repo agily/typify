@@ -619,7 +619,7 @@ impl TypeSpace {
     }
 
     fn convert_ref_type(&mut self, type_name: Name, schema: Schema, type_id: TypeId) -> Result<()> {
-        let (mut type_entry, metadata) = self.convert_schema(type_name.clone(), &schema)?;
+        let (mut type_entry, metadata) = self.convert_schema(type_name.clone(), &schema, None)?;
         let default = metadata
             .as_ref()
             .and_then(|m| m.default.as_ref())
@@ -981,7 +981,7 @@ impl TypeSpace {
         type_name: Name,
         schema: &'a Schema,
     ) -> Result<(TypeId, &'a Option<Box<Metadata>>)> {
-        let (mut type_entry, metadata) = self.convert_schema(type_name, schema)?;
+        let (mut type_entry, metadata) = self.convert_schema(type_name, schema, None)?;
         if let Some(metadata) = metadata {
             let default = metadata.default.clone().map(WrappedValue::new);
             match &mut type_entry.details {
@@ -1650,6 +1650,7 @@ mod tests {
                 Name::Unknown,
                 &schemars::schema::Schema::Object(schema.schema.clone()),
                 &schema.schema,
+                None
             )
             .unwrap();
 
@@ -1717,6 +1718,7 @@ mod tests {
                 Name::Unknown,
                 &schemars::schema::Schema::Object(schema.schema.clone()),
                 &schema.schema,
+                None,
             )
             .unwrap();
 
@@ -1764,6 +1766,7 @@ mod tests {
                 &None,
                 &enum_values,
                 None,
+                vec![]
             )
             .unwrap();
 
