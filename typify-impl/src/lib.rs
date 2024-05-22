@@ -766,6 +766,11 @@ impl TypeSpace {
             .as_ref()
             .and_then(|m| m.title.as_ref())
             .is_some();
+
+        if root_type {
+            defs.push((RefKey::Root, schema_object.into()));
+        }
+
         let mut graph: HashMap<String, HashSet<String>> = HashMap::new();
         let mut external_references = BTreeMap::new();
         for (k, def) in &defs {
@@ -791,12 +796,13 @@ impl TypeSpace {
         }
 
         for (reference, (mut schema, path, id)) in external_references {
+            let path = path.canonicalize().unwrap();
             if let RefKey::Def(reference) = reference {
                 let relpath = diff_paths(&path, self.file_path.parent().unwrap())
                     .unwrap_or_default()
                     .to_string_lossy()
-                    .replace("..\\", "Parent");
-                let ref_name = if relpath.ends_with("\\") {
+                    .replace(format!("..{LINE_SEPARATOR}").as_str(), "Parent");
+                let ref_name = if relpath.ends_with(LINE_SEPARATOR) {
                     format!(
                         "{}{}",
                         relpath,
@@ -804,14 +810,18 @@ impl TypeSpace {
                     )
                 } else {
                     format!(
-                        "{}\\{}",
+                        "{}{}{}",
                         relpath,
+                        LINE_SEPARATOR,
                         reference.split("/").last().unwrap_or_default()
                     )
                 }
-                .replace(".json", "\\")
-                .trim_matches('\\')
-                .replace("\\\\", "\\")
+                .replace(".json", LINE_SEPARATOR.to_string().as_str())
+                .trim_matches(LINE_SEPARATOR_CHAR)
+                .replace(
+                    format!("{LINE_SEPARATOR}{LINE_SEPARATOR}").as_str(),
+                    LINE_SEPARATOR,
+                )
                 .to_string();
                 replace_reference(&mut schema, &id, &s_id);
                 ext_refs.push((RefKey::Def(ref_name), schema));
@@ -820,12 +830,9 @@ impl TypeSpace {
 
         defs.extend(ext_refs.into_iter());
 
-        if root_type {
-            defs.push((RefKey::Root, schema_object.into()));
-        }
-        self.tree = graph;
+      self.tree = graph;
 
-        self.add_ref_types_impl(defs)?;
+      self.add_ref_types_impl(defs)?;
 
         if root_type {
             Ok(self.ref_to_id.get(&RefKey::Root).cloned())
@@ -1237,6 +1244,7 @@ fn fetch_external_definitions(
                 node.insert(reference.split("/").last().unwrap().to_string());
                 continue;
             }
+
             reference.remove(0);
             let fragment = reference
                 .split("/")
@@ -1479,10 +1487,22 @@ fn get_references(schema: &Schema) -> Vec<String> {
                 );
             }
             result
-        }
+        },
         _ => vec![],
     }
 }
+
+#[cfg(target_os = "windows")]
+const LINE_SEPARATOR: &str = "\\";
+
+#[cfg(target_os = "windows")]
+const LINE_SEPARATOR_CHAR: char = '\\';
+
+#[cfg(not(target_os = "windows"))]
+const LINE_SEPARATOR: &str = "/";
+
+#[cfg(not(target_os = "windows"))]
+const LINE_SEPARATOR_CHAR: char = '/';
 
 fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<String>) {
     match schema {
@@ -1503,10 +1523,11 @@ fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<
                 let dif = diff_paths(reff.path().as_str(), id.path().parent_or_empty().as_str())
                     .unwrap_or_default()
                     .to_string_lossy()
-                    .replace("..\\", "Parent");
+                    .replace(format!("..{LINE_SEPARATOR}").as_str(), "Parent");
+
                 let mut r = format!("{}{}", dif, reference.split("/").last().unwrap_or_default())
-                    .replace(".json", "\\");
-                if r.ends_with("\\") {
+                    .replace(".json", LINE_SEPARATOR.to_string().as_str());
+                if r.ends_with(LINE_SEPARATOR) {
                     r.pop();
                 }
                 *reference = r;

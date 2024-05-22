@@ -24704,169 +24704,169 @@ impl std::convert::TryFrom<String> for DiscussionUnpinnedAction {
 #[doc = "  \"title\": \"Everything\","]
 #[doc = "  \"oneOf\": ["]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/branch_protection_rule_event\""]
+#[doc = "      \"$ref\": \"branch_protection_rule_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/check_run_event\""]
+#[doc = "      \"$ref\": \"check_run_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/check_suite_event\""]
+#[doc = "      \"$ref\": \"check_suite_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/code_scanning_alert_event\""]
+#[doc = "      \"$ref\": \"code_scanning_alert_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/commit_comment_event\""]
+#[doc = "      \"$ref\": \"commit_comment_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/content_reference_event\""]
+#[doc = "      \"$ref\": \"content_reference_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/create$event\""]
+#[doc = "      \"$ref\": \"create$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/delete$event\""]
+#[doc = "      \"$ref\": \"delete$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/deploy_key_event\""]
+#[doc = "      \"$ref\": \"deploy_key_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/deployment_event\""]
+#[doc = "      \"$ref\": \"deployment_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/deployment_status_event\""]
+#[doc = "      \"$ref\": \"deployment_status_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/discussion_event\""]
+#[doc = "      \"$ref\": \"discussion_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/discussion_comment_event\""]
+#[doc = "      \"$ref\": \"discussion_comment_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/fork$event\""]
+#[doc = "      \"$ref\": \"fork$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/github_app_authorization_event\""]
+#[doc = "      \"$ref\": \"github_app_authorization_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/gollum$event\""]
+#[doc = "      \"$ref\": \"gollum$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/installation_event\""]
+#[doc = "      \"$ref\": \"installation_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/installation_repositories_event\""]
+#[doc = "      \"$ref\": \"installation_repositories_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/issue_comment_event\""]
+#[doc = "      \"$ref\": \"issue_comment_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/issues_event\""]
+#[doc = "      \"$ref\": \"issues_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/label_event\""]
+#[doc = "      \"$ref\": \"label_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/marketplace_purchase_event\""]
+#[doc = "      \"$ref\": \"marketplace_purchase_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/member_event\""]
+#[doc = "      \"$ref\": \"member_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/membership_event\""]
+#[doc = "      \"$ref\": \"membership_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/meta_event\""]
+#[doc = "      \"$ref\": \"meta_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/milestone_event\""]
+#[doc = "      \"$ref\": \"milestone_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/org_block_event\""]
+#[doc = "      \"$ref\": \"org_block_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/organization_event\""]
+#[doc = "      \"$ref\": \"organization_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/package_event\""]
+#[doc = "      \"$ref\": \"package_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/page_build$event\""]
+#[doc = "      \"$ref\": \"page_build$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/ping$event\""]
+#[doc = "      \"$ref\": \"ping$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/project_event\""]
+#[doc = "      \"$ref\": \"project_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/project_card_event\""]
+#[doc = "      \"$ref\": \"project_card_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/project_column_event\""]
+#[doc = "      \"$ref\": \"project_column_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/public$event\""]
+#[doc = "      \"$ref\": \"public$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/pull_request_event\""]
+#[doc = "      \"$ref\": \"pull_request_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/pull_request_review_event\""]
+#[doc = "      \"$ref\": \"pull_request_review_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/pull_request_review_comment_event\""]
+#[doc = "      \"$ref\": \"pull_request_review_comment_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/push$event\""]
+#[doc = "      \"$ref\": \"push$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/release_event\""]
+#[doc = "      \"$ref\": \"release_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/repository_event\""]
+#[doc = "      \"$ref\": \"repository_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/repository_dispatch_event\""]
+#[doc = "      \"$ref\": \"repository_dispatch_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/repository_import$event\""]
+#[doc = "      \"$ref\": \"repository_import$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/repository_vulnerability_alert_event\""]
+#[doc = "      \"$ref\": \"repository_vulnerability_alert_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/secret_scanning_alert_event\""]
+#[doc = "      \"$ref\": \"secret_scanning_alert_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/security_advisory_event\""]
+#[doc = "      \"$ref\": \"security_advisory_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/sponsorship_event\""]
+#[doc = "      \"$ref\": \"sponsorship_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/star_event\""]
+#[doc = "      \"$ref\": \"star_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/status$event\""]
+#[doc = "      \"$ref\": \"status$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/team_event\""]
+#[doc = "      \"$ref\": \"team_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/team_add$event\""]
+#[doc = "      \"$ref\": \"team_add$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/watch_event\""]
+#[doc = "      \"$ref\": \"watch_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/workflow_dispatch$event\""]
+#[doc = "      \"$ref\": \"workflow_dispatch$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/workflow_job_event\""]
+#[doc = "      \"$ref\": \"workflow_job_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"#/definitions/workflow_run_event\""]
+#[doc = "      \"$ref\": \"workflow_run_event\""]
 #[doc = "    }"]
 #[doc = "  ]"]
 #[doc = "}"]
@@ -24875,61 +24875,61 @@ impl std::convert::TryFrom<String> for DiscussionUnpinnedAction {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Everything {
-    BranchProtectionRuleEvent(BranchProtectionRuleEvent),
-    CheckRunEvent(CheckRunEvent),
-    CheckSuiteEvent(CheckSuiteEvent),
-    CodeScanningAlertEvent(CodeScanningAlertEvent),
-    CommitCommentEvent(CommitCommentEvent),
-    ContentReferenceEvent(ContentReferenceEvent),
-    CreateEvent(CreateEvent),
-    DeleteEvent(DeleteEvent),
-    DeployKeyEvent(DeployKeyEvent),
-    DeploymentEvent(DeploymentEvent),
-    DeploymentStatusEvent(DeploymentStatusEvent),
-    DiscussionEvent(DiscussionEvent),
-    DiscussionCommentEvent(DiscussionCommentEvent),
-    ForkEvent(ForkEvent),
-    GithubAppAuthorizationEvent(GithubAppAuthorizationEvent),
-    GollumEvent(GollumEvent),
-    InstallationEvent(InstallationEvent),
-    InstallationRepositoriesEvent(InstallationRepositoriesEvent),
-    IssueCommentEvent(IssueCommentEvent),
-    IssuesEvent(IssuesEvent),
-    LabelEvent(LabelEvent),
-    MarketplacePurchaseEvent(MarketplacePurchaseEvent),
-    MemberEvent(MemberEvent),
-    MembershipEvent(MembershipEvent),
-    MetaEvent(MetaEvent),
-    MilestoneEvent(MilestoneEvent),
-    OrgBlockEvent(OrgBlockEvent),
-    OrganizationEvent(OrganizationEvent),
-    PackageEvent(PackageEvent),
-    PageBuildEvent(PageBuildEvent),
-    PingEvent(PingEvent),
-    ProjectEvent(ProjectEvent),
-    ProjectCardEvent(ProjectCardEvent),
-    ProjectColumnEvent(ProjectColumnEvent),
-    PublicEvent(PublicEvent),
-    PullRequestEvent(PullRequestEvent),
-    PullRequestReviewEvent(PullRequestReviewEvent),
-    PullRequestReviewCommentEvent(PullRequestReviewCommentEvent),
-    PushEvent(PushEvent),
-    ReleaseEvent(ReleaseEvent),
-    RepositoryEvent(RepositoryEvent),
-    RepositoryDispatchEvent(RepositoryDispatchEvent),
-    RepositoryImportEvent(RepositoryImportEvent),
-    RepositoryVulnerabilityAlertEvent(RepositoryVulnerabilityAlertEvent),
-    SecretScanningAlertEvent(SecretScanningAlertEvent),
-    SecurityAdvisoryEvent(SecurityAdvisoryEvent),
-    SponsorshipEvent(SponsorshipEvent),
-    StarEvent(StarEvent),
-    StatusEvent(StatusEvent),
-    TeamEvent(TeamEvent),
-    TeamAddEvent(TeamAddEvent),
-    WatchEvent(WatchEvent),
-    WorkflowDispatchEvent(WorkflowDispatchEvent),
-    WorkflowJobEvent(WorkflowJobEvent),
-    WorkflowRunEvent(WorkflowRunEvent),
+    Variant0(BranchProtectionRuleEvent),
+    Variant1(CheckRunEvent),
+    Variant2(CheckSuiteEvent),
+    Variant3(CodeScanningAlertEvent),
+    Variant4(CommitCommentEvent),
+    Variant5(ContentReferenceEvent),
+    Variant6(CreateEvent),
+    Variant7(DeleteEvent),
+    Variant8(DeployKeyEvent),
+    Variant9(DeploymentEvent),
+    Variant10(DeploymentStatusEvent),
+    Variant11(DiscussionEvent),
+    Variant12(DiscussionCommentEvent),
+    Variant13(ForkEvent),
+    Variant14(GithubAppAuthorizationEvent),
+    Variant15(GollumEvent),
+    Variant16(InstallationEvent),
+    Variant17(InstallationRepositoriesEvent),
+    Variant18(IssueCommentEvent),
+    Variant19(IssuesEvent),
+    Variant20(LabelEvent),
+    Variant21(MarketplacePurchaseEvent),
+    Variant22(MemberEvent),
+    Variant23(MembershipEvent),
+    Variant24(MetaEvent),
+    Variant25(MilestoneEvent),
+    Variant26(OrgBlockEvent),
+    Variant27(OrganizationEvent),
+    Variant28(PackageEvent),
+    Variant29(PageBuildEvent),
+    Variant30(PingEvent),
+    Variant31(ProjectEvent),
+    Variant32(ProjectCardEvent),
+    Variant33(ProjectColumnEvent),
+    Variant34(PublicEvent),
+    Variant35(PullRequestEvent),
+    Variant36(PullRequestReviewEvent),
+    Variant37(PullRequestReviewCommentEvent),
+    Variant38(PushEvent),
+    Variant39(ReleaseEvent),
+    Variant40(RepositoryEvent),
+    Variant41(RepositoryDispatchEvent),
+    Variant42(RepositoryImportEvent),
+    Variant43(RepositoryVulnerabilityAlertEvent),
+    Variant44(SecretScanningAlertEvent),
+    Variant45(SecurityAdvisoryEvent),
+    Variant46(SponsorshipEvent),
+    Variant47(StarEvent),
+    Variant48(StatusEvent),
+    Variant49(TeamEvent),
+    Variant50(TeamAddEvent),
+    Variant51(WatchEvent),
+    Variant52(WorkflowDispatchEvent),
+    Variant53(WorkflowJobEvent),
+    Variant54(WorkflowRunEvent),
 }
 impl From<&Everything> for Everything {
     fn from(value: &Everything) -> Self {
@@ -24938,277 +24938,277 @@ impl From<&Everything> for Everything {
 }
 impl From<BranchProtectionRuleEvent> for Everything {
     fn from(value: BranchProtectionRuleEvent) -> Self {
-        Self::BranchProtectionRuleEvent(value)
+        Self::Variant0(value)
     }
 }
 impl From<CheckRunEvent> for Everything {
     fn from(value: CheckRunEvent) -> Self {
-        Self::CheckRunEvent(value)
+        Self::Variant1(value)
     }
 }
 impl From<CheckSuiteEvent> for Everything {
     fn from(value: CheckSuiteEvent) -> Self {
-        Self::CheckSuiteEvent(value)
+        Self::Variant2(value)
     }
 }
 impl From<CodeScanningAlertEvent> for Everything {
     fn from(value: CodeScanningAlertEvent) -> Self {
-        Self::CodeScanningAlertEvent(value)
+        Self::Variant3(value)
     }
 }
 impl From<CommitCommentEvent> for Everything {
     fn from(value: CommitCommentEvent) -> Self {
-        Self::CommitCommentEvent(value)
+        Self::Variant4(value)
     }
 }
 impl From<ContentReferenceEvent> for Everything {
     fn from(value: ContentReferenceEvent) -> Self {
-        Self::ContentReferenceEvent(value)
+        Self::Variant5(value)
     }
 }
 impl From<CreateEvent> for Everything {
     fn from(value: CreateEvent) -> Self {
-        Self::CreateEvent(value)
+        Self::Variant6(value)
     }
 }
 impl From<DeleteEvent> for Everything {
     fn from(value: DeleteEvent) -> Self {
-        Self::DeleteEvent(value)
+        Self::Variant7(value)
     }
 }
 impl From<DeployKeyEvent> for Everything {
     fn from(value: DeployKeyEvent) -> Self {
-        Self::DeployKeyEvent(value)
+        Self::Variant8(value)
     }
 }
 impl From<DeploymentEvent> for Everything {
     fn from(value: DeploymentEvent) -> Self {
-        Self::DeploymentEvent(value)
+        Self::Variant9(value)
     }
 }
 impl From<DeploymentStatusEvent> for Everything {
     fn from(value: DeploymentStatusEvent) -> Self {
-        Self::DeploymentStatusEvent(value)
+        Self::Variant10(value)
     }
 }
 impl From<DiscussionEvent> for Everything {
     fn from(value: DiscussionEvent) -> Self {
-        Self::DiscussionEvent(value)
+        Self::Variant11(value)
     }
 }
 impl From<DiscussionCommentEvent> for Everything {
     fn from(value: DiscussionCommentEvent) -> Self {
-        Self::DiscussionCommentEvent(value)
+        Self::Variant12(value)
     }
 }
 impl From<ForkEvent> for Everything {
     fn from(value: ForkEvent) -> Self {
-        Self::ForkEvent(value)
+        Self::Variant13(value)
     }
 }
 impl From<GithubAppAuthorizationEvent> for Everything {
     fn from(value: GithubAppAuthorizationEvent) -> Self {
-        Self::GithubAppAuthorizationEvent(value)
+        Self::Variant14(value)
     }
 }
 impl From<GollumEvent> for Everything {
     fn from(value: GollumEvent) -> Self {
-        Self::GollumEvent(value)
+        Self::Variant15(value)
     }
 }
 impl From<InstallationEvent> for Everything {
     fn from(value: InstallationEvent) -> Self {
-        Self::InstallationEvent(value)
+        Self::Variant16(value)
     }
 }
 impl From<InstallationRepositoriesEvent> for Everything {
     fn from(value: InstallationRepositoriesEvent) -> Self {
-        Self::InstallationRepositoriesEvent(value)
+        Self::Variant17(value)
     }
 }
 impl From<IssueCommentEvent> for Everything {
     fn from(value: IssueCommentEvent) -> Self {
-        Self::IssueCommentEvent(value)
+        Self::Variant18(value)
     }
 }
 impl From<IssuesEvent> for Everything {
     fn from(value: IssuesEvent) -> Self {
-        Self::IssuesEvent(value)
+        Self::Variant19(value)
     }
 }
 impl From<LabelEvent> for Everything {
     fn from(value: LabelEvent) -> Self {
-        Self::LabelEvent(value)
+        Self::Variant20(value)
     }
 }
 impl From<MarketplacePurchaseEvent> for Everything {
     fn from(value: MarketplacePurchaseEvent) -> Self {
-        Self::MarketplacePurchaseEvent(value)
+        Self::Variant21(value)
     }
 }
 impl From<MemberEvent> for Everything {
     fn from(value: MemberEvent) -> Self {
-        Self::MemberEvent(value)
+        Self::Variant22(value)
     }
 }
 impl From<MembershipEvent> for Everything {
     fn from(value: MembershipEvent) -> Self {
-        Self::MembershipEvent(value)
+        Self::Variant23(value)
     }
 }
 impl From<MetaEvent> for Everything {
     fn from(value: MetaEvent) -> Self {
-        Self::MetaEvent(value)
+        Self::Variant24(value)
     }
 }
 impl From<MilestoneEvent> for Everything {
     fn from(value: MilestoneEvent) -> Self {
-        Self::MilestoneEvent(value)
+        Self::Variant25(value)
     }
 }
 impl From<OrgBlockEvent> for Everything {
     fn from(value: OrgBlockEvent) -> Self {
-        Self::OrgBlockEvent(value)
+        Self::Variant26(value)
     }
 }
 impl From<OrganizationEvent> for Everything {
     fn from(value: OrganizationEvent) -> Self {
-        Self::OrganizationEvent(value)
+        Self::Variant27(value)
     }
 }
 impl From<PackageEvent> for Everything {
     fn from(value: PackageEvent) -> Self {
-        Self::PackageEvent(value)
+        Self::Variant28(value)
     }
 }
 impl From<PageBuildEvent> for Everything {
     fn from(value: PageBuildEvent) -> Self {
-        Self::PageBuildEvent(value)
+        Self::Variant29(value)
     }
 }
 impl From<PingEvent> for Everything {
     fn from(value: PingEvent) -> Self {
-        Self::PingEvent(value)
+        Self::Variant30(value)
     }
 }
 impl From<ProjectEvent> for Everything {
     fn from(value: ProjectEvent) -> Self {
-        Self::ProjectEvent(value)
+        Self::Variant31(value)
     }
 }
 impl From<ProjectCardEvent> for Everything {
     fn from(value: ProjectCardEvent) -> Self {
-        Self::ProjectCardEvent(value)
+        Self::Variant32(value)
     }
 }
 impl From<ProjectColumnEvent> for Everything {
     fn from(value: ProjectColumnEvent) -> Self {
-        Self::ProjectColumnEvent(value)
+        Self::Variant33(value)
     }
 }
 impl From<PublicEvent> for Everything {
     fn from(value: PublicEvent) -> Self {
-        Self::PublicEvent(value)
+        Self::Variant34(value)
     }
 }
 impl From<PullRequestEvent> for Everything {
     fn from(value: PullRequestEvent) -> Self {
-        Self::PullRequestEvent(value)
+        Self::Variant35(value)
     }
 }
 impl From<PullRequestReviewEvent> for Everything {
     fn from(value: PullRequestReviewEvent) -> Self {
-        Self::PullRequestReviewEvent(value)
+        Self::Variant36(value)
     }
 }
 impl From<PullRequestReviewCommentEvent> for Everything {
     fn from(value: PullRequestReviewCommentEvent) -> Self {
-        Self::PullRequestReviewCommentEvent(value)
+        Self::Variant37(value)
     }
 }
 impl From<PushEvent> for Everything {
     fn from(value: PushEvent) -> Self {
-        Self::PushEvent(value)
+        Self::Variant38(value)
     }
 }
 impl From<ReleaseEvent> for Everything {
     fn from(value: ReleaseEvent) -> Self {
-        Self::ReleaseEvent(value)
+        Self::Variant39(value)
     }
 }
 impl From<RepositoryEvent> for Everything {
     fn from(value: RepositoryEvent) -> Self {
-        Self::RepositoryEvent(value)
+        Self::Variant40(value)
     }
 }
 impl From<RepositoryDispatchEvent> for Everything {
     fn from(value: RepositoryDispatchEvent) -> Self {
-        Self::RepositoryDispatchEvent(value)
+        Self::Variant41(value)
     }
 }
 impl From<RepositoryImportEvent> for Everything {
     fn from(value: RepositoryImportEvent) -> Self {
-        Self::RepositoryImportEvent(value)
+        Self::Variant42(value)
     }
 }
 impl From<RepositoryVulnerabilityAlertEvent> for Everything {
     fn from(value: RepositoryVulnerabilityAlertEvent) -> Self {
-        Self::RepositoryVulnerabilityAlertEvent(value)
+        Self::Variant43(value)
     }
 }
 impl From<SecretScanningAlertEvent> for Everything {
     fn from(value: SecretScanningAlertEvent) -> Self {
-        Self::SecretScanningAlertEvent(value)
+        Self::Variant44(value)
     }
 }
 impl From<SecurityAdvisoryEvent> for Everything {
     fn from(value: SecurityAdvisoryEvent) -> Self {
-        Self::SecurityAdvisoryEvent(value)
+        Self::Variant45(value)
     }
 }
 impl From<SponsorshipEvent> for Everything {
     fn from(value: SponsorshipEvent) -> Self {
-        Self::SponsorshipEvent(value)
+        Self::Variant46(value)
     }
 }
 impl From<StarEvent> for Everything {
     fn from(value: StarEvent) -> Self {
-        Self::StarEvent(value)
+        Self::Variant47(value)
     }
 }
 impl From<StatusEvent> for Everything {
     fn from(value: StatusEvent) -> Self {
-        Self::StatusEvent(value)
+        Self::Variant48(value)
     }
 }
 impl From<TeamEvent> for Everything {
     fn from(value: TeamEvent) -> Self {
-        Self::TeamEvent(value)
+        Self::Variant49(value)
     }
 }
 impl From<TeamAddEvent> for Everything {
     fn from(value: TeamAddEvent) -> Self {
-        Self::TeamAddEvent(value)
+        Self::Variant50(value)
     }
 }
 impl From<WatchEvent> for Everything {
     fn from(value: WatchEvent) -> Self {
-        Self::WatchEvent(value)
+        Self::Variant51(value)
     }
 }
 impl From<WorkflowDispatchEvent> for Everything {
     fn from(value: WorkflowDispatchEvent) -> Self {
-        Self::WorkflowDispatchEvent(value)
+        Self::Variant52(value)
     }
 }
 impl From<WorkflowJobEvent> for Everything {
     fn from(value: WorkflowJobEvent) -> Self {
-        Self::WorkflowJobEvent(value)
+        Self::Variant53(value)
     }
 }
 impl From<WorkflowRunEvent> for Everything {
     fn from(value: WorkflowRunEvent) -> Self {
-        Self::WorkflowRunEvent(value)
+        Self::Variant54(value)
     }
 }
 #[doc = "A user forks a repository."]
