@@ -996,8 +996,8 @@ impl From<std::collections::HashMap<String, ReferencesVariant1Value>> for Refere
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ReferencesVariant1Value {
-    StringVersion(StringVersion),
-    ReferenceDef(ReferenceDef),
+    Variant0(StringVersion),
+    Variant1(ReferenceDef),
 }
 impl From<&ReferencesVariant1Value> for ReferencesVariant1Value {
     fn from(value: &ReferencesVariant1Value) -> Self {
@@ -1008,9 +1008,9 @@ impl std::str::FromStr for ReferencesVariant1Value {
     type Err = self::error::ConversionError;
     fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
         if let Ok(v) = value.parse() {
-            Ok(Self::StringVersion(v))
+            Ok(Self::Variant0(v))
         } else if let Ok(v) = value.parse() {
-            Ok(Self::ReferenceDef(v))
+            Ok(Self::Variant1(v))
         } else {
             Err("string conversion failed for all variants".into())
         }
@@ -1037,19 +1037,19 @@ impl std::convert::TryFrom<String> for ReferencesVariant1Value {
 impl ToString for ReferencesVariant1Value {
     fn to_string(&self) -> String {
         match self {
-            Self::StringVersion(x) => x.to_string(),
-            Self::ReferenceDef(x) => x.to_string(),
+            Self::Variant0(x) => x.to_string(),
+            Self::Variant1(x) => x.to_string(),
         }
     }
 }
 impl From<StringVersion> for ReferencesVariant1Value {
     fn from(value: StringVersion) -> Self {
-        Self::StringVersion(value)
+        Self::Variant0(value)
     }
 }
 impl From<ReferenceDef> for ReferencesVariant1Value {
     fn from(value: ReferenceDef) -> Self {
-        Self::ReferenceDef(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "ShouldBeExclusive"]

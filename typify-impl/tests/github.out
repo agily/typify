@@ -4345,9 +4345,9 @@ impl From<&BranchProtectionRuleEditedChangesAuthorizedActorsOnly>
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum BranchProtectionRuleEvent {
-    Created(BranchProtectionRuleCreated),
-    Deleted(BranchProtectionRuleDeleted),
-    Edited(BranchProtectionRuleEdited),
+    Variant0(BranchProtectionRuleCreated),
+    Variant1(BranchProtectionRuleDeleted),
+    Variant2(BranchProtectionRuleEdited),
 }
 impl From<&BranchProtectionRuleEvent> for BranchProtectionRuleEvent {
     fn from(value: &BranchProtectionRuleEvent) -> Self {
@@ -4356,17 +4356,17 @@ impl From<&BranchProtectionRuleEvent> for BranchProtectionRuleEvent {
 }
 impl From<BranchProtectionRuleCreated> for BranchProtectionRuleEvent {
     fn from(value: BranchProtectionRuleCreated) -> Self {
-        Self::Created(value)
+        Self::Variant0(value)
     }
 }
 impl From<BranchProtectionRuleDeleted> for BranchProtectionRuleEvent {
     fn from(value: BranchProtectionRuleDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant1(value)
     }
 }
 impl From<BranchProtectionRuleEdited> for BranchProtectionRuleEvent {
     fn from(value: BranchProtectionRuleEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "BranchProtectionRuleLinearHistoryRequirementEnforcementLevel"]
@@ -7314,10 +7314,10 @@ impl From<&CheckRunDeployment> for CheckRunDeployment {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum CheckRunEvent {
-    Completed(CheckRunCompleted),
-    Created(CheckRunCreated),
-    RequestedAction(CheckRunRequestedAction),
-    Rerequested(CheckRunRerequested),
+    Variant0(CheckRunCompleted),
+    Variant1(CheckRunCreated),
+    Variant2(CheckRunRequestedAction),
+    Variant3(CheckRunRerequested),
 }
 impl From<&CheckRunEvent> for CheckRunEvent {
     fn from(value: &CheckRunEvent) -> Self {
@@ -7326,22 +7326,22 @@ impl From<&CheckRunEvent> for CheckRunEvent {
 }
 impl From<CheckRunCompleted> for CheckRunEvent {
     fn from(value: CheckRunCompleted) -> Self {
-        Self::Completed(value)
+        Self::Variant0(value)
     }
 }
 impl From<CheckRunCreated> for CheckRunEvent {
     fn from(value: CheckRunCreated) -> Self {
-        Self::Created(value)
+        Self::Variant1(value)
     }
 }
 impl From<CheckRunRequestedAction> for CheckRunEvent {
     fn from(value: CheckRunRequestedAction) -> Self {
-        Self::RequestedAction(value)
+        Self::Variant2(value)
     }
 }
 impl From<CheckRunRerequested> for CheckRunEvent {
     fn from(value: CheckRunRerequested) -> Self {
-        Self::Rerequested(value)
+        Self::Variant3(value)
     }
 }
 #[doc = "CheckRunPullRequest"]
@@ -10391,9 +10391,9 @@ impl std::convert::TryFrom<String> for CheckSuiteCompletedCheckSuiteStatus {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum CheckSuiteEvent {
-    Completed(CheckSuiteCompleted),
-    Requested(CheckSuiteRequested),
-    Rerequested(CheckSuiteRerequested),
+    Variant0(CheckSuiteCompleted),
+    Variant1(CheckSuiteRequested),
+    Variant2(CheckSuiteRerequested),
 }
 impl From<&CheckSuiteEvent> for CheckSuiteEvent {
     fn from(value: &CheckSuiteEvent) -> Self {
@@ -10402,17 +10402,17 @@ impl From<&CheckSuiteEvent> for CheckSuiteEvent {
 }
 impl From<CheckSuiteCompleted> for CheckSuiteEvent {
     fn from(value: CheckSuiteCompleted) -> Self {
-        Self::Completed(value)
+        Self::Variant0(value)
     }
 }
 impl From<CheckSuiteRequested> for CheckSuiteEvent {
     fn from(value: CheckSuiteRequested) -> Self {
-        Self::Requested(value)
+        Self::Variant1(value)
     }
 }
 impl From<CheckSuiteRerequested> for CheckSuiteEvent {
     fn from(value: CheckSuiteRerequested) -> Self {
-        Self::Rerequested(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "CheckSuiteRequested"]
@@ -14243,12 +14243,12 @@ impl From<&CodeScanningAlertCreatedAlertTool> for CodeScanningAlertCreatedAlertT
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum CodeScanningAlertEvent {
-    AppearedInBranch(CodeScanningAlertAppearedInBranch),
-    ClosedByUser(CodeScanningAlertClosedByUser),
-    Created(CodeScanningAlertCreated),
-    Fixed(CodeScanningAlertFixed),
-    Reopened(CodeScanningAlertReopened),
-    ReopenedByUser(CodeScanningAlertReopenedByUser),
+    Variant0(CodeScanningAlertAppearedInBranch),
+    Variant1(CodeScanningAlertClosedByUser),
+    Variant2(CodeScanningAlertCreated),
+    Variant3(CodeScanningAlertFixed),
+    Variant4(CodeScanningAlertReopened),
+    Variant5(CodeScanningAlertReopenedByUser),
 }
 impl From<&CodeScanningAlertEvent> for CodeScanningAlertEvent {
     fn from(value: &CodeScanningAlertEvent) -> Self {
@@ -14257,32 +14257,32 @@ impl From<&CodeScanningAlertEvent> for CodeScanningAlertEvent {
 }
 impl From<CodeScanningAlertAppearedInBranch> for CodeScanningAlertEvent {
     fn from(value: CodeScanningAlertAppearedInBranch) -> Self {
-        Self::AppearedInBranch(value)
+        Self::Variant0(value)
     }
 }
 impl From<CodeScanningAlertClosedByUser> for CodeScanningAlertEvent {
     fn from(value: CodeScanningAlertClosedByUser) -> Self {
-        Self::ClosedByUser(value)
+        Self::Variant1(value)
     }
 }
 impl From<CodeScanningAlertCreated> for CodeScanningAlertEvent {
     fn from(value: CodeScanningAlertCreated) -> Self {
-        Self::Created(value)
+        Self::Variant2(value)
     }
 }
 impl From<CodeScanningAlertFixed> for CodeScanningAlertEvent {
     fn from(value: CodeScanningAlertFixed) -> Self {
-        Self::Fixed(value)
+        Self::Variant3(value)
     }
 }
 impl From<CodeScanningAlertReopened> for CodeScanningAlertEvent {
     fn from(value: CodeScanningAlertReopened) -> Self {
-        Self::Reopened(value)
+        Self::Variant4(value)
     }
 }
 impl From<CodeScanningAlertReopenedByUser> for CodeScanningAlertEvent {
     fn from(value: CodeScanningAlertReopenedByUser) -> Self {
-        Self::ReopenedByUser(value)
+        Self::Variant5(value)
     }
 }
 #[doc = "CodeScanningAlertFixed"]
@@ -18641,8 +18641,8 @@ impl From<&DeployKeyDeletedKey> for DeployKeyDeletedKey {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum DeployKeyEvent {
-    Created(DeployKeyCreated),
-    Deleted(DeployKeyDeleted),
+    Variant0(DeployKeyCreated),
+    Variant1(DeployKeyDeleted),
 }
 impl From<&DeployKeyEvent> for DeployKeyEvent {
     fn from(value: &DeployKeyEvent) -> Self {
@@ -18651,12 +18651,12 @@ impl From<&DeployKeyEvent> for DeployKeyEvent {
 }
 impl From<DeployKeyCreated> for DeployKeyEvent {
     fn from(value: DeployKeyCreated) -> Self {
-        Self::Created(value)
+        Self::Variant0(value)
     }
 }
 impl From<DeployKeyDeleted> for DeployKeyEvent {
     fn from(value: DeployKeyDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "DeploymentCreated"]
@@ -21903,9 +21903,9 @@ impl From<&DiscussionCommentEditedComment> for DiscussionCommentEditedComment {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum DiscussionCommentEvent {
-    Created(DiscussionCommentCreated),
-    Deleted(DiscussionCommentDeleted),
-    Edited(DiscussionCommentEdited),
+    Variant0(DiscussionCommentCreated),
+    Variant1(DiscussionCommentDeleted),
+    Variant2(DiscussionCommentEdited),
 }
 impl From<&DiscussionCommentEvent> for DiscussionCommentEvent {
     fn from(value: &DiscussionCommentEvent) -> Self {
@@ -21914,17 +21914,17 @@ impl From<&DiscussionCommentEvent> for DiscussionCommentEvent {
 }
 impl From<DiscussionCommentCreated> for DiscussionCommentEvent {
     fn from(value: DiscussionCommentCreated) -> Self {
-        Self::Created(value)
+        Self::Variant0(value)
     }
 }
 impl From<DiscussionCommentDeleted> for DiscussionCommentEvent {
     fn from(value: DiscussionCommentDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant1(value)
     }
 }
 impl From<DiscussionCommentEdited> for DiscussionCommentEvent {
     fn from(value: DiscussionCommentEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "DiscussionCreated"]
@@ -22716,19 +22716,19 @@ impl From<&DiscussionEditedChangesTitle> for DiscussionEditedChangesTitle {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum DiscussionEvent {
-    Answered(DiscussionAnswered),
-    CategoryChanged(DiscussionCategoryChanged),
-    Created(DiscussionCreated),
-    Deleted(DiscussionDeleted),
-    Edited(DiscussionEdited),
-    Labeled(DiscussionLabeled),
-    Locked(DiscussionLocked),
-    Pinned(DiscussionPinned),
-    Transferred(DiscussionTransferred),
-    Unanswered(DiscussionUnanswered),
-    Unlabeled(DiscussionUnlabeled),
-    Unlocked(DiscussionUnlocked),
-    Unpinned(DiscussionUnpinned),
+    Variant0(DiscussionAnswered),
+    Variant1(DiscussionCategoryChanged),
+    Variant2(DiscussionCreated),
+    Variant3(DiscussionDeleted),
+    Variant4(DiscussionEdited),
+    Variant5(DiscussionLabeled),
+    Variant6(DiscussionLocked),
+    Variant7(DiscussionPinned),
+    Variant8(DiscussionTransferred),
+    Variant9(DiscussionUnanswered),
+    Variant10(DiscussionUnlabeled),
+    Variant11(DiscussionUnlocked),
+    Variant12(DiscussionUnpinned),
 }
 impl From<&DiscussionEvent> for DiscussionEvent {
     fn from(value: &DiscussionEvent) -> Self {
@@ -22737,67 +22737,67 @@ impl From<&DiscussionEvent> for DiscussionEvent {
 }
 impl From<DiscussionAnswered> for DiscussionEvent {
     fn from(value: DiscussionAnswered) -> Self {
-        Self::Answered(value)
+        Self::Variant0(value)
     }
 }
 impl From<DiscussionCategoryChanged> for DiscussionEvent {
     fn from(value: DiscussionCategoryChanged) -> Self {
-        Self::CategoryChanged(value)
+        Self::Variant1(value)
     }
 }
 impl From<DiscussionCreated> for DiscussionEvent {
     fn from(value: DiscussionCreated) -> Self {
-        Self::Created(value)
+        Self::Variant2(value)
     }
 }
 impl From<DiscussionDeleted> for DiscussionEvent {
     fn from(value: DiscussionDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant3(value)
     }
 }
 impl From<DiscussionEdited> for DiscussionEvent {
     fn from(value: DiscussionEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant4(value)
     }
 }
 impl From<DiscussionLabeled> for DiscussionEvent {
     fn from(value: DiscussionLabeled) -> Self {
-        Self::Labeled(value)
+        Self::Variant5(value)
     }
 }
 impl From<DiscussionLocked> for DiscussionEvent {
     fn from(value: DiscussionLocked) -> Self {
-        Self::Locked(value)
+        Self::Variant6(value)
     }
 }
 impl From<DiscussionPinned> for DiscussionEvent {
     fn from(value: DiscussionPinned) -> Self {
-        Self::Pinned(value)
+        Self::Variant7(value)
     }
 }
 impl From<DiscussionTransferred> for DiscussionEvent {
     fn from(value: DiscussionTransferred) -> Self {
-        Self::Transferred(value)
+        Self::Variant8(value)
     }
 }
 impl From<DiscussionUnanswered> for DiscussionEvent {
     fn from(value: DiscussionUnanswered) -> Self {
-        Self::Unanswered(value)
+        Self::Variant9(value)
     }
 }
 impl From<DiscussionUnlabeled> for DiscussionEvent {
     fn from(value: DiscussionUnlabeled) -> Self {
-        Self::Unlabeled(value)
+        Self::Variant10(value)
     }
 }
 impl From<DiscussionUnlocked> for DiscussionEvent {
     fn from(value: DiscussionUnlocked) -> Self {
-        Self::Unlocked(value)
+        Self::Variant11(value)
     }
 }
 impl From<DiscussionUnpinned> for DiscussionEvent {
     fn from(value: DiscussionUnpinned) -> Self {
-        Self::Unpinned(value)
+        Self::Variant12(value)
     }
 }
 #[doc = "DiscussionLabeled"]
@@ -24704,169 +24704,169 @@ impl std::convert::TryFrom<String> for DiscussionUnpinnedAction {
 #[doc = "  \"title\": \"Everything\","]
 #[doc = "  \"oneOf\": ["]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"branch_protection_rule_event\""]
+#[doc = "      \"$ref\": \"#/definitions/branch_protection_rule_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"check_run_event\""]
+#[doc = "      \"$ref\": \"#/definitions/check_run_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"check_suite_event\""]
+#[doc = "      \"$ref\": \"#/definitions/check_suite_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"code_scanning_alert_event\""]
+#[doc = "      \"$ref\": \"#/definitions/code_scanning_alert_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"commit_comment_event\""]
+#[doc = "      \"$ref\": \"#/definitions/commit_comment_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"content_reference_event\""]
+#[doc = "      \"$ref\": \"#/definitions/content_reference_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"create$event\""]
+#[doc = "      \"$ref\": \"#/definitions/create$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"delete$event\""]
+#[doc = "      \"$ref\": \"#/definitions/delete$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"deploy_key_event\""]
+#[doc = "      \"$ref\": \"#/definitions/deploy_key_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"deployment_event\""]
+#[doc = "      \"$ref\": \"#/definitions/deployment_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"deployment_status_event\""]
+#[doc = "      \"$ref\": \"#/definitions/deployment_status_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"discussion_event\""]
+#[doc = "      \"$ref\": \"#/definitions/discussion_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"discussion_comment_event\""]
+#[doc = "      \"$ref\": \"#/definitions/discussion_comment_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"fork$event\""]
+#[doc = "      \"$ref\": \"#/definitions/fork$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"github_app_authorization_event\""]
+#[doc = "      \"$ref\": \"#/definitions/github_app_authorization_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"gollum$event\""]
+#[doc = "      \"$ref\": \"#/definitions/gollum$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"installation_event\""]
+#[doc = "      \"$ref\": \"#/definitions/installation_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"installation_repositories_event\""]
+#[doc = "      \"$ref\": \"#/definitions/installation_repositories_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"issue_comment_event\""]
+#[doc = "      \"$ref\": \"#/definitions/issue_comment_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"issues_event\""]
+#[doc = "      \"$ref\": \"#/definitions/issues_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"label_event\""]
+#[doc = "      \"$ref\": \"#/definitions/label_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"marketplace_purchase_event\""]
+#[doc = "      \"$ref\": \"#/definitions/marketplace_purchase_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"member_event\""]
+#[doc = "      \"$ref\": \"#/definitions/member_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"membership_event\""]
+#[doc = "      \"$ref\": \"#/definitions/membership_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"meta_event\""]
+#[doc = "      \"$ref\": \"#/definitions/meta_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"milestone_event\""]
+#[doc = "      \"$ref\": \"#/definitions/milestone_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"org_block_event\""]
+#[doc = "      \"$ref\": \"#/definitions/org_block_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"organization_event\""]
+#[doc = "      \"$ref\": \"#/definitions/organization_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"package_event\""]
+#[doc = "      \"$ref\": \"#/definitions/package_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"page_build$event\""]
+#[doc = "      \"$ref\": \"#/definitions/page_build$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"ping$event\""]
+#[doc = "      \"$ref\": \"#/definitions/ping$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"project_event\""]
+#[doc = "      \"$ref\": \"#/definitions/project_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"project_card_event\""]
+#[doc = "      \"$ref\": \"#/definitions/project_card_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"project_column_event\""]
+#[doc = "      \"$ref\": \"#/definitions/project_column_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"public$event\""]
+#[doc = "      \"$ref\": \"#/definitions/public$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"pull_request_event\""]
+#[doc = "      \"$ref\": \"#/definitions/pull_request_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"pull_request_review_event\""]
+#[doc = "      \"$ref\": \"#/definitions/pull_request_review_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"pull_request_review_comment_event\""]
+#[doc = "      \"$ref\": \"#/definitions/pull_request_review_comment_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"push$event\""]
+#[doc = "      \"$ref\": \"#/definitions/push$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"release_event\""]
+#[doc = "      \"$ref\": \"#/definitions/release_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"repository_event\""]
+#[doc = "      \"$ref\": \"#/definitions/repository_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"repository_dispatch_event\""]
+#[doc = "      \"$ref\": \"#/definitions/repository_dispatch_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"repository_import$event\""]
+#[doc = "      \"$ref\": \"#/definitions/repository_import$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"repository_vulnerability_alert_event\""]
+#[doc = "      \"$ref\": \"#/definitions/repository_vulnerability_alert_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"secret_scanning_alert_event\""]
+#[doc = "      \"$ref\": \"#/definitions/secret_scanning_alert_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"security_advisory_event\""]
+#[doc = "      \"$ref\": \"#/definitions/security_advisory_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"sponsorship_event\""]
+#[doc = "      \"$ref\": \"#/definitions/sponsorship_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"star_event\""]
+#[doc = "      \"$ref\": \"#/definitions/star_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"status$event\""]
+#[doc = "      \"$ref\": \"#/definitions/status$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"team_event\""]
+#[doc = "      \"$ref\": \"#/definitions/team_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"team_add$event\""]
+#[doc = "      \"$ref\": \"#/definitions/team_add$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"watch_event\""]
+#[doc = "      \"$ref\": \"#/definitions/watch_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"workflow_dispatch$event\""]
+#[doc = "      \"$ref\": \"#/definitions/workflow_dispatch$event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"workflow_job_event\""]
+#[doc = "      \"$ref\": \"#/definitions/workflow_job_event\""]
 #[doc = "    },"]
 #[doc = "    {"]
-#[doc = "      \"$ref\": \"workflow_run_event\""]
+#[doc = "      \"$ref\": \"#/definitions/workflow_run_event\""]
 #[doc = "    }"]
 #[doc = "  ]"]
 #[doc = "}"]
@@ -27088,11 +27088,11 @@ impl From<&InstallationDeletedRepositoriesItem> for InstallationDeletedRepositor
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum InstallationEvent {
-    Created(InstallationCreated),
-    Deleted(InstallationDeleted),
-    NewPermissionsAccepted(InstallationNewPermissionsAccepted),
-    Suspend(InstallationSuspend),
-    Unsuspend(InstallationUnsuspend),
+    Variant0(InstallationCreated),
+    Variant1(InstallationDeleted),
+    Variant2(InstallationNewPermissionsAccepted),
+    Variant3(InstallationSuspend),
+    Variant4(InstallationUnsuspend),
 }
 impl From<&InstallationEvent> for InstallationEvent {
     fn from(value: &InstallationEvent) -> Self {
@@ -27101,27 +27101,27 @@ impl From<&InstallationEvent> for InstallationEvent {
 }
 impl From<InstallationCreated> for InstallationEvent {
     fn from(value: InstallationCreated) -> Self {
-        Self::Created(value)
+        Self::Variant0(value)
     }
 }
 impl From<InstallationDeleted> for InstallationEvent {
     fn from(value: InstallationDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant1(value)
     }
 }
 impl From<InstallationNewPermissionsAccepted> for InstallationEvent {
     fn from(value: InstallationNewPermissionsAccepted) -> Self {
-        Self::NewPermissionsAccepted(value)
+        Self::Variant2(value)
     }
 }
 impl From<InstallationSuspend> for InstallationEvent {
     fn from(value: InstallationSuspend) -> Self {
-        Self::Suspend(value)
+        Self::Variant3(value)
     }
 }
 impl From<InstallationUnsuspend> for InstallationEvent {
     fn from(value: InstallationUnsuspend) -> Self {
-        Self::Unsuspend(value)
+        Self::Variant4(value)
     }
 }
 #[doc = "InstallationEventsItem"]
@@ -30562,8 +30562,8 @@ impl std::convert::TryFrom<String> for InstallationRepositoriesAddedRepositorySe
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum InstallationRepositoriesEvent {
-    Added(InstallationRepositoriesAdded),
-    Removed(InstallationRepositoriesRemoved),
+    Variant0(InstallationRepositoriesAdded),
+    Variant1(InstallationRepositoriesRemoved),
 }
 impl From<&InstallationRepositoriesEvent> for InstallationRepositoriesEvent {
     fn from(value: &InstallationRepositoriesEvent) -> Self {
@@ -30572,12 +30572,12 @@ impl From<&InstallationRepositoriesEvent> for InstallationRepositoriesEvent {
 }
 impl From<InstallationRepositoriesAdded> for InstallationRepositoriesEvent {
     fn from(value: InstallationRepositoriesAdded) -> Self {
-        Self::Added(value)
+        Self::Variant0(value)
     }
 }
 impl From<InstallationRepositoriesRemoved> for InstallationRepositoriesEvent {
     fn from(value: InstallationRepositoriesRemoved) -> Self {
-        Self::Removed(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "InstallationRepositoriesRemoved"]
@@ -40795,9 +40795,9 @@ impl std::convert::TryFrom<String> for IssueCommentEditedIssueState {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum IssueCommentEvent {
-    Created(IssueCommentCreated),
-    Deleted(IssueCommentDeleted),
-    Edited(IssueCommentEdited),
+    Variant0(IssueCommentCreated),
+    Variant1(IssueCommentDeleted),
+    Variant2(IssueCommentEdited),
 }
 impl From<&IssueCommentEvent> for IssueCommentEvent {
     fn from(value: &IssueCommentEvent) -> Self {
@@ -40806,17 +40806,17 @@ impl From<&IssueCommentEvent> for IssueCommentEvent {
 }
 impl From<IssueCommentCreated> for IssueCommentEvent {
     fn from(value: IssueCommentCreated) -> Self {
-        Self::Created(value)
+        Self::Variant0(value)
     }
 }
 impl From<IssueCommentDeleted> for IssueCommentEvent {
     fn from(value: IssueCommentDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant1(value)
     }
 }
 impl From<IssueCommentEdited> for IssueCommentEvent {
     fn from(value: IssueCommentEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "IssuePullRequest"]
@@ -42295,22 +42295,22 @@ impl From<&IssuesEditedChangesTitle> for IssuesEditedChangesTitle {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum IssuesEvent {
-    Assigned(IssuesAssigned),
-    Closed(IssuesClosed),
-    Deleted(IssuesDeleted),
-    Demilestoned(IssuesDemilestoned),
-    Edited(IssuesEdited),
-    Labeled(IssuesLabeled),
-    Locked(IssuesLocked),
-    Milestoned(IssuesMilestoned),
-    Opened(IssuesOpened),
-    Pinned(IssuesPinned),
-    Reopened(IssuesReopened),
-    Transferred(IssuesTransferred),
-    Unassigned(IssuesUnassigned),
-    Unlabeled(IssuesUnlabeled),
-    Unlocked(IssuesUnlocked),
-    Unpinned(IssuesUnpinned),
+    Variant0(IssuesAssigned),
+    Variant1(IssuesClosed),
+    Variant2(IssuesDeleted),
+    Variant3(IssuesDemilestoned),
+    Variant4(IssuesEdited),
+    Variant5(IssuesLabeled),
+    Variant6(IssuesLocked),
+    Variant7(IssuesMilestoned),
+    Variant8(IssuesOpened),
+    Variant9(IssuesPinned),
+    Variant10(IssuesReopened),
+    Variant11(IssuesTransferred),
+    Variant12(IssuesUnassigned),
+    Variant13(IssuesUnlabeled),
+    Variant14(IssuesUnlocked),
+    Variant15(IssuesUnpinned),
 }
 impl From<&IssuesEvent> for IssuesEvent {
     fn from(value: &IssuesEvent) -> Self {
@@ -42319,82 +42319,82 @@ impl From<&IssuesEvent> for IssuesEvent {
 }
 impl From<IssuesAssigned> for IssuesEvent {
     fn from(value: IssuesAssigned) -> Self {
-        Self::Assigned(value)
+        Self::Variant0(value)
     }
 }
 impl From<IssuesClosed> for IssuesEvent {
     fn from(value: IssuesClosed) -> Self {
-        Self::Closed(value)
+        Self::Variant1(value)
     }
 }
 impl From<IssuesDeleted> for IssuesEvent {
     fn from(value: IssuesDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant2(value)
     }
 }
 impl From<IssuesDemilestoned> for IssuesEvent {
     fn from(value: IssuesDemilestoned) -> Self {
-        Self::Demilestoned(value)
+        Self::Variant3(value)
     }
 }
 impl From<IssuesEdited> for IssuesEvent {
     fn from(value: IssuesEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant4(value)
     }
 }
 impl From<IssuesLabeled> for IssuesEvent {
     fn from(value: IssuesLabeled) -> Self {
-        Self::Labeled(value)
+        Self::Variant5(value)
     }
 }
 impl From<IssuesLocked> for IssuesEvent {
     fn from(value: IssuesLocked) -> Self {
-        Self::Locked(value)
+        Self::Variant6(value)
     }
 }
 impl From<IssuesMilestoned> for IssuesEvent {
     fn from(value: IssuesMilestoned) -> Self {
-        Self::Milestoned(value)
+        Self::Variant7(value)
     }
 }
 impl From<IssuesOpened> for IssuesEvent {
     fn from(value: IssuesOpened) -> Self {
-        Self::Opened(value)
+        Self::Variant8(value)
     }
 }
 impl From<IssuesPinned> for IssuesEvent {
     fn from(value: IssuesPinned) -> Self {
-        Self::Pinned(value)
+        Self::Variant9(value)
     }
 }
 impl From<IssuesReopened> for IssuesEvent {
     fn from(value: IssuesReopened) -> Self {
-        Self::Reopened(value)
+        Self::Variant10(value)
     }
 }
 impl From<IssuesTransferred> for IssuesEvent {
     fn from(value: IssuesTransferred) -> Self {
-        Self::Transferred(value)
+        Self::Variant11(value)
     }
 }
 impl From<IssuesUnassigned> for IssuesEvent {
     fn from(value: IssuesUnassigned) -> Self {
-        Self::Unassigned(value)
+        Self::Variant12(value)
     }
 }
 impl From<IssuesUnlabeled> for IssuesEvent {
     fn from(value: IssuesUnlabeled) -> Self {
-        Self::Unlabeled(value)
+        Self::Variant13(value)
     }
 }
 impl From<IssuesUnlocked> for IssuesEvent {
     fn from(value: IssuesUnlocked) -> Self {
-        Self::Unlocked(value)
+        Self::Variant14(value)
     }
 }
 impl From<IssuesUnpinned> for IssuesEvent {
     fn from(value: IssuesUnpinned) -> Self {
-        Self::Unpinned(value)
+        Self::Variant15(value)
     }
 }
 #[doc = "IssuesLabeled"]
@@ -46039,9 +46039,9 @@ impl From<&LabelEditedChangesName> for LabelEditedChangesName {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum LabelEvent {
-    Created(LabelCreated),
-    Deleted(LabelDeleted),
-    Edited(LabelEdited),
+    Variant0(LabelCreated),
+    Variant1(LabelDeleted),
+    Variant2(LabelEdited),
 }
 impl From<&LabelEvent> for LabelEvent {
     fn from(value: &LabelEvent) -> Self {
@@ -46050,17 +46050,17 @@ impl From<&LabelEvent> for LabelEvent {
 }
 impl From<LabelCreated> for LabelEvent {
     fn from(value: LabelCreated) -> Self {
-        Self::Created(value)
+        Self::Variant0(value)
     }
 }
 impl From<LabelDeleted> for LabelEvent {
     fn from(value: LabelDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant1(value)
     }
 }
 impl From<LabelEdited> for LabelEvent {
     fn from(value: LabelEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "License"]
@@ -47394,11 +47394,11 @@ impl From<&MarketplacePurchaseChangedSender> for MarketplacePurchaseChangedSende
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum MarketplacePurchaseEvent {
-    Cancelled(MarketplacePurchaseCancelled),
-    Changed(MarketplacePurchaseChanged),
-    PendingChange(MarketplacePurchasePendingChange),
-    PendingChangeCancelled(MarketplacePurchasePendingChangeCancelled),
-    Purchased(MarketplacePurchasePurchased),
+    Variant0(MarketplacePurchaseCancelled),
+    Variant1(MarketplacePurchaseChanged),
+    Variant2(MarketplacePurchasePendingChange),
+    Variant3(MarketplacePurchasePendingChangeCancelled),
+    Variant4(MarketplacePurchasePurchased),
 }
 impl From<&MarketplacePurchaseEvent> for MarketplacePurchaseEvent {
     fn from(value: &MarketplacePurchaseEvent) -> Self {
@@ -47407,27 +47407,27 @@ impl From<&MarketplacePurchaseEvent> for MarketplacePurchaseEvent {
 }
 impl From<MarketplacePurchaseCancelled> for MarketplacePurchaseEvent {
     fn from(value: MarketplacePurchaseCancelled) -> Self {
-        Self::Cancelled(value)
+        Self::Variant0(value)
     }
 }
 impl From<MarketplacePurchaseChanged> for MarketplacePurchaseEvent {
     fn from(value: MarketplacePurchaseChanged) -> Self {
-        Self::Changed(value)
+        Self::Variant1(value)
     }
 }
 impl From<MarketplacePurchasePendingChange> for MarketplacePurchaseEvent {
     fn from(value: MarketplacePurchasePendingChange) -> Self {
-        Self::PendingChange(value)
+        Self::Variant2(value)
     }
 }
 impl From<MarketplacePurchasePendingChangeCancelled> for MarketplacePurchaseEvent {
     fn from(value: MarketplacePurchasePendingChangeCancelled) -> Self {
-        Self::PendingChangeCancelled(value)
+        Self::Variant3(value)
     }
 }
 impl From<MarketplacePurchasePurchased> for MarketplacePurchaseEvent {
     fn from(value: MarketplacePurchasePurchased) -> Self {
-        Self::Purchased(value)
+        Self::Variant4(value)
     }
 }
 #[doc = "MarketplacePurchasePendingChange"]
@@ -49564,9 +49564,9 @@ impl From<&MemberEditedChangesOldPermission> for MemberEditedChangesOldPermissio
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum MemberEvent {
-    Added(MemberAdded),
-    Edited(MemberEdited),
-    Removed(MemberRemoved),
+    Variant0(MemberAdded),
+    Variant1(MemberEdited),
+    Variant2(MemberRemoved),
 }
 impl From<&MemberEvent> for MemberEvent {
     fn from(value: &MemberEvent) -> Self {
@@ -49575,17 +49575,17 @@ impl From<&MemberEvent> for MemberEvent {
 }
 impl From<MemberAdded> for MemberEvent {
     fn from(value: MemberAdded) -> Self {
-        Self::Added(value)
+        Self::Variant0(value)
     }
 }
 impl From<MemberEdited> for MemberEvent {
     fn from(value: MemberEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant1(value)
     }
 }
 impl From<MemberRemoved> for MemberEvent {
     fn from(value: MemberRemoved) -> Self {
-        Self::Removed(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "MemberRemoved"]
@@ -49963,8 +49963,8 @@ impl std::convert::TryFrom<String> for MembershipAddedScope {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum MembershipEvent {
-    Added(MembershipAdded),
-    Removed(MembershipRemoved),
+    Variant0(MembershipAdded),
+    Variant1(MembershipRemoved),
 }
 impl From<&MembershipEvent> for MembershipEvent {
     fn from(value: &MembershipEvent) -> Self {
@@ -49973,12 +49973,12 @@ impl From<&MembershipEvent> for MembershipEvent {
 }
 impl From<MembershipAdded> for MembershipEvent {
     fn from(value: MembershipAdded) -> Self {
-        Self::Added(value)
+        Self::Variant0(value)
     }
 }
 impl From<MembershipRemoved> for MembershipEvent {
     fn from(value: MembershipRemoved) -> Self {
-        Self::Removed(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "MembershipRemoved"]
@@ -51772,11 +51772,11 @@ impl From<&MilestoneEditedChangesTitle> for MilestoneEditedChangesTitle {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum MilestoneEvent {
-    Closed(MilestoneClosed),
-    Created(MilestoneCreated),
-    Deleted(MilestoneDeleted),
-    Edited(MilestoneEdited),
-    Opened(MilestoneOpened),
+    Variant0(MilestoneClosed),
+    Variant1(MilestoneCreated),
+    Variant2(MilestoneDeleted),
+    Variant3(MilestoneEdited),
+    Variant4(MilestoneOpened),
 }
 impl From<&MilestoneEvent> for MilestoneEvent {
     fn from(value: &MilestoneEvent) -> Self {
@@ -51785,27 +51785,27 @@ impl From<&MilestoneEvent> for MilestoneEvent {
 }
 impl From<MilestoneClosed> for MilestoneEvent {
     fn from(value: MilestoneClosed) -> Self {
-        Self::Closed(value)
+        Self::Variant0(value)
     }
 }
 impl From<MilestoneCreated> for MilestoneEvent {
     fn from(value: MilestoneCreated) -> Self {
-        Self::Created(value)
+        Self::Variant1(value)
     }
 }
 impl From<MilestoneDeleted> for MilestoneEvent {
     fn from(value: MilestoneDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant2(value)
     }
 }
 impl From<MilestoneEdited> for MilestoneEvent {
     fn from(value: MilestoneEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant3(value)
     }
 }
 impl From<MilestoneOpened> for MilestoneEvent {
     fn from(value: MilestoneOpened) -> Self {
-        Self::Opened(value)
+        Self::Variant4(value)
     }
 }
 #[doc = "MilestoneOpened"]
@@ -52260,8 +52260,8 @@ impl std::convert::TryFrom<String> for OrgBlockBlockedAction {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum OrgBlockEvent {
-    Blocked(OrgBlockBlocked),
-    Unblocked(OrgBlockUnblocked),
+    Variant0(OrgBlockBlocked),
+    Variant1(OrgBlockUnblocked),
 }
 impl From<&OrgBlockEvent> for OrgBlockEvent {
     fn from(value: &OrgBlockEvent) -> Self {
@@ -52270,12 +52270,12 @@ impl From<&OrgBlockEvent> for OrgBlockEvent {
 }
 impl From<OrgBlockBlocked> for OrgBlockEvent {
     fn from(value: OrgBlockBlocked) -> Self {
-        Self::Blocked(value)
+        Self::Variant0(value)
     }
 }
 impl From<OrgBlockUnblocked> for OrgBlockEvent {
     fn from(value: OrgBlockUnblocked) -> Self {
-        Self::Unblocked(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "OrgBlockUnblocked"]
@@ -52634,11 +52634,11 @@ impl std::convert::TryFrom<String> for OrganizationDeletedAction {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum OrganizationEvent {
-    Deleted(OrganizationDeleted),
-    MemberAdded(OrganizationMemberAdded),
-    MemberInvited(OrganizationMemberInvited),
-    MemberRemoved(OrganizationMemberRemoved),
-    Renamed(OrganizationRenamed),
+    Variant0(OrganizationDeleted),
+    Variant1(OrganizationMemberAdded),
+    Variant2(OrganizationMemberInvited),
+    Variant3(OrganizationMemberRemoved),
+    Variant4(OrganizationRenamed),
 }
 impl From<&OrganizationEvent> for OrganizationEvent {
     fn from(value: &OrganizationEvent) -> Self {
@@ -52647,27 +52647,27 @@ impl From<&OrganizationEvent> for OrganizationEvent {
 }
 impl From<OrganizationDeleted> for OrganizationEvent {
     fn from(value: OrganizationDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant0(value)
     }
 }
 impl From<OrganizationMemberAdded> for OrganizationEvent {
     fn from(value: OrganizationMemberAdded) -> Self {
-        Self::MemberAdded(value)
+        Self::Variant1(value)
     }
 }
 impl From<OrganizationMemberInvited> for OrganizationEvent {
     fn from(value: OrganizationMemberInvited) -> Self {
-        Self::MemberInvited(value)
+        Self::Variant2(value)
     }
 }
 impl From<OrganizationMemberRemoved> for OrganizationEvent {
     fn from(value: OrganizationMemberRemoved) -> Self {
-        Self::MemberRemoved(value)
+        Self::Variant3(value)
     }
 }
 impl From<OrganizationRenamed> for OrganizationEvent {
     fn from(value: OrganizationRenamed) -> Self {
-        Self::Renamed(value)
+        Self::Variant4(value)
     }
 }
 #[doc = "OrganizationMemberAdded"]
@@ -53301,8 +53301,8 @@ impl std::convert::TryFrom<String> for OrganizationRenamedAction {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PackageEvent {
-    Published(PackagePublished),
-    Updated(PackageUpdated),
+    Variant0(PackagePublished),
+    Variant1(PackageUpdated),
 }
 impl From<&PackageEvent> for PackageEvent {
     fn from(value: &PackageEvent) -> Self {
@@ -53311,12 +53311,12 @@ impl From<&PackageEvent> for PackageEvent {
 }
 impl From<PackagePublished> for PackageEvent {
     fn from(value: PackagePublished) -> Self {
-        Self::Published(value)
+        Self::Variant0(value)
     }
 }
 impl From<PackageUpdated> for PackageEvent {
     fn from(value: PackageUpdated) -> Self {
-        Self::Updated(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "PackagePublished"]
@@ -57240,11 +57240,11 @@ impl From<&ProjectCardEditedChangesNote> for ProjectCardEditedChangesNote {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ProjectCardEvent {
-    Converted(ProjectCardConverted),
-    Created(ProjectCardCreated),
-    Deleted(ProjectCardDeleted),
-    Edited(ProjectCardEdited),
-    Moved(ProjectCardMoved),
+    Variant0(ProjectCardConverted),
+    Variant1(ProjectCardCreated),
+    Variant2(ProjectCardDeleted),
+    Variant3(ProjectCardEdited),
+    Variant4(ProjectCardMoved),
 }
 impl From<&ProjectCardEvent> for ProjectCardEvent {
     fn from(value: &ProjectCardEvent) -> Self {
@@ -57253,27 +57253,27 @@ impl From<&ProjectCardEvent> for ProjectCardEvent {
 }
 impl From<ProjectCardConverted> for ProjectCardEvent {
     fn from(value: ProjectCardConverted) -> Self {
-        Self::Converted(value)
+        Self::Variant0(value)
     }
 }
 impl From<ProjectCardCreated> for ProjectCardEvent {
     fn from(value: ProjectCardCreated) -> Self {
-        Self::Created(value)
+        Self::Variant1(value)
     }
 }
 impl From<ProjectCardDeleted> for ProjectCardEvent {
     fn from(value: ProjectCardDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant2(value)
     }
 }
 impl From<ProjectCardEdited> for ProjectCardEvent {
     fn from(value: ProjectCardEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant3(value)
     }
 }
 impl From<ProjectCardMoved> for ProjectCardEvent {
     fn from(value: ProjectCardMoved) -> Self {
-        Self::Moved(value)
+        Self::Variant4(value)
     }
 }
 #[doc = "ProjectCardMoved"]
@@ -58205,10 +58205,10 @@ impl From<&ProjectColumnEditedChangesName> for ProjectColumnEditedChangesName {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ProjectColumnEvent {
-    Created(ProjectColumnCreated),
-    Deleted(ProjectColumnDeleted),
-    Edited(ProjectColumnEdited),
-    Moved(ProjectColumnMoved),
+    Variant0(ProjectColumnCreated),
+    Variant1(ProjectColumnDeleted),
+    Variant2(ProjectColumnEdited),
+    Variant3(ProjectColumnMoved),
 }
 impl From<&ProjectColumnEvent> for ProjectColumnEvent {
     fn from(value: &ProjectColumnEvent) -> Self {
@@ -58217,22 +58217,22 @@ impl From<&ProjectColumnEvent> for ProjectColumnEvent {
 }
 impl From<ProjectColumnCreated> for ProjectColumnEvent {
     fn from(value: ProjectColumnCreated) -> Self {
-        Self::Created(value)
+        Self::Variant0(value)
     }
 }
 impl From<ProjectColumnDeleted> for ProjectColumnEvent {
     fn from(value: ProjectColumnDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant1(value)
     }
 }
 impl From<ProjectColumnEdited> for ProjectColumnEvent {
     fn from(value: ProjectColumnEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant2(value)
     }
 }
 impl From<ProjectColumnMoved> for ProjectColumnEvent {
     fn from(value: ProjectColumnMoved) -> Self {
-        Self::Moved(value)
+        Self::Variant3(value)
     }
 }
 #[doc = "ProjectColumnMoved"]
@@ -58878,11 +58878,11 @@ impl From<&ProjectEditedChangesName> for ProjectEditedChangesName {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ProjectEvent {
-    Closed(ProjectClosed),
-    Created(ProjectCreated),
-    Deleted(ProjectDeleted),
-    Edited(ProjectEdited),
-    Reopened(ProjectReopened),
+    Variant0(ProjectClosed),
+    Variant1(ProjectCreated),
+    Variant2(ProjectDeleted),
+    Variant3(ProjectEdited),
+    Variant4(ProjectReopened),
 }
 impl From<&ProjectEvent> for ProjectEvent {
     fn from(value: &ProjectEvent) -> Self {
@@ -58891,27 +58891,27 @@ impl From<&ProjectEvent> for ProjectEvent {
 }
 impl From<ProjectClosed> for ProjectEvent {
     fn from(value: ProjectClosed) -> Self {
-        Self::Closed(value)
+        Self::Variant0(value)
     }
 }
 impl From<ProjectCreated> for ProjectEvent {
     fn from(value: ProjectCreated) -> Self {
-        Self::Created(value)
+        Self::Variant1(value)
     }
 }
 impl From<ProjectDeleted> for ProjectEvent {
     fn from(value: ProjectDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant2(value)
     }
 }
 impl From<ProjectEdited> for ProjectEvent {
     fn from(value: ProjectEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant3(value)
     }
 }
 impl From<ProjectReopened> for ProjectEvent {
     fn from(value: ProjectReopened) -> Self {
-        Self::Reopened(value)
+        Self::Variant4(value)
     }
 }
 #[doc = "ProjectReopened"]
@@ -60934,8 +60934,8 @@ impl From<&PullRequestClosedPullRequestLinks> for PullRequestClosedPullRequestLi
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PullRequestClosedPullRequestRequestedReviewersItem {
-    User(User),
-    Team(Team),
+    Variant0(User),
+    Variant1(Team),
 }
 impl From<&PullRequestClosedPullRequestRequestedReviewersItem>
     for PullRequestClosedPullRequestRequestedReviewersItem
@@ -60946,12 +60946,12 @@ impl From<&PullRequestClosedPullRequestRequestedReviewersItem>
 }
 impl From<User> for PullRequestClosedPullRequestRequestedReviewersItem {
     fn from(value: User) -> Self {
-        Self::User(value)
+        Self::Variant0(value)
     }
 }
 impl From<Team> for PullRequestClosedPullRequestRequestedReviewersItem {
     fn from(value: Team) -> Self {
-        Self::Team(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "PullRequestClosedPullRequestState"]
@@ -61549,8 +61549,8 @@ impl From<&PullRequestConvertedToDraftPullRequestLinks>
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PullRequestConvertedToDraftPullRequestRequestedReviewersItem {
-    User(User),
-    Team(Team),
+    Variant0(User),
+    Variant1(Team),
 }
 impl From<&PullRequestConvertedToDraftPullRequestRequestedReviewersItem>
     for PullRequestConvertedToDraftPullRequestRequestedReviewersItem
@@ -61561,12 +61561,12 @@ impl From<&PullRequestConvertedToDraftPullRequestRequestedReviewersItem>
 }
 impl From<User> for PullRequestConvertedToDraftPullRequestRequestedReviewersItem {
     fn from(value: User) -> Self {
-        Self::User(value)
+        Self::Variant0(value)
     }
 }
 impl From<Team> for PullRequestConvertedToDraftPullRequestRequestedReviewersItem {
     fn from(value: Team) -> Self {
-        Self::Team(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "State of this Pull Request. Either `open` or `closed`."]
@@ -61972,23 +61972,23 @@ impl From<&PullRequestEditedChangesTitle> for PullRequestEditedChangesTitle {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PullRequestEvent {
-    Assigned(PullRequestAssigned),
-    AutoMergeDisabled(PullRequestAutoMergeDisabled),
-    AutoMergeEnabled(PullRequestAutoMergeEnabled),
-    Closed(PullRequestClosed),
-    ConvertedToDraft(PullRequestConvertedToDraft),
-    Edited(PullRequestEdited),
-    Labeled(PullRequestLabeled),
-    Locked(PullRequestLocked),
-    Opened(PullRequestOpened),
-    ReadyForReview(PullRequestReadyForReview),
-    Reopened(PullRequestReopened),
-    ReviewRequestRemoved(PullRequestReviewRequestRemoved),
-    ReviewRequested(PullRequestReviewRequested),
-    Synchronize(PullRequestSynchronize),
-    Unassigned(PullRequestUnassigned),
-    Unlabeled(PullRequestUnlabeled),
-    Unlocked(PullRequestUnlocked),
+    Variant0(PullRequestAssigned),
+    Variant1(PullRequestAutoMergeDisabled),
+    Variant2(PullRequestAutoMergeEnabled),
+    Variant3(PullRequestClosed),
+    Variant4(PullRequestConvertedToDraft),
+    Variant5(PullRequestEdited),
+    Variant6(PullRequestLabeled),
+    Variant7(PullRequestLocked),
+    Variant8(PullRequestOpened),
+    Variant9(PullRequestReadyForReview),
+    Variant10(PullRequestReopened),
+    Variant11(PullRequestReviewRequestRemoved),
+    Variant12(PullRequestReviewRequested),
+    Variant13(PullRequestSynchronize),
+    Variant14(PullRequestUnassigned),
+    Variant15(PullRequestUnlabeled),
+    Variant16(PullRequestUnlocked),
 }
 impl From<&PullRequestEvent> for PullRequestEvent {
     fn from(value: &PullRequestEvent) -> Self {
@@ -61997,87 +61997,87 @@ impl From<&PullRequestEvent> for PullRequestEvent {
 }
 impl From<PullRequestAssigned> for PullRequestEvent {
     fn from(value: PullRequestAssigned) -> Self {
-        Self::Assigned(value)
+        Self::Variant0(value)
     }
 }
 impl From<PullRequestAutoMergeDisabled> for PullRequestEvent {
     fn from(value: PullRequestAutoMergeDisabled) -> Self {
-        Self::AutoMergeDisabled(value)
+        Self::Variant1(value)
     }
 }
 impl From<PullRequestAutoMergeEnabled> for PullRequestEvent {
     fn from(value: PullRequestAutoMergeEnabled) -> Self {
-        Self::AutoMergeEnabled(value)
+        Self::Variant2(value)
     }
 }
 impl From<PullRequestClosed> for PullRequestEvent {
     fn from(value: PullRequestClosed) -> Self {
-        Self::Closed(value)
+        Self::Variant3(value)
     }
 }
 impl From<PullRequestConvertedToDraft> for PullRequestEvent {
     fn from(value: PullRequestConvertedToDraft) -> Self {
-        Self::ConvertedToDraft(value)
+        Self::Variant4(value)
     }
 }
 impl From<PullRequestEdited> for PullRequestEvent {
     fn from(value: PullRequestEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant5(value)
     }
 }
 impl From<PullRequestLabeled> for PullRequestEvent {
     fn from(value: PullRequestLabeled) -> Self {
-        Self::Labeled(value)
+        Self::Variant6(value)
     }
 }
 impl From<PullRequestLocked> for PullRequestEvent {
     fn from(value: PullRequestLocked) -> Self {
-        Self::Locked(value)
+        Self::Variant7(value)
     }
 }
 impl From<PullRequestOpened> for PullRequestEvent {
     fn from(value: PullRequestOpened) -> Self {
-        Self::Opened(value)
+        Self::Variant8(value)
     }
 }
 impl From<PullRequestReadyForReview> for PullRequestEvent {
     fn from(value: PullRequestReadyForReview) -> Self {
-        Self::ReadyForReview(value)
+        Self::Variant9(value)
     }
 }
 impl From<PullRequestReopened> for PullRequestEvent {
     fn from(value: PullRequestReopened) -> Self {
-        Self::Reopened(value)
+        Self::Variant10(value)
     }
 }
 impl From<PullRequestReviewRequestRemoved> for PullRequestEvent {
     fn from(value: PullRequestReviewRequestRemoved) -> Self {
-        Self::ReviewRequestRemoved(value)
+        Self::Variant11(value)
     }
 }
 impl From<PullRequestReviewRequested> for PullRequestEvent {
     fn from(value: PullRequestReviewRequested) -> Self {
-        Self::ReviewRequested(value)
+        Self::Variant12(value)
     }
 }
 impl From<PullRequestSynchronize> for PullRequestEvent {
     fn from(value: PullRequestSynchronize) -> Self {
-        Self::Synchronize(value)
+        Self::Variant13(value)
     }
 }
 impl From<PullRequestUnassigned> for PullRequestEvent {
     fn from(value: PullRequestUnassigned) -> Self {
-        Self::Unassigned(value)
+        Self::Variant14(value)
     }
 }
 impl From<PullRequestUnlabeled> for PullRequestEvent {
     fn from(value: PullRequestUnlabeled) -> Self {
-        Self::Unlabeled(value)
+        Self::Variant15(value)
     }
 }
 impl From<PullRequestUnlocked> for PullRequestEvent {
     fn from(value: PullRequestUnlocked) -> Self {
-        Self::Unlocked(value)
+        Self::Variant16(value)
     }
 }
 #[doc = "PullRequestHead"]
@@ -62956,8 +62956,8 @@ impl From<&PullRequestOpenedPullRequestLinks> for PullRequestOpenedPullRequestLi
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PullRequestOpenedPullRequestRequestedReviewersItem {
-    User(User),
-    Team(Team),
+    Variant0(User),
+    Variant1(Team),
 }
 impl From<&PullRequestOpenedPullRequestRequestedReviewersItem>
     for PullRequestOpenedPullRequestRequestedReviewersItem
@@ -62968,12 +62968,12 @@ impl From<&PullRequestOpenedPullRequestRequestedReviewersItem>
 }
 impl From<User> for PullRequestOpenedPullRequestRequestedReviewersItem {
     fn from(value: User) -> Self {
-        Self::User(value)
+        Self::Variant0(value)
     }
 }
 impl From<Team> for PullRequestOpenedPullRequestRequestedReviewersItem {
     fn from(value: Team) -> Self {
-        Self::Team(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "PullRequestOpenedPullRequestState"]
@@ -63574,8 +63574,8 @@ impl From<&PullRequestReadyForReviewPullRequestLinks>
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PullRequestReadyForReviewPullRequestRequestedReviewersItem {
-    User(User),
-    Team(Team),
+    Variant0(User),
+    Variant1(Team),
 }
 impl From<&PullRequestReadyForReviewPullRequestRequestedReviewersItem>
     for PullRequestReadyForReviewPullRequestRequestedReviewersItem
@@ -63586,12 +63586,12 @@ impl From<&PullRequestReadyForReviewPullRequestRequestedReviewersItem>
 }
 impl From<User> for PullRequestReadyForReviewPullRequestRequestedReviewersItem {
     fn from(value: User) -> Self {
-        Self::User(value)
+        Self::Variant0(value)
     }
 }
 impl From<Team> for PullRequestReadyForReviewPullRequestRequestedReviewersItem {
     fn from(value: Team) -> Self {
-        Self::Team(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "PullRequestReadyForReviewPullRequestState"]
@@ -64185,8 +64185,8 @@ impl From<&PullRequestReopenedPullRequestLinks> for PullRequestReopenedPullReque
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PullRequestReopenedPullRequestRequestedReviewersItem {
-    User(User),
-    Team(Team),
+    Variant0(User),
+    Variant1(Team),
 }
 impl From<&PullRequestReopenedPullRequestRequestedReviewersItem>
     for PullRequestReopenedPullRequestRequestedReviewersItem
@@ -64197,12 +64197,12 @@ impl From<&PullRequestReopenedPullRequestRequestedReviewersItem>
 }
 impl From<User> for PullRequestReopenedPullRequestRequestedReviewersItem {
     fn from(value: User) -> Self {
-        Self::User(value)
+        Self::Variant0(value)
     }
 }
 impl From<Team> for PullRequestReopenedPullRequestRequestedReviewersItem {
     fn from(value: Team) -> Self {
-        Self::Team(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "PullRequestReopenedPullRequestState"]
@@ -64282,8 +64282,8 @@ impl std::convert::TryFrom<String> for PullRequestReopenedPullRequestState {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PullRequestRequestedReviewersItem {
-    User(User),
-    Team(Team),
+    Variant0(User),
+    Variant1(Team),
 }
 impl From<&PullRequestRequestedReviewersItem> for PullRequestRequestedReviewersItem {
     fn from(value: &PullRequestRequestedReviewersItem) -> Self {
@@ -64292,12 +64292,12 @@ impl From<&PullRequestRequestedReviewersItem> for PullRequestRequestedReviewersI
 }
 impl From<User> for PullRequestRequestedReviewersItem {
     fn from(value: User) -> Self {
-        Self::User(value)
+        Self::Variant0(value)
     }
 }
 impl From<Team> for PullRequestRequestedReviewersItem {
     fn from(value: Team) -> Self {
-        Self::Team(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "The [comment](https://docs.github.com/en/rest/reference/pulls#comments) itself."]
@@ -65586,8 +65586,8 @@ impl From<&PullRequestReviewCommentCreatedPullRequestLinks>
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PullRequestReviewCommentCreatedPullRequestRequestedReviewersItem {
-    User(User),
-    Team(Team),
+    Variant0(User),
+    Variant1(Team),
 }
 impl From<&PullRequestReviewCommentCreatedPullRequestRequestedReviewersItem>
     for PullRequestReviewCommentCreatedPullRequestRequestedReviewersItem
@@ -65598,12 +65598,12 @@ impl From<&PullRequestReviewCommentCreatedPullRequestRequestedReviewersItem>
 }
 impl From<User> for PullRequestReviewCommentCreatedPullRequestRequestedReviewersItem {
     fn from(value: User) -> Self {
-        Self::User(value)
+        Self::Variant0(value)
     }
 }
 impl From<Team> for PullRequestReviewCommentCreatedPullRequestRequestedReviewersItem {
     fn from(value: Team) -> Self {
-        Self::Team(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "PullRequestReviewCommentCreatedPullRequestState"]
@@ -66716,8 +66716,8 @@ impl From<&PullRequestReviewCommentDeletedPullRequestLinks>
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PullRequestReviewCommentDeletedPullRequestRequestedReviewersItem {
-    User(User),
-    Team(Team),
+    Variant0(User),
+    Variant1(Team),
 }
 impl From<&PullRequestReviewCommentDeletedPullRequestRequestedReviewersItem>
     for PullRequestReviewCommentDeletedPullRequestRequestedReviewersItem
@@ -66728,12 +66728,12 @@ impl From<&PullRequestReviewCommentDeletedPullRequestRequestedReviewersItem>
 }
 impl From<User> for PullRequestReviewCommentDeletedPullRequestRequestedReviewersItem {
     fn from(value: User) -> Self {
-        Self::User(value)
+        Self::Variant0(value)
     }
 }
 impl From<Team> for PullRequestReviewCommentDeletedPullRequestRequestedReviewersItem {
     fn from(value: Team) -> Self {
-        Self::Team(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "PullRequestReviewCommentDeletedPullRequestState"]
@@ -67939,8 +67939,8 @@ impl From<&PullRequestReviewCommentEditedPullRequestLinks>
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PullRequestReviewCommentEditedPullRequestRequestedReviewersItem {
-    User(User),
-    Team(Team),
+    Variant0(User),
+    Variant1(Team),
 }
 impl From<&PullRequestReviewCommentEditedPullRequestRequestedReviewersItem>
     for PullRequestReviewCommentEditedPullRequestRequestedReviewersItem
@@ -67951,12 +67951,12 @@ impl From<&PullRequestReviewCommentEditedPullRequestRequestedReviewersItem>
 }
 impl From<User> for PullRequestReviewCommentEditedPullRequestRequestedReviewersItem {
     fn from(value: User) -> Self {
-        Self::User(value)
+        Self::Variant0(value)
     }
 }
 impl From<Team> for PullRequestReviewCommentEditedPullRequestRequestedReviewersItem {
     fn from(value: Team) -> Self {
-        Self::Team(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "PullRequestReviewCommentEditedPullRequestState"]
@@ -68046,9 +68046,9 @@ impl std::convert::TryFrom<String> for PullRequestReviewCommentEditedPullRequest
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PullRequestReviewCommentEvent {
-    Created(PullRequestReviewCommentCreated),
-    Deleted(PullRequestReviewCommentDeleted),
-    Edited(PullRequestReviewCommentEdited),
+    Variant0(PullRequestReviewCommentCreated),
+    Variant1(PullRequestReviewCommentDeleted),
+    Variant2(PullRequestReviewCommentEdited),
 }
 impl From<&PullRequestReviewCommentEvent> for PullRequestReviewCommentEvent {
     fn from(value: &PullRequestReviewCommentEvent) -> Self {
@@ -68057,17 +68057,17 @@ impl From<&PullRequestReviewCommentEvent> for PullRequestReviewCommentEvent {
 }
 impl From<PullRequestReviewCommentCreated> for PullRequestReviewCommentEvent {
     fn from(value: PullRequestReviewCommentCreated) -> Self {
-        Self::Created(value)
+        Self::Variant0(value)
     }
 }
 impl From<PullRequestReviewCommentDeleted> for PullRequestReviewCommentEvent {
     fn from(value: PullRequestReviewCommentDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant1(value)
     }
 }
 impl From<PullRequestReviewCommentEdited> for PullRequestReviewCommentEvent {
     fn from(value: PullRequestReviewCommentEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "PullRequestReviewCommentLinks"]
@@ -69078,9 +69078,9 @@ impl From<&PullRequestReviewEditedReviewLinks> for PullRequestReviewEditedReview
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PullRequestReviewEvent {
-    Dismissed(PullRequestReviewDismissed),
-    Edited(PullRequestReviewEdited),
-    Submitted(PullRequestReviewSubmitted),
+    Variant0(PullRequestReviewDismissed),
+    Variant1(PullRequestReviewEdited),
+    Variant2(PullRequestReviewSubmitted),
 }
 impl From<&PullRequestReviewEvent> for PullRequestReviewEvent {
     fn from(value: &PullRequestReviewEvent) -> Self {
@@ -69089,17 +69089,17 @@ impl From<&PullRequestReviewEvent> for PullRequestReviewEvent {
 }
 impl From<PullRequestReviewDismissed> for PullRequestReviewEvent {
     fn from(value: PullRequestReviewDismissed) -> Self {
-        Self::Dismissed(value)
+        Self::Variant0(value)
     }
 }
 impl From<PullRequestReviewEdited> for PullRequestReviewEvent {
     fn from(value: PullRequestReviewEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant1(value)
     }
 }
 impl From<PullRequestReviewSubmitted> for PullRequestReviewEvent {
     fn from(value: PullRequestReviewSubmitted) -> Self {
-        Self::Submitted(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "PullRequestReviewRequestRemoved"]
@@ -71472,13 +71472,13 @@ impl From<&ReleaseEditedChangesName> for ReleaseEditedChangesName {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ReleaseEvent {
-    Created(ReleaseCreated),
-    Deleted(ReleaseDeleted),
-    Edited(ReleaseEdited),
-    Prereleased(ReleasePrereleased),
-    Published(ReleasePublished),
-    Released(ReleaseReleased),
-    Unpublished(ReleaseUnpublished),
+    Variant0(ReleaseCreated),
+    Variant1(ReleaseDeleted),
+    Variant2(ReleaseEdited),
+    Variant3(ReleasePrereleased),
+    Variant4(ReleasePublished),
+    Variant5(ReleaseReleased),
+    Variant6(ReleaseUnpublished),
 }
 impl From<&ReleaseEvent> for ReleaseEvent {
     fn from(value: &ReleaseEvent) -> Self {
@@ -71487,37 +71487,37 @@ impl From<&ReleaseEvent> for ReleaseEvent {
 }
 impl From<ReleaseCreated> for ReleaseEvent {
     fn from(value: ReleaseCreated) -> Self {
-        Self::Created(value)
+        Self::Variant0(value)
     }
 }
 impl From<ReleaseDeleted> for ReleaseEvent {
     fn from(value: ReleaseDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant1(value)
     }
 }
 impl From<ReleaseEdited> for ReleaseEvent {
     fn from(value: ReleaseEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant2(value)
     }
 }
 impl From<ReleasePrereleased> for ReleaseEvent {
     fn from(value: ReleasePrereleased) -> Self {
-        Self::Prereleased(value)
+        Self::Variant3(value)
     }
 }
 impl From<ReleasePublished> for ReleaseEvent {
     fn from(value: ReleasePublished) -> Self {
-        Self::Published(value)
+        Self::Variant4(value)
     }
 }
 impl From<ReleaseReleased> for ReleaseEvent {
     fn from(value: ReleaseReleased) -> Self {
-        Self::Released(value)
+        Self::Variant5(value)
     }
 }
 impl From<ReleaseUnpublished> for ReleaseEvent {
     fn from(value: ReleaseUnpublished) -> Self {
-        Self::Unpublished(value)
+        Self::Variant6(value)
     }
 }
 #[doc = "ReleasePrereleased"]
@@ -74122,15 +74122,15 @@ impl From<&RepositoryEditedChangesHomepage> for RepositoryEditedChangesHomepage 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum RepositoryEvent {
-    Archived(RepositoryArchived),
-    Created(RepositoryCreated),
-    Deleted(RepositoryDeleted),
-    Edited(RepositoryEdited),
-    Privatized(RepositoryPrivatized),
-    Publicized(RepositoryPublicized),
-    Renamed(RepositoryRenamed),
-    Transferred(RepositoryTransferred),
-    Unarchived(RepositoryUnarchived),
+    Variant0(RepositoryArchived),
+    Variant1(RepositoryCreated),
+    Variant2(RepositoryDeleted),
+    Variant3(RepositoryEdited),
+    Variant4(RepositoryPrivatized),
+    Variant5(RepositoryPublicized),
+    Variant6(RepositoryRenamed),
+    Variant7(RepositoryTransferred),
+    Variant8(RepositoryUnarchived),
 }
 impl From<&RepositoryEvent> for RepositoryEvent {
     fn from(value: &RepositoryEvent) -> Self {
@@ -74139,47 +74139,47 @@ impl From<&RepositoryEvent> for RepositoryEvent {
 }
 impl From<RepositoryArchived> for RepositoryEvent {
     fn from(value: RepositoryArchived) -> Self {
-        Self::Archived(value)
+        Self::Variant0(value)
     }
 }
 impl From<RepositoryCreated> for RepositoryEvent {
     fn from(value: RepositoryCreated) -> Self {
-        Self::Created(value)
+        Self::Variant1(value)
     }
 }
 impl From<RepositoryDeleted> for RepositoryEvent {
     fn from(value: RepositoryDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant2(value)
     }
 }
 impl From<RepositoryEdited> for RepositoryEvent {
     fn from(value: RepositoryEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant3(value)
     }
 }
 impl From<RepositoryPrivatized> for RepositoryEvent {
     fn from(value: RepositoryPrivatized) -> Self {
-        Self::Privatized(value)
+        Self::Variant4(value)
     }
 }
 impl From<RepositoryPublicized> for RepositoryEvent {
     fn from(value: RepositoryPublicized) -> Self {
-        Self::Publicized(value)
+        Self::Variant5(value)
     }
 }
 impl From<RepositoryRenamed> for RepositoryEvent {
     fn from(value: RepositoryRenamed) -> Self {
-        Self::Renamed(value)
+        Self::Variant6(value)
     }
 }
 impl From<RepositoryTransferred> for RepositoryEvent {
     fn from(value: RepositoryTransferred) -> Self {
-        Self::Transferred(value)
+        Self::Variant7(value)
     }
 }
 impl From<RepositoryUnarchived> for RepositoryEvent {
     fn from(value: RepositoryUnarchived) -> Self {
-        Self::Unarchived(value)
+        Self::Variant8(value)
     }
 }
 #[doc = "RepositoryImportEvent"]
@@ -77081,9 +77081,9 @@ impl From<&RepositoryVulnerabilityAlertDismissAlert> for RepositoryVulnerability
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum RepositoryVulnerabilityAlertEvent {
-    Create(RepositoryVulnerabilityAlertCreate),
-    Dismiss(RepositoryVulnerabilityAlertDismiss),
-    Resolve(RepositoryVulnerabilityAlertResolve),
+    Variant0(RepositoryVulnerabilityAlertCreate),
+    Variant1(RepositoryVulnerabilityAlertDismiss),
+    Variant2(RepositoryVulnerabilityAlertResolve),
 }
 impl From<&RepositoryVulnerabilityAlertEvent> for RepositoryVulnerabilityAlertEvent {
     fn from(value: &RepositoryVulnerabilityAlertEvent) -> Self {
@@ -77092,17 +77092,17 @@ impl From<&RepositoryVulnerabilityAlertEvent> for RepositoryVulnerabilityAlertEv
 }
 impl From<RepositoryVulnerabilityAlertCreate> for RepositoryVulnerabilityAlertEvent {
     fn from(value: RepositoryVulnerabilityAlertCreate) -> Self {
-        Self::Create(value)
+        Self::Variant0(value)
     }
 }
 impl From<RepositoryVulnerabilityAlertDismiss> for RepositoryVulnerabilityAlertEvent {
     fn from(value: RepositoryVulnerabilityAlertDismiss) -> Self {
-        Self::Dismiss(value)
+        Self::Variant1(value)
     }
 }
 impl From<RepositoryVulnerabilityAlertResolve> for RepositoryVulnerabilityAlertEvent {
     fn from(value: RepositoryVulnerabilityAlertResolve) -> Self {
-        Self::Resolve(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "RepositoryVulnerabilityAlertResolve"]
@@ -77563,9 +77563,9 @@ impl From<&SecretScanningAlertCreatedAlert> for SecretScanningAlertCreatedAlert 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum SecretScanningAlertEvent {
-    Created(SecretScanningAlertCreated),
-    Reopened(SecretScanningAlertReopened),
-    Resolved(SecretScanningAlertResolved),
+    Variant0(SecretScanningAlertCreated),
+    Variant1(SecretScanningAlertReopened),
+    Variant2(SecretScanningAlertResolved),
 }
 impl From<&SecretScanningAlertEvent> for SecretScanningAlertEvent {
     fn from(value: &SecretScanningAlertEvent) -> Self {
@@ -77574,17 +77574,17 @@ impl From<&SecretScanningAlertEvent> for SecretScanningAlertEvent {
 }
 impl From<SecretScanningAlertCreated> for SecretScanningAlertEvent {
     fn from(value: SecretScanningAlertCreated) -> Self {
-        Self::Created(value)
+        Self::Variant0(value)
     }
 }
 impl From<SecretScanningAlertReopened> for SecretScanningAlertEvent {
     fn from(value: SecretScanningAlertReopened) -> Self {
-        Self::Reopened(value)
+        Self::Variant1(value)
     }
 }
 impl From<SecretScanningAlertResolved> for SecretScanningAlertEvent {
     fn from(value: SecretScanningAlertResolved) -> Self {
-        Self::Resolved(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "SecretScanningAlertReopened"]
@@ -78083,10 +78083,10 @@ impl std::convert::TryFrom<String> for SecretScanningAlertResolvedAlertResolutio
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum SecurityAdvisoryEvent {
-    Performed(SecurityAdvisoryPerformed),
-    Published(SecurityAdvisoryPublished),
-    Updated(SecurityAdvisoryUpdated),
-    Withdrawn(SecurityAdvisoryWithdrawn),
+    Variant0(SecurityAdvisoryPerformed),
+    Variant1(SecurityAdvisoryPublished),
+    Variant2(SecurityAdvisoryUpdated),
+    Variant3(SecurityAdvisoryWithdrawn),
 }
 impl From<&SecurityAdvisoryEvent> for SecurityAdvisoryEvent {
     fn from(value: &SecurityAdvisoryEvent) -> Self {
@@ -78095,22 +78095,22 @@ impl From<&SecurityAdvisoryEvent> for SecurityAdvisoryEvent {
 }
 impl From<SecurityAdvisoryPerformed> for SecurityAdvisoryEvent {
     fn from(value: SecurityAdvisoryPerformed) -> Self {
-        Self::Performed(value)
+        Self::Variant0(value)
     }
 }
 impl From<SecurityAdvisoryPublished> for SecurityAdvisoryEvent {
     fn from(value: SecurityAdvisoryPublished) -> Self {
-        Self::Published(value)
+        Self::Variant1(value)
     }
 }
 impl From<SecurityAdvisoryUpdated> for SecurityAdvisoryEvent {
     fn from(value: SecurityAdvisoryUpdated) -> Self {
-        Self::Updated(value)
+        Self::Variant2(value)
     }
 }
 impl From<SecurityAdvisoryWithdrawn> for SecurityAdvisoryEvent {
     fn from(value: SecurityAdvisoryWithdrawn) -> Self {
-        Self::Withdrawn(value)
+        Self::Variant3(value)
     }
 }
 #[doc = "SecurityAdvisoryPerformed"]
@@ -81714,8 +81714,8 @@ impl From<&SimplePullRequestLinks> for SimplePullRequestLinks {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum SimplePullRequestRequestedReviewersItem {
-    User(User),
-    Team(Team),
+    Variant0(User),
+    Variant1(Team),
 }
 impl From<&SimplePullRequestRequestedReviewersItem> for SimplePullRequestRequestedReviewersItem {
     fn from(value: &SimplePullRequestRequestedReviewersItem) -> Self {
@@ -81724,12 +81724,12 @@ impl From<&SimplePullRequestRequestedReviewersItem> for SimplePullRequestRequest
 }
 impl From<User> for SimplePullRequestRequestedReviewersItem {
     fn from(value: User) -> Self {
-        Self::User(value)
+        Self::Variant0(value)
     }
 }
 impl From<Team> for SimplePullRequestRequestedReviewersItem {
     fn from(value: Team) -> Self {
-        Self::Team(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "SimplePullRequestState"]
@@ -82467,12 +82467,12 @@ impl From<&SponsorshipEditedSponsorship> for SponsorshipEditedSponsorship {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum SponsorshipEvent {
-    Cancelled(SponsorshipCancelled),
-    Created(SponsorshipCreated),
-    Edited(SponsorshipEdited),
-    PendingCancellation(SponsorshipPendingCancellation),
-    PendingTierChange(SponsorshipPendingTierChange),
-    TierChanged(SponsorshipTierChanged),
+    Variant0(SponsorshipCancelled),
+    Variant1(SponsorshipCreated),
+    Variant2(SponsorshipEdited),
+    Variant3(SponsorshipPendingCancellation),
+    Variant4(SponsorshipPendingTierChange),
+    Variant5(SponsorshipTierChanged),
 }
 impl From<&SponsorshipEvent> for SponsorshipEvent {
     fn from(value: &SponsorshipEvent) -> Self {
@@ -82481,32 +82481,32 @@ impl From<&SponsorshipEvent> for SponsorshipEvent {
 }
 impl From<SponsorshipCancelled> for SponsorshipEvent {
     fn from(value: SponsorshipCancelled) -> Self {
-        Self::Cancelled(value)
+        Self::Variant0(value)
     }
 }
 impl From<SponsorshipCreated> for SponsorshipEvent {
     fn from(value: SponsorshipCreated) -> Self {
-        Self::Created(value)
+        Self::Variant1(value)
     }
 }
 impl From<SponsorshipEdited> for SponsorshipEvent {
     fn from(value: SponsorshipEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant2(value)
     }
 }
 impl From<SponsorshipPendingCancellation> for SponsorshipEvent {
     fn from(value: SponsorshipPendingCancellation) -> Self {
-        Self::PendingCancellation(value)
+        Self::Variant3(value)
     }
 }
 impl From<SponsorshipPendingTierChange> for SponsorshipEvent {
     fn from(value: SponsorshipPendingTierChange) -> Self {
-        Self::PendingTierChange(value)
+        Self::Variant4(value)
     }
 }
 impl From<SponsorshipTierChanged> for SponsorshipEvent {
     fn from(value: SponsorshipTierChanged) -> Self {
-        Self::TierChanged(value)
+        Self::Variant5(value)
     }
 }
 #[doc = "SponsorshipPendingCancellation"]
@@ -83580,8 +83580,8 @@ impl std::convert::TryFrom<String> for StarDeletedAction {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum StarEvent {
-    Created(StarCreated),
-    Deleted(StarDeleted),
+    Variant0(StarCreated),
+    Variant1(StarDeleted),
 }
 impl From<&StarEvent> for StarEvent {
     fn from(value: &StarEvent) -> Self {
@@ -83590,12 +83590,12 @@ impl From<&StarEvent> for StarEvent {
 }
 impl From<StarCreated> for StarEvent {
     fn from(value: StarCreated) -> Self {
-        Self::Created(value)
+        Self::Variant0(value)
     }
 }
 impl From<StarDeleted> for StarEvent {
     fn from(value: StarDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "StatusEvent"]
@@ -85998,11 +85998,11 @@ impl From<&TeamEditedChangesRepositoryPermissionsFrom>
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum TeamEvent {
-    AddedToRepository(TeamAddedToRepository),
-    Created(TeamCreated),
-    Deleted(TeamDeleted),
-    Edited(TeamEdited),
-    RemovedFromRepository(TeamRemovedFromRepository),
+    Variant0(TeamAddedToRepository),
+    Variant1(TeamCreated),
+    Variant2(TeamDeleted),
+    Variant3(TeamEdited),
+    Variant4(TeamRemovedFromRepository),
 }
 impl From<&TeamEvent> for TeamEvent {
     fn from(value: &TeamEvent) -> Self {
@@ -86011,27 +86011,27 @@ impl From<&TeamEvent> for TeamEvent {
 }
 impl From<TeamAddedToRepository> for TeamEvent {
     fn from(value: TeamAddedToRepository) -> Self {
-        Self::AddedToRepository(value)
+        Self::Variant0(value)
     }
 }
 impl From<TeamCreated> for TeamEvent {
     fn from(value: TeamCreated) -> Self {
-        Self::Created(value)
+        Self::Variant1(value)
     }
 }
 impl From<TeamDeleted> for TeamEvent {
     fn from(value: TeamDeleted) -> Self {
-        Self::Deleted(value)
+        Self::Variant2(value)
     }
 }
 impl From<TeamEdited> for TeamEvent {
     fn from(value: TeamEdited) -> Self {
-        Self::Edited(value)
+        Self::Variant3(value)
     }
 }
 impl From<TeamRemovedFromRepository> for TeamEvent {
     fn from(value: TeamRemovedFromRepository) -> Self {
-        Self::RemovedFromRepository(value)
+        Self::Variant4(value)
     }
 }
 #[doc = "TeamParent"]
@@ -87812,9 +87812,9 @@ impl std::convert::TryFrom<String> for WorkflowJobConclusion {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum WorkflowJobEvent {
-    Completed(WorkflowJobCompleted),
-    Queued(WorkflowJobQueued),
-    Started(WorkflowJobStarted),
+    Variant0(WorkflowJobCompleted),
+    Variant1(WorkflowJobQueued),
+    Variant2(WorkflowJobStarted),
 }
 impl From<&WorkflowJobEvent> for WorkflowJobEvent {
     fn from(value: &WorkflowJobEvent) -> Self {
@@ -87823,17 +87823,17 @@ impl From<&WorkflowJobEvent> for WorkflowJobEvent {
 }
 impl From<WorkflowJobCompleted> for WorkflowJobEvent {
     fn from(value: WorkflowJobCompleted) -> Self {
-        Self::Completed(value)
+        Self::Variant0(value)
     }
 }
 impl From<WorkflowJobQueued> for WorkflowJobEvent {
     fn from(value: WorkflowJobQueued) -> Self {
-        Self::Queued(value)
+        Self::Variant1(value)
     }
 }
 impl From<WorkflowJobStarted> for WorkflowJobEvent {
     fn from(value: WorkflowJobStarted) -> Self {
-        Self::Started(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "WorkflowJobQueued"]
@@ -89502,8 +89502,8 @@ impl std::convert::TryFrom<String> for WorkflowRunConclusion {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum WorkflowRunEvent {
-    Completed(WorkflowRunCompleted),
-    Requested(WorkflowRunRequested),
+    Variant0(WorkflowRunCompleted),
+    Variant1(WorkflowRunRequested),
 }
 impl From<&WorkflowRunEvent> for WorkflowRunEvent {
     fn from(value: &WorkflowRunEvent) -> Self {
@@ -89512,12 +89512,12 @@ impl From<&WorkflowRunEvent> for WorkflowRunEvent {
 }
 impl From<WorkflowRunCompleted> for WorkflowRunEvent {
     fn from(value: WorkflowRunCompleted) -> Self {
-        Self::Completed(value)
+        Self::Variant0(value)
     }
 }
 impl From<WorkflowRunRequested> for WorkflowRunEvent {
     fn from(value: WorkflowRunRequested) -> Self {
-        Self::Requested(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "WorkflowRunPullRequestsItem"]
@@ -89900,8 +89900,8 @@ impl std::convert::TryFrom<String> for WorkflowRunStatus {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum WorkflowStep {
-    InProgress(WorkflowStepInProgress),
-    Completed(WorkflowStepCompleted),
+    Variant0(WorkflowStepInProgress),
+    Variant1(WorkflowStepCompleted),
 }
 impl From<&WorkflowStep> for WorkflowStep {
     fn from(value: &WorkflowStep) -> Self {
@@ -89910,12 +89910,12 @@ impl From<&WorkflowStep> for WorkflowStep {
 }
 impl From<WorkflowStepInProgress> for WorkflowStep {
     fn from(value: WorkflowStepInProgress) -> Self {
-        Self::InProgress(value)
+        Self::Variant0(value)
     }
 }
 impl From<WorkflowStepCompleted> for WorkflowStep {
     fn from(value: WorkflowStepCompleted) -> Self {
-        Self::Completed(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "WorkflowStepCompleted"]

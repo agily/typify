@@ -13,10 +13,7 @@ use iref::Iri;
 use log::info;
 use output::OutputSpace;
 use pathdiff::diff_paths;
-use petgraph::{Direction, Graph};
 use proc_macro2::TokenStream;
-use ptree::graph::write_graph_with;
-use ptree::PrintConfig;
 use quote::{format_ident, quote, ToTokens};
 use schemars::schema::{
     Metadata, RootSchema, Schema, SchemaObject, SingleOrVec, SubschemaValidation,
@@ -217,6 +214,7 @@ pub struct TypeSpace {
     // Shared functions for generating default values
     defaults: BTreeSet<DefaultImpl>,
 
+    tree: HashMap<String, HashSet<String>>,
     file_path: PathBuf,
 }
 
@@ -244,6 +242,7 @@ impl Default for TypeSpace {
             cache: Default::default(),
             defaults: Default::default(),
             file_path: Default::default(),
+            tree: Default::default(),
         }
     }
 }
@@ -824,20 +823,7 @@ impl TypeSpace {
         if root_type {
             defs.push((RefKey::Root, schema_object.into()));
         }
-
-        let g = construct_graph(&graph);
-        let mut root_indexes = vec![];
-        for index in g
-            .node_indices()
-            .filter(|i| g.neighbors_directed(*i, Direction::Incoming).count() == 0)
-        {
-            root_indexes.push(index);
-        }
-
-        let file = std::fs::File::create("tree.txt").unwrap();
-        for root_index in root_indexes {
-            write_graph_with(&g, root_index, &file, &PrintConfig::from_env()).unwrap();
-        }
+        self.tree = graph;
 
         self.add_ref_types_impl(defs)?;
 
@@ -939,6 +925,11 @@ impl TypeSpace {
             .for_each(|x| output.add_item(output::OutputSpaceMod::Defaults, "", x.into()));
 
         output.into_stream()
+    }
+
+    /// doc
+    pub fn get_tree(&self) -> &HashMap<String, HashSet<String>> {
+        &self.tree
     }
 
     /// Allocated the next TypeId.
@@ -1594,25 +1585,6 @@ fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<
             }
         }
     }
-}
-
-fn construct_graph(packages: &HashMap<String, HashSet<String>>) -> Graph<&String, &String> {
-    let nudes: HashSet<_> = packages
-        .iter()
-        .flat_map(|(name, dependency)| dependency.iter().chain(Some(name)))
-        .collect();
-    let mut deps = Graph::new();
-    for nude in nudes {
-        deps.add_node(nude);
-    }
-    for (name, dependencies) in packages {
-        let root_node = deps.node_indices().find(|i| deps[*i] == name).unwrap();
-        for dep in dependencies {
-            let dep_node = deps.node_indices().find(|i| deps[*i] == dep).unwrap();
-            deps.add_edge(root_node, dep_node, name);
-        }
-    }
-    deps
 }
 
 #[cfg(test)]
