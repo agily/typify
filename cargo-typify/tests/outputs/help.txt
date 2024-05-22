@@ -29,6 +29,14 @@ Options:
           
           [possible values: generate, allow, deny]
 
+      --print-refs
+          Record reference tree in file. Input file name will be used with a `.tree` extension
+
+      --output-tree <OUTPUT_TREE>
+          The output file to write tree to. If not specified, the input file name will be used with a `.tree` extension.
+          
+          If `-` is specified, the tree will be written to stdout.
+
   -h, --help
           Print help (see a summary with '-h')
 

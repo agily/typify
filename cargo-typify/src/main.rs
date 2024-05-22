@@ -1,6 +1,6 @@
 // Copyright 2023 Oxide Computer Company
 
-use cargo_typify::{convert, CliArgs};
+use cargo_typify::{convert, CliArgs, ConvertResult};
 use clap::Parser;
 
 use color_eyre::eyre::{Context, Result};
@@ -19,16 +19,28 @@ fn main() -> Result<()> {
     let cli = CargoCli::parse();
     let CargoCli::Typify(args) = cli;
 
-    let contents = convert(&args).wrap_err("Failed to convert JSON Schema to Rust code")?;
+    let ConvertResult { contents, tree } =
+        convert(&args).wrap_err("Failed to convert JSON Schema to Rust code")?;
 
-    let output_path = args.output_path();
-
-    if let Some(output_path) = &output_path {
+    if let Some(output_path) = &args.output_path() {
         std::fs::write(output_path, contents).wrap_err_with(|| {
             format!("Failed to write output to file: {}", output_path.display())
         })?;
     } else {
-        print!("{}", contents);
+        print!("{contents}");
+    }
+
+    if let Some(tree) = tree {
+        if let Some(output_tree_path) = &args.tree_out_path() {
+            std::fs::write(output_tree_path, tree).wrap_err_with(|| {
+                format!(
+                    "Failed to write output to file: {}",
+                    output_tree_path.display()
+                )
+            })?;
+        } else {
+            println!("{tree}");
+        }
     }
 
     Ok(())

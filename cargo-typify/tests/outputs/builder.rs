@@ -175,7 +175,7 @@ impl Veggie {
 #[doc = "    \"vegetables\": {"]
 #[doc = "      \"type\": \"array\","]
 #[doc = "      \"items\": {"]
-#[doc = "        \"$ref\": \"#/$defs/veggie\""]
+#[doc = "        \"$ref\": \"veggie\""]
 #[doc = "      }"]
 #[doc = "    }"]
 #[doc = "  }"]

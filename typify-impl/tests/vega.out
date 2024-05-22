@@ -575,9 +575,9 @@ impl From<SignalRef> for AggregateTransformGroupby {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum AggregateTransformGroupbyVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&AggregateTransformGroupbyVariant0Item> for AggregateTransformGroupbyVariant0Item {
     fn from(value: &AggregateTransformGroupbyVariant0Item) -> Self {
@@ -586,17 +586,17 @@ impl From<&AggregateTransformGroupbyVariant0Item> for AggregateTransformGroupbyV
 }
 impl From<ScaleField> for AggregateTransformGroupbyVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for AggregateTransformGroupbyVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for AggregateTransformGroupbyVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "AggregateTransformKey"]
@@ -622,9 +622,9 @@ impl From<Expr> for AggregateTransformGroupbyVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum AggregateTransformKey {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&AggregateTransformKey> for AggregateTransformKey {
     fn from(value: &AggregateTransformKey) -> Self {
@@ -633,17 +633,17 @@ impl From<&AggregateTransformKey> for AggregateTransformKey {
 }
 impl From<ScaleField> for AggregateTransformKey {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for AggregateTransformKey {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for AggregateTransformKey {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "AggregateTransformOps"]
@@ -11610,10 +11610,10 @@ impl From<&BaseColorValueVariant0Variant2> for BaseColorValueVariant0Variant2 {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum BaseColorValueVariant4Color {
-    Rgb(ColorRgb),
-    Hsl(ColorHsl),
-    Lab(ColorLab),
-    Hcl(ColorHcl),
+    Variant0(ColorRgb),
+    Variant1(ColorHsl),
+    Variant2(ColorLab),
+    Variant3(ColorHcl),
 }
 impl From<&BaseColorValueVariant4Color> for BaseColorValueVariant4Color {
     fn from(value: &BaseColorValueVariant4Color) -> Self {
@@ -11622,22 +11622,22 @@ impl From<&BaseColorValueVariant4Color> for BaseColorValueVariant4Color {
 }
 impl From<ColorRgb> for BaseColorValueVariant4Color {
     fn from(value: ColorRgb) -> Self {
-        Self::Rgb(value)
+        Self::Variant0(value)
     }
 }
 impl From<ColorHsl> for BaseColorValueVariant4Color {
     fn from(value: ColorHsl) -> Self {
-        Self::Hsl(value)
+        Self::Variant1(value)
     }
 }
 impl From<ColorLab> for BaseColorValueVariant4Color {
     fn from(value: ColorLab) -> Self {
-        Self::Lab(value)
+        Self::Variant2(value)
     }
 }
 impl From<ColorHcl> for BaseColorValueVariant4Color {
     fn from(value: ColorHcl) -> Self {
-        Self::Hcl(value)
+        Self::Variant3(value)
     }
 }
 #[doc = "BaselineValue"]
@@ -13736,9 +13736,9 @@ impl From<SignalRef> for BinTransformExtentVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum BinTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&BinTransformField> for BinTransformField {
     fn from(value: &BinTransformField) -> Self {
@@ -13747,17 +13747,17 @@ impl From<&BinTransformField> for BinTransformField {
 }
 impl From<ScaleField> for BinTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for BinTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for BinTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "BinTransformInterval"]
@@ -17926,8 +17926,8 @@ impl From<&Compare> for Compare {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum CompareVariant0Field {
-    ScaleField(ScaleField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(Expr),
 }
 impl From<&CompareVariant0Field> for CompareVariant0Field {
     fn from(value: &CompareVariant0Field) -> Self {
@@ -17936,12 +17936,12 @@ impl From<&CompareVariant0Field> for CompareVariant0Field {
 }
 impl From<ScaleField> for CompareVariant0Field {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<Expr> for CompareVariant0Field {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "CompareVariant1FieldItem"]
@@ -17964,8 +17964,8 @@ impl From<Expr> for CompareVariant0Field {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum CompareVariant1FieldItem {
-    ScaleField(ScaleField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(Expr),
 }
 impl From<&CompareVariant1FieldItem> for CompareVariant1FieldItem {
     fn from(value: &CompareVariant1FieldItem) -> Self {
@@ -17974,12 +17974,12 @@ impl From<&CompareVariant1FieldItem> for CompareVariant1FieldItem {
 }
 impl From<ScaleField> for CompareVariant1FieldItem {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<Expr> for CompareVariant1FieldItem {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "ContourTransform"]
@@ -18728,9 +18728,9 @@ impl From<SignalRef> for ContourTransformValuesVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ContourTransformWeight {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&ContourTransformWeight> for ContourTransformWeight {
     fn from(value: &ContourTransformWeight) -> Self {
@@ -18739,17 +18739,17 @@ impl From<&ContourTransformWeight> for ContourTransformWeight {
 }
 impl From<ScaleField> for ContourTransformWeight {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for ContourTransformWeight {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for ContourTransformWeight {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "ContourTransformX"]
@@ -18775,9 +18775,9 @@ impl From<Expr> for ContourTransformWeight {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ContourTransformX {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&ContourTransformX> for ContourTransformX {
     fn from(value: &ContourTransformX) -> Self {
@@ -18786,17 +18786,17 @@ impl From<&ContourTransformX> for ContourTransformX {
 }
 impl From<ScaleField> for ContourTransformX {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for ContourTransformX {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for ContourTransformX {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "ContourTransformY"]
@@ -18822,9 +18822,9 @@ impl From<Expr> for ContourTransformX {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ContourTransformY {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&ContourTransformY> for ContourTransformY {
     fn from(value: &ContourTransformY) -> Self {
@@ -18833,17 +18833,17 @@ impl From<&ContourTransformY> for ContourTransformY {
 }
 impl From<ScaleField> for ContourTransformY {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for ContourTransformY {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for ContourTransformY {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "CountpatternTransform"]
@@ -19200,9 +19200,9 @@ impl std::convert::TryFrom<String> for CountpatternTransformCaseVariant0 {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum CountpatternTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&CountpatternTransformField> for CountpatternTransformField {
     fn from(value: &CountpatternTransformField) -> Self {
@@ -19211,17 +19211,17 @@ impl From<&CountpatternTransformField> for CountpatternTransformField {
 }
 impl From<ScaleField> for CountpatternTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for CountpatternTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for CountpatternTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "CountpatternTransformPattern"]
@@ -19722,9 +19722,9 @@ impl From<SignalRef> for CrossfilterTransformFields {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum CrossfilterTransformFieldsVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&CrossfilterTransformFieldsVariant0Item> for CrossfilterTransformFieldsVariant0Item {
     fn from(value: &CrossfilterTransformFieldsVariant0Item) -> Self {
@@ -19733,17 +19733,17 @@ impl From<&CrossfilterTransformFieldsVariant0Item> for CrossfilterTransformField
 }
 impl From<ScaleField> for CrossfilterTransformFieldsVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for CrossfilterTransformFieldsVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for CrossfilterTransformFieldsVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "CrossfilterTransformQuery"]
@@ -26424,9 +26424,9 @@ impl From<SignalRef> for DensityTransformDistributionDistributions {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum DensityTransformDistributionField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&DensityTransformDistributionField> for DensityTransformDistributionField {
     fn from(value: &DensityTransformDistributionField) -> Self {
@@ -26435,17 +26435,17 @@ impl From<&DensityTransformDistributionField> for DensityTransformDistributionFi
 }
 impl From<ScaleField> for DensityTransformDistributionField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for DensityTransformDistributionField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for DensityTransformDistributionField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "DensityTransformDistributionMax"]
@@ -28593,9 +28593,9 @@ impl From<SignalRef> for DotbinTransformAs {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum DotbinTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&DotbinTransformField> for DotbinTransformField {
     fn from(value: &DotbinTransformField) -> Self {
@@ -28604,17 +28604,17 @@ impl From<&DotbinTransformField> for DotbinTransformField {
 }
 impl From<ScaleField> for DotbinTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for DotbinTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for DotbinTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "DotbinTransformGroupby"]
@@ -28691,9 +28691,9 @@ impl From<SignalRef> for DotbinTransformGroupby {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum DotbinTransformGroupbyVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&DotbinTransformGroupbyVariant0Item> for DotbinTransformGroupbyVariant0Item {
     fn from(value: &DotbinTransformGroupbyVariant0Item) -> Self {
@@ -28702,17 +28702,17 @@ impl From<&DotbinTransformGroupbyVariant0Item> for DotbinTransformGroupbyVariant
 }
 impl From<ScaleField> for DotbinTransformGroupbyVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for DotbinTransformGroupbyVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for DotbinTransformGroupbyVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "DotbinTransformSmooth"]
@@ -29477,8 +29477,8 @@ impl From<&Everything> for Everything {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum EverythingMarksItem {
-    Group(MarkGroup),
-    Visual(MarkVisual),
+    Variant0(MarkGroup),
+    Variant1(MarkVisual),
 }
 impl From<&EverythingMarksItem> for EverythingMarksItem {
     fn from(value: &EverythingMarksItem) -> Self {
@@ -29487,12 +29487,12 @@ impl From<&EverythingMarksItem> for EverythingMarksItem {
 }
 impl From<MarkGroup> for EverythingMarksItem {
     fn from(value: MarkGroup) -> Self {
-        Self::Group(value)
+        Self::Variant0(value)
     }
 }
 impl From<MarkVisual> for EverythingMarksItem {
     fn from(value: MarkVisual) -> Self {
-        Self::Visual(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "Expr"]
@@ -29646,9 +29646,9 @@ impl From<&ExtentTransform> for ExtentTransform {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ExtentTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&ExtentTransformField> for ExtentTransformField {
     fn from(value: &ExtentTransformField) -> Self {
@@ -29657,17 +29657,17 @@ impl From<&ExtentTransformField> for ExtentTransformField {
 }
 impl From<ScaleField> for ExtentTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for ExtentTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for ExtentTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "ExtentTransformType"]
@@ -30471,9 +30471,9 @@ impl From<SignalRef> for FlattenTransformFields {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum FlattenTransformFieldsVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&FlattenTransformFieldsVariant0Item> for FlattenTransformFieldsVariant0Item {
     fn from(value: &FlattenTransformFieldsVariant0Item) -> Self {
@@ -30482,17 +30482,17 @@ impl From<&FlattenTransformFieldsVariant0Item> for FlattenTransformFieldsVariant
 }
 impl From<ScaleField> for FlattenTransformFieldsVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for FlattenTransformFieldsVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for FlattenTransformFieldsVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "FlattenTransformIndex"]
@@ -30843,9 +30843,9 @@ impl From<SignalRef> for FoldTransformFields {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum FoldTransformFieldsVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&FoldTransformFieldsVariant0Item> for FoldTransformFieldsVariant0Item {
     fn from(value: &FoldTransformFieldsVariant0Item) -> Self {
@@ -30854,17 +30854,17 @@ impl From<&FoldTransformFieldsVariant0Item> for FoldTransformFieldsVariant0Item 
 }
 impl From<ScaleField> for FoldTransformFieldsVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for FoldTransformFieldsVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for FoldTransformFieldsVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "FoldTransformType"]
@@ -33639,9 +33639,9 @@ impl From<SignalRef> for ForceTransformForcesItemDistanceMin {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ForceTransformForcesItemId {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&ForceTransformForcesItemId> for ForceTransformForcesItemId {
     fn from(value: &ForceTransformForcesItemId) -> Self {
@@ -33650,17 +33650,17 @@ impl From<&ForceTransformForcesItemId> for ForceTransformForcesItemId {
 }
 impl From<ScaleField> for ForceTransformForcesItemId {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for ForceTransformForcesItemId {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for ForceTransformForcesItemId {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "ForceTransformForcesItemIterations"]
@@ -34523,9 +34523,9 @@ impl From<SignalRef> for GeojsonTransformFields {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum GeojsonTransformFieldsVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&GeojsonTransformFieldsVariant0Item> for GeojsonTransformFieldsVariant0Item {
     fn from(value: &GeojsonTransformFieldsVariant0Item) -> Self {
@@ -34534,17 +34534,17 @@ impl From<&GeojsonTransformFieldsVariant0Item> for GeojsonTransformFieldsVariant
 }
 impl From<ScaleField> for GeojsonTransformFieldsVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for GeojsonTransformFieldsVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for GeojsonTransformFieldsVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "GeojsonTransformGeojson"]
@@ -34570,9 +34570,9 @@ impl From<Expr> for GeojsonTransformFieldsVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum GeojsonTransformGeojson {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&GeojsonTransformGeojson> for GeojsonTransformGeojson {
     fn from(value: &GeojsonTransformGeojson) -> Self {
@@ -34581,17 +34581,17 @@ impl From<&GeojsonTransformGeojson> for GeojsonTransformGeojson {
 }
 impl From<ScaleField> for GeojsonTransformGeojson {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for GeojsonTransformGeojson {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for GeojsonTransformGeojson {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "GeojsonTransformType"]
@@ -34804,9 +34804,9 @@ impl From<SignalRef> for GeopathTransformAs {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum GeopathTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&GeopathTransformField> for GeopathTransformField {
     fn from(value: &GeopathTransformField) -> Self {
@@ -34815,17 +34815,17 @@ impl From<&GeopathTransformField> for GeopathTransformField {
 }
 impl From<ScaleField> for GeopathTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for GeopathTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for GeopathTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "GeopathTransformPointRadius"]
@@ -35208,9 +35208,9 @@ impl From<SignalRef> for GeopointTransformFields {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum GeopointTransformFieldsVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&GeopointTransformFieldsVariant0Item> for GeopointTransformFieldsVariant0Item {
     fn from(value: &GeopointTransformFieldsVariant0Item) -> Self {
@@ -35219,17 +35219,17 @@ impl From<&GeopointTransformFieldsVariant0Item> for GeopointTransformFieldsVaria
 }
 impl From<ScaleField> for GeopointTransformFieldsVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for GeopointTransformFieldsVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for GeopointTransformFieldsVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "GeopointTransformType"]
@@ -35444,9 +35444,9 @@ impl From<SignalRef> for GeoshapeTransformAs {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum GeoshapeTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&GeoshapeTransformField> for GeoshapeTransformField {
     fn from(value: &GeoshapeTransformField) -> Self {
@@ -35455,24 +35455,22 @@ impl From<&GeoshapeTransformField> for GeoshapeTransformField {
 }
 impl Default for GeoshapeTransformField {
     fn default() -> Self {
-        GeoshapeTransformField::ScaleField(ScaleField(StringOrSignal::Variant0(
-            "datum".to_string(),
-        )))
+        GeoshapeTransformField::Variant0(ScaleField(StringOrSignal::Variant0("datum".to_string())))
     }
 }
 impl From<ScaleField> for GeoshapeTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for GeoshapeTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for GeoshapeTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "GeoshapeTransformPointRadius"]
@@ -36643,9 +36641,9 @@ impl From<ParamField> for HeatmapTransformColor {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum HeatmapTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&HeatmapTransformField> for HeatmapTransformField {
     fn from(value: &HeatmapTransformField) -> Self {
@@ -36654,17 +36652,17 @@ impl From<&HeatmapTransformField> for HeatmapTransformField {
 }
 impl From<ScaleField> for HeatmapTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for HeatmapTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for HeatmapTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "HeatmapTransformOpacity"]
@@ -37176,9 +37174,9 @@ impl From<&ImputeTransform> for ImputeTransform {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ImputeTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&ImputeTransformField> for ImputeTransformField {
     fn from(value: &ImputeTransformField) -> Self {
@@ -37187,17 +37185,17 @@ impl From<&ImputeTransformField> for ImputeTransformField {
 }
 impl From<ScaleField> for ImputeTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for ImputeTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for ImputeTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "ImputeTransformGroupby"]
@@ -37274,9 +37272,9 @@ impl From<SignalRef> for ImputeTransformGroupby {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ImputeTransformGroupbyVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&ImputeTransformGroupbyVariant0Item> for ImputeTransformGroupbyVariant0Item {
     fn from(value: &ImputeTransformGroupbyVariant0Item) -> Self {
@@ -37285,17 +37283,17 @@ impl From<&ImputeTransformGroupbyVariant0Item> for ImputeTransformGroupbyVariant
 }
 impl From<ScaleField> for ImputeTransformGroupbyVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for ImputeTransformGroupbyVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for ImputeTransformGroupbyVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "ImputeTransformKey"]
@@ -37321,9 +37319,9 @@ impl From<Expr> for ImputeTransformGroupbyVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ImputeTransformKey {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&ImputeTransformKey> for ImputeTransformKey {
     fn from(value: &ImputeTransformKey) -> Self {
@@ -37332,17 +37330,17 @@ impl From<&ImputeTransformKey> for ImputeTransformKey {
 }
 impl From<ScaleField> for ImputeTransformKey {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for ImputeTransformKey {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for ImputeTransformKey {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "ImputeTransformKeyvals"]
@@ -37834,9 +37832,9 @@ impl From<SignalRef> for IsocontourTransformAs {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum IsocontourTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&IsocontourTransformField> for IsocontourTransformField {
     fn from(value: &IsocontourTransformField) -> Self {
@@ -37845,17 +37843,17 @@ impl From<&IsocontourTransformField> for IsocontourTransformField {
 }
 impl From<ScaleField> for IsocontourTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for IsocontourTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for IsocontourTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "IsocontourTransformLevels"]
@@ -38884,9 +38882,9 @@ impl From<SignalRef> for JoinaggregateTransformGroupby {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum JoinaggregateTransformGroupbyVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&JoinaggregateTransformGroupbyVariant0Item>
     for JoinaggregateTransformGroupbyVariant0Item
@@ -38897,17 +38895,17 @@ impl From<&JoinaggregateTransformGroupbyVariant0Item>
 }
 impl From<ScaleField> for JoinaggregateTransformGroupbyVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for JoinaggregateTransformGroupbyVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for JoinaggregateTransformGroupbyVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "JoinaggregateTransformKey"]
@@ -38933,9 +38931,9 @@ impl From<Expr> for JoinaggregateTransformGroupbyVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum JoinaggregateTransformKey {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&JoinaggregateTransformKey> for JoinaggregateTransformKey {
     fn from(value: &JoinaggregateTransformKey) -> Self {
@@ -38944,17 +38942,17 @@ impl From<&JoinaggregateTransformKey> for JoinaggregateTransformKey {
 }
 impl From<ScaleField> for JoinaggregateTransformKey {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for JoinaggregateTransformKey {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for JoinaggregateTransformKey {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "JoinaggregateTransformOps"]
@@ -39791,9 +39789,9 @@ impl From<SignalRef> for Kde2dTransformGroupby {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Kde2dTransformGroupbyVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&Kde2dTransformGroupbyVariant0Item> for Kde2dTransformGroupbyVariant0Item {
     fn from(value: &Kde2dTransformGroupbyVariant0Item) -> Self {
@@ -39802,17 +39800,17 @@ impl From<&Kde2dTransformGroupbyVariant0Item> for Kde2dTransformGroupbyVariant0I
 }
 impl From<ScaleField> for Kde2dTransformGroupbyVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for Kde2dTransformGroupbyVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for Kde2dTransformGroupbyVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "Kde2dTransformSize"]
@@ -39982,9 +39980,9 @@ impl std::convert::TryFrom<String> for Kde2dTransformType {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Kde2dTransformWeight {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&Kde2dTransformWeight> for Kde2dTransformWeight {
     fn from(value: &Kde2dTransformWeight) -> Self {
@@ -39993,17 +39991,17 @@ impl From<&Kde2dTransformWeight> for Kde2dTransformWeight {
 }
 impl From<ScaleField> for Kde2dTransformWeight {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for Kde2dTransformWeight {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for Kde2dTransformWeight {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "Kde2dTransformX"]
@@ -40029,9 +40027,9 @@ impl From<Expr> for Kde2dTransformWeight {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Kde2dTransformX {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&Kde2dTransformX> for Kde2dTransformX {
     fn from(value: &Kde2dTransformX) -> Self {
@@ -40040,17 +40038,17 @@ impl From<&Kde2dTransformX> for Kde2dTransformX {
 }
 impl From<ScaleField> for Kde2dTransformX {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for Kde2dTransformX {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for Kde2dTransformX {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "Kde2dTransformY"]
@@ -40076,9 +40074,9 @@ impl From<Expr> for Kde2dTransformX {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Kde2dTransformY {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&Kde2dTransformY> for Kde2dTransformY {
     fn from(value: &Kde2dTransformY) -> Self {
@@ -40087,17 +40085,17 @@ impl From<&Kde2dTransformY> for Kde2dTransformY {
 }
 impl From<ScaleField> for Kde2dTransformY {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for Kde2dTransformY {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for Kde2dTransformY {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "KdeTransform"]
@@ -40635,9 +40633,9 @@ impl From<SignalRef> for KdeTransformExtentVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum KdeTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&KdeTransformField> for KdeTransformField {
     fn from(value: &KdeTransformField) -> Self {
@@ -40646,17 +40644,17 @@ impl From<&KdeTransformField> for KdeTransformField {
 }
 impl From<ScaleField> for KdeTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for KdeTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for KdeTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "KdeTransformGroupby"]
@@ -40733,9 +40731,9 @@ impl From<SignalRef> for KdeTransformGroupby {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum KdeTransformGroupbyVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&KdeTransformGroupbyVariant0Item> for KdeTransformGroupbyVariant0Item {
     fn from(value: &KdeTransformGroupbyVariant0Item) -> Self {
@@ -40744,17 +40742,17 @@ impl From<&KdeTransformGroupbyVariant0Item> for KdeTransformGroupbyVariant0Item 
 }
 impl From<ScaleField> for KdeTransformGroupbyVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for KdeTransformGroupbyVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for KdeTransformGroupbyVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "KdeTransformMaxsteps"]
@@ -66178,9 +66176,9 @@ impl std::convert::TryFrom<String> for LinkpathTransformShapeVariant0 {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum LinkpathTransformSourceX {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&LinkpathTransformSourceX> for LinkpathTransformSourceX {
     fn from(value: &LinkpathTransformSourceX) -> Self {
@@ -66189,24 +66187,24 @@ impl From<&LinkpathTransformSourceX> for LinkpathTransformSourceX {
 }
 impl Default for LinkpathTransformSourceX {
     fn default() -> Self {
-        LinkpathTransformSourceX::ScaleField(ScaleField(StringOrSignal::Variant0(
+        LinkpathTransformSourceX::Variant0(ScaleField(StringOrSignal::Variant0(
             "source.x".to_string(),
         )))
     }
 }
 impl From<ScaleField> for LinkpathTransformSourceX {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for LinkpathTransformSourceX {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for LinkpathTransformSourceX {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "LinkpathTransformSourceY"]
@@ -66233,9 +66231,9 @@ impl From<Expr> for LinkpathTransformSourceX {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum LinkpathTransformSourceY {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&LinkpathTransformSourceY> for LinkpathTransformSourceY {
     fn from(value: &LinkpathTransformSourceY) -> Self {
@@ -66244,24 +66242,24 @@ impl From<&LinkpathTransformSourceY> for LinkpathTransformSourceY {
 }
 impl Default for LinkpathTransformSourceY {
     fn default() -> Self {
-        LinkpathTransformSourceY::ScaleField(ScaleField(StringOrSignal::Variant0(
+        LinkpathTransformSourceY::Variant0(ScaleField(StringOrSignal::Variant0(
             "source.y".to_string(),
         )))
     }
 }
 impl From<ScaleField> for LinkpathTransformSourceY {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for LinkpathTransformSourceY {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for LinkpathTransformSourceY {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "LinkpathTransformTargetX"]
@@ -66288,9 +66286,9 @@ impl From<Expr> for LinkpathTransformSourceY {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum LinkpathTransformTargetX {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&LinkpathTransformTargetX> for LinkpathTransformTargetX {
     fn from(value: &LinkpathTransformTargetX) -> Self {
@@ -66299,24 +66297,24 @@ impl From<&LinkpathTransformTargetX> for LinkpathTransformTargetX {
 }
 impl Default for LinkpathTransformTargetX {
     fn default() -> Self {
-        LinkpathTransformTargetX::ScaleField(ScaleField(StringOrSignal::Variant0(
+        LinkpathTransformTargetX::Variant0(ScaleField(StringOrSignal::Variant0(
             "target.x".to_string(),
         )))
     }
 }
 impl From<ScaleField> for LinkpathTransformTargetX {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for LinkpathTransformTargetX {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for LinkpathTransformTargetX {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "LinkpathTransformTargetY"]
@@ -66343,9 +66341,9 @@ impl From<Expr> for LinkpathTransformTargetX {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum LinkpathTransformTargetY {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&LinkpathTransformTargetY> for LinkpathTransformTargetY {
     fn from(value: &LinkpathTransformTargetY) -> Self {
@@ -66354,24 +66352,24 @@ impl From<&LinkpathTransformTargetY> for LinkpathTransformTargetY {
 }
 impl Default for LinkpathTransformTargetY {
     fn default() -> Self {
-        LinkpathTransformTargetY::ScaleField(ScaleField(StringOrSignal::Variant0(
+        LinkpathTransformTargetY::Variant0(ScaleField(StringOrSignal::Variant0(
             "target.y".to_string(),
         )))
     }
 }
 impl From<ScaleField> for LinkpathTransformTargetY {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for LinkpathTransformTargetY {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for LinkpathTransformTargetY {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "LinkpathTransformType"]
@@ -66806,9 +66804,9 @@ impl From<SignalRef> for LoessTransformGroupby {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum LoessTransformGroupbyVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&LoessTransformGroupbyVariant0Item> for LoessTransformGroupbyVariant0Item {
     fn from(value: &LoessTransformGroupbyVariant0Item) -> Self {
@@ -66817,17 +66815,17 @@ impl From<&LoessTransformGroupbyVariant0Item> for LoessTransformGroupbyVariant0I
 }
 impl From<ScaleField> for LoessTransformGroupbyVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for LoessTransformGroupbyVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for LoessTransformGroupbyVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "LoessTransformType"]
@@ -66909,9 +66907,9 @@ impl std::convert::TryFrom<String> for LoessTransformType {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum LoessTransformX {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&LoessTransformX> for LoessTransformX {
     fn from(value: &LoessTransformX) -> Self {
@@ -66920,17 +66918,17 @@ impl From<&LoessTransformX> for LoessTransformX {
 }
 impl From<ScaleField> for LoessTransformX {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for LoessTransformX {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for LoessTransformX {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "LoessTransformY"]
@@ -66956,9 +66954,9 @@ impl From<Expr> for LoessTransformX {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum LoessTransformY {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&LoessTransformY> for LoessTransformY {
     fn from(value: &LoessTransformY) -> Self {
@@ -66967,17 +66965,17 @@ impl From<&LoessTransformY> for LoessTransformY {
 }
 impl From<ScaleField> for LoessTransformY {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for LoessTransformY {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for LoessTransformY {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "LookupTransform"]
@@ -67267,9 +67265,9 @@ impl From<SignalRef> for LookupTransformFields {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum LookupTransformFieldsVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&LookupTransformFieldsVariant0Item> for LookupTransformFieldsVariant0Item {
     fn from(value: &LookupTransformFieldsVariant0Item) -> Self {
@@ -67278,17 +67276,17 @@ impl From<&LookupTransformFieldsVariant0Item> for LookupTransformFieldsVariant0I
 }
 impl From<ScaleField> for LookupTransformFieldsVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for LookupTransformFieldsVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for LookupTransformFieldsVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "LookupTransformKey"]
@@ -67314,9 +67312,9 @@ impl From<Expr> for LookupTransformFieldsVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum LookupTransformKey {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&LookupTransformKey> for LookupTransformKey {
     fn from(value: &LookupTransformKey) -> Self {
@@ -67325,17 +67323,17 @@ impl From<&LookupTransformKey> for LookupTransformKey {
 }
 impl From<ScaleField> for LookupTransformKey {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for LookupTransformKey {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for LookupTransformKey {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "LookupTransformType"]
@@ -67468,9 +67466,9 @@ impl From<SignalRef> for LookupTransformValues {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum LookupTransformValuesVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&LookupTransformValuesVariant0Item> for LookupTransformValuesVariant0Item {
     fn from(value: &LookupTransformValuesVariant0Item) -> Self {
@@ -67479,17 +67477,17 @@ impl From<&LookupTransformValuesVariant0Item> for LookupTransformValuesVariant0I
 }
 impl From<ScaleField> for LookupTransformValuesVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for LookupTransformValuesVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for LookupTransformValuesVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "Mark"]
@@ -67699,8 +67697,8 @@ impl From<&MarkGroup> for MarkGroup {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum MarkGroupFrom {
-    From(From),
-    Facet(Facet),
+    Variant0(From),
+    Variant1(Facet),
 }
 impl From<&MarkGroupFrom> for MarkGroupFrom {
     fn from(value: &MarkGroupFrom) -> Self {
@@ -67709,12 +67707,12 @@ impl From<&MarkGroupFrom> for MarkGroupFrom {
 }
 impl From<From> for MarkGroupFrom {
     fn from(value: From) -> Self {
-        Self::From(value)
+        Self::Variant0(value)
     }
 }
 impl From<Facet> for MarkGroupFrom {
     fn from(value: Facet) -> Self {
-        Self::Facet(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "MarkGroupMarksItem"]
@@ -67737,8 +67735,8 @@ impl From<Facet> for MarkGroupFrom {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum MarkGroupMarksItem {
-    Group(MarkGroup),
-    Visual(MarkVisual),
+    Variant0(MarkGroup),
+    Variant1(MarkVisual),
 }
 impl From<&MarkGroupMarksItem> for MarkGroupMarksItem {
     fn from(value: &MarkGroupMarksItem) -> Self {
@@ -67747,12 +67745,12 @@ impl From<&MarkGroupMarksItem> for MarkGroupMarksItem {
 }
 impl From<MarkGroup> for MarkGroupMarksItem {
     fn from(value: MarkGroup) -> Self {
-        Self::Group(value)
+        Self::Variant0(value)
     }
 }
 impl From<MarkVisual> for MarkGroupMarksItem {
     fn from(value: MarkVisual) -> Self {
-        Self::Visual(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "MarkGroupType"]
@@ -68162,9 +68160,9 @@ impl From<SignalRef> for NestTransformKeys {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum NestTransformKeysVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&NestTransformKeysVariant0Item> for NestTransformKeysVariant0Item {
     fn from(value: &NestTransformKeysVariant0Item) -> Self {
@@ -68173,17 +68171,17 @@ impl From<&NestTransformKeysVariant0Item> for NestTransformKeysVariant0Item {
 }
 impl From<ScaleField> for NestTransformKeysVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for NestTransformKeysVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for NestTransformKeysVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "NestTransformType"]
@@ -74367,9 +74365,9 @@ impl From<SignalRef> for PackTransformAsVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PackTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&PackTransformField> for PackTransformField {
     fn from(value: &PackTransformField) -> Self {
@@ -74378,17 +74376,17 @@ impl From<&PackTransformField> for PackTransformField {
 }
 impl From<ScaleField> for PackTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for PackTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for PackTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "PackTransformPadding"]
@@ -74452,9 +74450,9 @@ impl From<SignalRef> for PackTransformPadding {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PackTransformRadius {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&PackTransformRadius> for PackTransformRadius {
     fn from(value: &PackTransformRadius) -> Self {
@@ -74463,17 +74461,17 @@ impl From<&PackTransformRadius> for PackTransformRadius {
 }
 impl From<ScaleField> for PackTransformRadius {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for PackTransformRadius {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for PackTransformRadius {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "PackTransformSize"]
@@ -74983,9 +74981,9 @@ impl From<SignalRef> for PartitionTransformAsVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PartitionTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&PartitionTransformField> for PartitionTransformField {
     fn from(value: &PartitionTransformField) -> Self {
@@ -74994,17 +74992,17 @@ impl From<&PartitionTransformField> for PartitionTransformField {
 }
 impl From<ScaleField> for PartitionTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for PartitionTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for PartitionTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "PartitionTransformPadding"]
@@ -75510,9 +75508,9 @@ impl From<SignalRef> for PieTransformEndAngle {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PieTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&PieTransformField> for PieTransformField {
     fn from(value: &PieTransformField) -> Self {
@@ -75521,17 +75519,17 @@ impl From<&PieTransformField> for PieTransformField {
 }
 impl From<ScaleField> for PieTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for PieTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for PieTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "PieTransformSort"]
@@ -75846,9 +75844,9 @@ impl From<&PivotTransform> for PivotTransform {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PivotTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&PivotTransformField> for PivotTransformField {
     fn from(value: &PivotTransformField) -> Self {
@@ -75857,17 +75855,17 @@ impl From<&PivotTransformField> for PivotTransformField {
 }
 impl From<ScaleField> for PivotTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for PivotTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for PivotTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "PivotTransformGroupby"]
@@ -75944,9 +75942,9 @@ impl From<SignalRef> for PivotTransformGroupby {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PivotTransformGroupbyVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&PivotTransformGroupbyVariant0Item> for PivotTransformGroupbyVariant0Item {
     fn from(value: &PivotTransformGroupbyVariant0Item) -> Self {
@@ -75955,17 +75953,17 @@ impl From<&PivotTransformGroupbyVariant0Item> for PivotTransformGroupbyVariant0I
 }
 impl From<ScaleField> for PivotTransformGroupbyVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for PivotTransformGroupbyVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for PivotTransformGroupbyVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "PivotTransformKey"]
@@ -75991,9 +75989,9 @@ impl From<Expr> for PivotTransformGroupbyVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PivotTransformKey {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&PivotTransformKey> for PivotTransformKey {
     fn from(value: &PivotTransformKey) -> Self {
@@ -76002,17 +76000,17 @@ impl From<&PivotTransformKey> for PivotTransformKey {
 }
 impl From<ScaleField> for PivotTransformKey {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for PivotTransformKey {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for PivotTransformKey {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "PivotTransformLimit"]
@@ -76372,9 +76370,9 @@ impl std::convert::TryFrom<String> for PivotTransformType {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum PivotTransformValue {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&PivotTransformValue> for PivotTransformValue {
     fn from(value: &PivotTransformValue) -> Self {
@@ -76383,17 +76381,17 @@ impl From<&PivotTransformValue> for PivotTransformValue {
 }
 impl From<ScaleField> for PivotTransformValue {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for PivotTransformValue {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for PivotTransformValue {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "ProjectTransform"]
@@ -76645,9 +76643,9 @@ impl From<SignalRef> for ProjectTransformFields {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ProjectTransformFieldsVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&ProjectTransformFieldsVariant0Item> for ProjectTransformFieldsVariant0Item {
     fn from(value: &ProjectTransformFieldsVariant0Item) -> Self {
@@ -76656,17 +76654,17 @@ impl From<&ProjectTransformFieldsVariant0Item> for ProjectTransformFieldsVariant
 }
 impl From<ScaleField> for ProjectTransformFieldsVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for ProjectTransformFieldsVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for ProjectTransformFieldsVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "ProjectTransformType"]
@@ -77644,9 +77642,9 @@ impl From<SignalRef> for QuantileTransformAsVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum QuantileTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&QuantileTransformField> for QuantileTransformField {
     fn from(value: &QuantileTransformField) -> Self {
@@ -77655,17 +77653,17 @@ impl From<&QuantileTransformField> for QuantileTransformField {
 }
 impl From<ScaleField> for QuantileTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for QuantileTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for QuantileTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "QuantileTransformGroupby"]
@@ -77742,9 +77740,9 @@ impl From<SignalRef> for QuantileTransformGroupby {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum QuantileTransformGroupbyVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&QuantileTransformGroupbyVariant0Item> for QuantileTransformGroupbyVariant0Item {
     fn from(value: &QuantileTransformGroupbyVariant0Item) -> Self {
@@ -77753,17 +77751,17 @@ impl From<&QuantileTransformGroupbyVariant0Item> for QuantileTransformGroupbyVar
 }
 impl From<ScaleField> for QuantileTransformGroupbyVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for QuantileTransformGroupbyVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for QuantileTransformGroupbyVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "QuantileTransformProbs"]
@@ -78498,9 +78496,9 @@ impl From<SignalRef> for RegressionTransformGroupby {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum RegressionTransformGroupbyVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&RegressionTransformGroupbyVariant0Item> for RegressionTransformGroupbyVariant0Item {
     fn from(value: &RegressionTransformGroupbyVariant0Item) -> Self {
@@ -78509,17 +78507,17 @@ impl From<&RegressionTransformGroupbyVariant0Item> for RegressionTransformGroupb
 }
 impl From<ScaleField> for RegressionTransformGroupbyVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for RegressionTransformGroupbyVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for RegressionTransformGroupbyVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "RegressionTransformMethod"]
@@ -78722,9 +78720,9 @@ impl std::convert::TryFrom<String> for RegressionTransformType {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum RegressionTransformX {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&RegressionTransformX> for RegressionTransformX {
     fn from(value: &RegressionTransformX) -> Self {
@@ -78733,17 +78731,17 @@ impl From<&RegressionTransformX> for RegressionTransformX {
 }
 impl From<ScaleField> for RegressionTransformX {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for RegressionTransformX {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for RegressionTransformX {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "RegressionTransformY"]
@@ -78769,9 +78767,9 @@ impl From<Expr> for RegressionTransformX {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum RegressionTransformY {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&RegressionTransformY> for RegressionTransformY {
     fn from(value: &RegressionTransformY) -> Self {
@@ -78780,17 +78778,17 @@ impl From<&RegressionTransformY> for RegressionTransformY {
 }
 impl From<ScaleField> for RegressionTransformY {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for RegressionTransformY {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for RegressionTransformY {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "ResolvefilterTransform"]
@@ -91870,8 +91868,8 @@ impl From<&Scope> for Scope {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum ScopeMarksItem {
-    Group(MarkGroup),
-    Visual(MarkVisual),
+    Variant0(MarkGroup),
+    Variant1(MarkVisual),
 }
 impl From<&ScopeMarksItem> for ScopeMarksItem {
     fn from(value: &ScopeMarksItem) -> Self {
@@ -91880,12 +91878,12 @@ impl From<&ScopeMarksItem> for ScopeMarksItem {
 }
 impl From<MarkGroup> for ScopeMarksItem {
     fn from(value: MarkGroup) -> Self {
-        Self::Group(value)
+        Self::Variant0(value)
     }
 }
 impl From<MarkVisual> for ScopeMarksItem {
     fn from(value: MarkVisual) -> Self {
-        Self::Visual(value)
+        Self::Variant1(value)
     }
 }
 #[doc = "Selector"]
@@ -92860,9 +92858,9 @@ impl From<SignalRef> for StackTransformAsVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum StackTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&StackTransformField> for StackTransformField {
     fn from(value: &StackTransformField) -> Self {
@@ -92871,17 +92869,17 @@ impl From<&StackTransformField> for StackTransformField {
 }
 impl From<ScaleField> for StackTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for StackTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for StackTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "StackTransformGroupby"]
@@ -92958,9 +92956,9 @@ impl From<SignalRef> for StackTransformGroupby {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum StackTransformGroupbyVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&StackTransformGroupbyVariant0Item> for StackTransformGroupbyVariant0Item {
     fn from(value: &StackTransformGroupbyVariant0Item) -> Self {
@@ -92969,17 +92967,17 @@ impl From<&StackTransformGroupbyVariant0Item> for StackTransformGroupbyVariant0I
 }
 impl From<ScaleField> for StackTransformGroupbyVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for StackTransformGroupbyVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for StackTransformGroupbyVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "StackTransformOffset"]
@@ -93243,9 +93241,9 @@ impl From<&StratifyTransform> for StratifyTransform {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum StratifyTransformKey {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&StratifyTransformKey> for StratifyTransformKey {
     fn from(value: &StratifyTransformKey) -> Self {
@@ -93254,17 +93252,17 @@ impl From<&StratifyTransformKey> for StratifyTransformKey {
 }
 impl From<ScaleField> for StratifyTransformKey {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for StratifyTransformKey {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for StratifyTransformKey {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "StratifyTransformParentKey"]
@@ -93290,9 +93288,9 @@ impl From<Expr> for StratifyTransformKey {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum StratifyTransformParentKey {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&StratifyTransformParentKey> for StratifyTransformParentKey {
     fn from(value: &StratifyTransformParentKey) -> Self {
@@ -93301,17 +93299,17 @@ impl From<&StratifyTransformParentKey> for StratifyTransformParentKey {
 }
 impl From<ScaleField> for StratifyTransformParentKey {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for StratifyTransformParentKey {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for StratifyTransformParentKey {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "StratifyTransformType"]
@@ -100174,9 +100172,9 @@ impl From<SignalRef> for TimeunitTransformExtentVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum TimeunitTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&TimeunitTransformField> for TimeunitTransformField {
     fn from(value: &TimeunitTransformField) -> Self {
@@ -100185,17 +100183,17 @@ impl From<&TimeunitTransformField> for TimeunitTransformField {
 }
 impl From<ScaleField> for TimeunitTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for TimeunitTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for TimeunitTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "TimeunitTransformInterval"]
@@ -102709,57 +102707,57 @@ impl From<NumberValue> for TitleVariant1SubtitleLineHeight {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum Transform {
-    CrossfilterTransform(CrossfilterTransform),
-    ResolvefilterTransform(ResolvefilterTransform),
-    LinkpathTransform(LinkpathTransform),
-    PieTransform(PieTransform),
-    StackTransform(StackTransform),
-    ForceTransform(ForceTransform),
-    ContourTransform(ContourTransform),
-    GeojsonTransform(GeojsonTransform),
-    GeopathTransform(GeopathTransform),
-    GeopointTransform(GeopointTransform),
-    GeoshapeTransform(GeoshapeTransform),
-    GraticuleTransform(GraticuleTransform),
-    HeatmapTransform(HeatmapTransform),
-    IsocontourTransform(IsocontourTransform),
-    Kde2dTransform(Kde2dTransform),
-    NestTransform(NestTransform),
-    PackTransform(PackTransform),
-    PartitionTransform(PartitionTransform),
-    StratifyTransform(StratifyTransform),
-    TreeTransform(TreeTransform),
-    TreelinksTransform(TreelinksTransform),
-    TreemapTransform(TreemapTransform),
-    LabelTransform(LabelTransform),
-    LoessTransform(LoessTransform),
-    RegressionTransform(RegressionTransform),
-    AggregateTransform(AggregateTransform),
-    BinTransform(BinTransform),
-    CollectTransform(CollectTransform),
-    CountpatternTransform(CountpatternTransform),
-    CrossTransform(CrossTransform),
-    DensityTransform(DensityTransform),
-    DotbinTransform(DotbinTransform),
-    ExtentTransform(ExtentTransform),
-    FilterTransform(FilterTransform),
-    FlattenTransform(FlattenTransform),
-    FoldTransform(FoldTransform),
-    FormulaTransform(FormulaTransform),
-    ImputeTransform(ImputeTransform),
-    JoinaggregateTransform(JoinaggregateTransform),
-    KdeTransform(KdeTransform),
-    LookupTransform(LookupTransform),
-    PivotTransform(PivotTransform),
-    ProjectTransform(ProjectTransform),
-    QuantileTransform(QuantileTransform),
-    SampleTransform(SampleTransform),
-    SequenceTransform(SequenceTransform),
-    TimeunitTransform(TimeunitTransform),
-    WindowTransform(WindowTransform),
-    IdentifierTransform(IdentifierTransform),
-    VoronoiTransform(VoronoiTransform),
-    WordcloudTransform(WordcloudTransform),
+    Variant0(CrossfilterTransform),
+    Variant1(ResolvefilterTransform),
+    Variant2(LinkpathTransform),
+    Variant3(PieTransform),
+    Variant4(StackTransform),
+    Variant5(ForceTransform),
+    Variant6(ContourTransform),
+    Variant7(GeojsonTransform),
+    Variant8(GeopathTransform),
+    Variant9(GeopointTransform),
+    Variant10(GeoshapeTransform),
+    Variant11(GraticuleTransform),
+    Variant12(HeatmapTransform),
+    Variant13(IsocontourTransform),
+    Variant14(Kde2dTransform),
+    Variant15(NestTransform),
+    Variant16(PackTransform),
+    Variant17(PartitionTransform),
+    Variant18(StratifyTransform),
+    Variant19(TreeTransform),
+    Variant20(TreelinksTransform),
+    Variant21(TreemapTransform),
+    Variant22(LabelTransform),
+    Variant23(LoessTransform),
+    Variant24(RegressionTransform),
+    Variant25(AggregateTransform),
+    Variant26(BinTransform),
+    Variant27(CollectTransform),
+    Variant28(CountpatternTransform),
+    Variant29(CrossTransform),
+    Variant30(DensityTransform),
+    Variant31(DotbinTransform),
+    Variant32(ExtentTransform),
+    Variant33(FilterTransform),
+    Variant34(FlattenTransform),
+    Variant35(FoldTransform),
+    Variant36(FormulaTransform),
+    Variant37(ImputeTransform),
+    Variant38(JoinaggregateTransform),
+    Variant39(KdeTransform),
+    Variant40(LookupTransform),
+    Variant41(PivotTransform),
+    Variant42(ProjectTransform),
+    Variant43(QuantileTransform),
+    Variant44(SampleTransform),
+    Variant45(SequenceTransform),
+    Variant46(TimeunitTransform),
+    Variant47(WindowTransform),
+    Variant48(IdentifierTransform),
+    Variant49(VoronoiTransform),
+    Variant50(WordcloudTransform),
 }
 impl From<&Transform> for Transform {
     fn from(value: &Transform) -> Self {
@@ -102768,257 +102766,257 @@ impl From<&Transform> for Transform {
 }
 impl From<CrossfilterTransform> for Transform {
     fn from(value: CrossfilterTransform) -> Self {
-        Self::CrossfilterTransform(value)
+        Self::Variant0(value)
     }
 }
 impl From<ResolvefilterTransform> for Transform {
     fn from(value: ResolvefilterTransform) -> Self {
-        Self::ResolvefilterTransform(value)
+        Self::Variant1(value)
     }
 }
 impl From<LinkpathTransform> for Transform {
     fn from(value: LinkpathTransform) -> Self {
-        Self::LinkpathTransform(value)
+        Self::Variant2(value)
     }
 }
 impl From<PieTransform> for Transform {
     fn from(value: PieTransform) -> Self {
-        Self::PieTransform(value)
+        Self::Variant3(value)
     }
 }
 impl From<StackTransform> for Transform {
     fn from(value: StackTransform) -> Self {
-        Self::StackTransform(value)
+        Self::Variant4(value)
     }
 }
 impl From<ForceTransform> for Transform {
     fn from(value: ForceTransform) -> Self {
-        Self::ForceTransform(value)
+        Self::Variant5(value)
     }
 }
 impl From<ContourTransform> for Transform {
     fn from(value: ContourTransform) -> Self {
-        Self::ContourTransform(value)
+        Self::Variant6(value)
     }
 }
 impl From<GeojsonTransform> for Transform {
     fn from(value: GeojsonTransform) -> Self {
-        Self::GeojsonTransform(value)
+        Self::Variant7(value)
     }
 }
 impl From<GeopathTransform> for Transform {
     fn from(value: GeopathTransform) -> Self {
-        Self::GeopathTransform(value)
+        Self::Variant8(value)
     }
 }
 impl From<GeopointTransform> for Transform {
     fn from(value: GeopointTransform) -> Self {
-        Self::GeopointTransform(value)
+        Self::Variant9(value)
     }
 }
 impl From<GeoshapeTransform> for Transform {
     fn from(value: GeoshapeTransform) -> Self {
-        Self::GeoshapeTransform(value)
+        Self::Variant10(value)
     }
 }
 impl From<GraticuleTransform> for Transform {
     fn from(value: GraticuleTransform) -> Self {
-        Self::GraticuleTransform(value)
+        Self::Variant11(value)
     }
 }
 impl From<HeatmapTransform> for Transform {
     fn from(value: HeatmapTransform) -> Self {
-        Self::HeatmapTransform(value)
+        Self::Variant12(value)
     }
 }
 impl From<IsocontourTransform> for Transform {
     fn from(value: IsocontourTransform) -> Self {
-        Self::IsocontourTransform(value)
+        Self::Variant13(value)
     }
 }
 impl From<Kde2dTransform> for Transform {
     fn from(value: Kde2dTransform) -> Self {
-        Self::Kde2dTransform(value)
+        Self::Variant14(value)
     }
 }
 impl From<NestTransform> for Transform {
     fn from(value: NestTransform) -> Self {
-        Self::NestTransform(value)
+        Self::Variant15(value)
     }
 }
 impl From<PackTransform> for Transform {
     fn from(value: PackTransform) -> Self {
-        Self::PackTransform(value)
+        Self::Variant16(value)
     }
 }
 impl From<PartitionTransform> for Transform {
     fn from(value: PartitionTransform) -> Self {
-        Self::PartitionTransform(value)
+        Self::Variant17(value)
     }
 }
 impl From<StratifyTransform> for Transform {
     fn from(value: StratifyTransform) -> Self {
-        Self::StratifyTransform(value)
+        Self::Variant18(value)
     }
 }
 impl From<TreeTransform> for Transform {
     fn from(value: TreeTransform) -> Self {
-        Self::TreeTransform(value)
+        Self::Variant19(value)
     }
 }
 impl From<TreelinksTransform> for Transform {
     fn from(value: TreelinksTransform) -> Self {
-        Self::TreelinksTransform(value)
+        Self::Variant20(value)
     }
 }
 impl From<TreemapTransform> for Transform {
     fn from(value: TreemapTransform) -> Self {
-        Self::TreemapTransform(value)
+        Self::Variant21(value)
     }
 }
 impl From<LabelTransform> for Transform {
     fn from(value: LabelTransform) -> Self {
-        Self::LabelTransform(value)
+        Self::Variant22(value)
     }
 }
 impl From<LoessTransform> for Transform {
     fn from(value: LoessTransform) -> Self {
-        Self::LoessTransform(value)
+        Self::Variant23(value)
     }
 }
 impl From<RegressionTransform> for Transform {
     fn from(value: RegressionTransform) -> Self {
-        Self::RegressionTransform(value)
+        Self::Variant24(value)
     }
 }
 impl From<AggregateTransform> for Transform {
     fn from(value: AggregateTransform) -> Self {
-        Self::AggregateTransform(value)
+        Self::Variant25(value)
     }
 }
 impl From<BinTransform> for Transform {
     fn from(value: BinTransform) -> Self {
-        Self::BinTransform(value)
+        Self::Variant26(value)
     }
 }
 impl From<CollectTransform> for Transform {
     fn from(value: CollectTransform) -> Self {
-        Self::CollectTransform(value)
+        Self::Variant27(value)
     }
 }
 impl From<CountpatternTransform> for Transform {
     fn from(value: CountpatternTransform) -> Self {
-        Self::CountpatternTransform(value)
+        Self::Variant28(value)
     }
 }
 impl From<CrossTransform> for Transform {
     fn from(value: CrossTransform) -> Self {
-        Self::CrossTransform(value)
+        Self::Variant29(value)
     }
 }
 impl From<DensityTransform> for Transform {
     fn from(value: DensityTransform) -> Self {
-        Self::DensityTransform(value)
+        Self::Variant30(value)
     }
 }
 impl From<DotbinTransform> for Transform {
     fn from(value: DotbinTransform) -> Self {
-        Self::DotbinTransform(value)
+        Self::Variant31(value)
     }
 }
 impl From<ExtentTransform> for Transform {
     fn from(value: ExtentTransform) -> Self {
-        Self::ExtentTransform(value)
+        Self::Variant32(value)
     }
 }
 impl From<FilterTransform> for Transform {
     fn from(value: FilterTransform) -> Self {
-        Self::FilterTransform(value)
+        Self::Variant33(value)
     }
 }
 impl From<FlattenTransform> for Transform {
     fn from(value: FlattenTransform) -> Self {
-        Self::FlattenTransform(value)
+        Self::Variant34(value)
     }
 }
 impl From<FoldTransform> for Transform {
     fn from(value: FoldTransform) -> Self {
-        Self::FoldTransform(value)
+        Self::Variant35(value)
     }
 }
 impl From<FormulaTransform> for Transform {
     fn from(value: FormulaTransform) -> Self {
-        Self::FormulaTransform(value)
+        Self::Variant36(value)
     }
 }
 impl From<ImputeTransform> for Transform {
     fn from(value: ImputeTransform) -> Self {
-        Self::ImputeTransform(value)
+        Self::Variant37(value)
     }
 }
 impl From<JoinaggregateTransform> for Transform {
     fn from(value: JoinaggregateTransform) -> Self {
-        Self::JoinaggregateTransform(value)
+        Self::Variant38(value)
     }
 }
 impl From<KdeTransform> for Transform {
     fn from(value: KdeTransform) -> Self {
-        Self::KdeTransform(value)
+        Self::Variant39(value)
     }
 }
 impl From<LookupTransform> for Transform {
     fn from(value: LookupTransform) -> Self {
-        Self::LookupTransform(value)
+        Self::Variant40(value)
     }
 }
 impl From<PivotTransform> for Transform {
     fn from(value: PivotTransform) -> Self {
-        Self::PivotTransform(value)
+        Self::Variant41(value)
     }
 }
 impl From<ProjectTransform> for Transform {
     fn from(value: ProjectTransform) -> Self {
-        Self::ProjectTransform(value)
+        Self::Variant42(value)
     }
 }
 impl From<QuantileTransform> for Transform {
     fn from(value: QuantileTransform) -> Self {
-        Self::QuantileTransform(value)
+        Self::Variant43(value)
     }
 }
 impl From<SampleTransform> for Transform {
     fn from(value: SampleTransform) -> Self {
-        Self::SampleTransform(value)
+        Self::Variant44(value)
     }
 }
 impl From<SequenceTransform> for Transform {
     fn from(value: SequenceTransform) -> Self {
-        Self::SequenceTransform(value)
+        Self::Variant45(value)
     }
 }
 impl From<TimeunitTransform> for Transform {
     fn from(value: TimeunitTransform) -> Self {
-        Self::TimeunitTransform(value)
+        Self::Variant46(value)
     }
 }
 impl From<WindowTransform> for Transform {
     fn from(value: WindowTransform) -> Self {
-        Self::WindowTransform(value)
+        Self::Variant47(value)
     }
 }
 impl From<IdentifierTransform> for Transform {
     fn from(value: IdentifierTransform) -> Self {
-        Self::IdentifierTransform(value)
+        Self::Variant48(value)
     }
 }
 impl From<VoronoiTransform> for Transform {
     fn from(value: VoronoiTransform) -> Self {
-        Self::VoronoiTransform(value)
+        Self::Variant49(value)
     }
 }
 impl From<WordcloudTransform> for Transform {
     fn from(value: WordcloudTransform) -> Self {
-        Self::WordcloudTransform(value)
+        Self::Variant50(value)
     }
 }
 #[doc = "TransformMark"]
@@ -103125,36 +103123,36 @@ impl From<WordcloudTransform> for Transform {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum TransformMark {
-    CrossfilterTransform(CrossfilterTransform),
-    ResolvefilterTransform(ResolvefilterTransform),
-    LinkpathTransform(LinkpathTransform),
-    PieTransform(PieTransform),
-    StackTransform(StackTransform),
-    ForceTransform(ForceTransform),
-    GeojsonTransform(GeojsonTransform),
-    GeopathTransform(GeopathTransform),
-    GeopointTransform(GeopointTransform),
-    GeoshapeTransform(GeoshapeTransform),
-    HeatmapTransform(HeatmapTransform),
-    PackTransform(PackTransform),
-    PartitionTransform(PartitionTransform),
-    StratifyTransform(StratifyTransform),
-    TreeTransform(TreeTransform),
-    TreemapTransform(TreemapTransform),
-    LabelTransform(LabelTransform),
-    BinTransform(BinTransform),
-    CollectTransform(CollectTransform),
-    DotbinTransform(DotbinTransform),
-    ExtentTransform(ExtentTransform),
-    FormulaTransform(FormulaTransform),
-    JoinaggregateTransform(JoinaggregateTransform),
-    LookupTransform(LookupTransform),
-    SampleTransform(SampleTransform),
-    TimeunitTransform(TimeunitTransform),
-    WindowTransform(WindowTransform),
-    IdentifierTransform(IdentifierTransform),
-    VoronoiTransform(VoronoiTransform),
-    WordcloudTransform(WordcloudTransform),
+    Variant0(CrossfilterTransform),
+    Variant1(ResolvefilterTransform),
+    Variant2(LinkpathTransform),
+    Variant3(PieTransform),
+    Variant4(StackTransform),
+    Variant5(ForceTransform),
+    Variant6(GeojsonTransform),
+    Variant7(GeopathTransform),
+    Variant8(GeopointTransform),
+    Variant9(GeoshapeTransform),
+    Variant10(HeatmapTransform),
+    Variant11(PackTransform),
+    Variant12(PartitionTransform),
+    Variant13(StratifyTransform),
+    Variant14(TreeTransform),
+    Variant15(TreemapTransform),
+    Variant16(LabelTransform),
+    Variant17(BinTransform),
+    Variant18(CollectTransform),
+    Variant19(DotbinTransform),
+    Variant20(ExtentTransform),
+    Variant21(FormulaTransform),
+    Variant22(JoinaggregateTransform),
+    Variant23(LookupTransform),
+    Variant24(SampleTransform),
+    Variant25(TimeunitTransform),
+    Variant26(WindowTransform),
+    Variant27(IdentifierTransform),
+    Variant28(VoronoiTransform),
+    Variant29(WordcloudTransform),
 }
 impl From<&TransformMark> for TransformMark {
     fn from(value: &TransformMark) -> Self {
@@ -103163,152 +103161,152 @@ impl From<&TransformMark> for TransformMark {
 }
 impl From<CrossfilterTransform> for TransformMark {
     fn from(value: CrossfilterTransform) -> Self {
-        Self::CrossfilterTransform(value)
+        Self::Variant0(value)
     }
 }
 impl From<ResolvefilterTransform> for TransformMark {
     fn from(value: ResolvefilterTransform) -> Self {
-        Self::ResolvefilterTransform(value)
+        Self::Variant1(value)
     }
 }
 impl From<LinkpathTransform> for TransformMark {
     fn from(value: LinkpathTransform) -> Self {
-        Self::LinkpathTransform(value)
+        Self::Variant2(value)
     }
 }
 impl From<PieTransform> for TransformMark {
     fn from(value: PieTransform) -> Self {
-        Self::PieTransform(value)
+        Self::Variant3(value)
     }
 }
 impl From<StackTransform> for TransformMark {
     fn from(value: StackTransform) -> Self {
-        Self::StackTransform(value)
+        Self::Variant4(value)
     }
 }
 impl From<ForceTransform> for TransformMark {
     fn from(value: ForceTransform) -> Self {
-        Self::ForceTransform(value)
+        Self::Variant5(value)
     }
 }
 impl From<GeojsonTransform> for TransformMark {
     fn from(value: GeojsonTransform) -> Self {
-        Self::GeojsonTransform(value)
+        Self::Variant6(value)
     }
 }
 impl From<GeopathTransform> for TransformMark {
     fn from(value: GeopathTransform) -> Self {
-        Self::GeopathTransform(value)
+        Self::Variant7(value)
     }
 }
 impl From<GeopointTransform> for TransformMark {
     fn from(value: GeopointTransform) -> Self {
-        Self::GeopointTransform(value)
+        Self::Variant8(value)
     }
 }
 impl From<GeoshapeTransform> for TransformMark {
     fn from(value: GeoshapeTransform) -> Self {
-        Self::GeoshapeTransform(value)
+        Self::Variant9(value)
     }
 }
 impl From<HeatmapTransform> for TransformMark {
     fn from(value: HeatmapTransform) -> Self {
-        Self::HeatmapTransform(value)
+        Self::Variant10(value)
     }
 }
 impl From<PackTransform> for TransformMark {
     fn from(value: PackTransform) -> Self {
-        Self::PackTransform(value)
+        Self::Variant11(value)
     }
 }
 impl From<PartitionTransform> for TransformMark {
     fn from(value: PartitionTransform) -> Self {
-        Self::PartitionTransform(value)
+        Self::Variant12(value)
     }
 }
 impl From<StratifyTransform> for TransformMark {
     fn from(value: StratifyTransform) -> Self {
-        Self::StratifyTransform(value)
+        Self::Variant13(value)
     }
 }
 impl From<TreeTransform> for TransformMark {
     fn from(value: TreeTransform) -> Self {
-        Self::TreeTransform(value)
+        Self::Variant14(value)
     }
 }
 impl From<TreemapTransform> for TransformMark {
     fn from(value: TreemapTransform) -> Self {
-        Self::TreemapTransform(value)
+        Self::Variant15(value)
     }
 }
 impl From<LabelTransform> for TransformMark {
     fn from(value: LabelTransform) -> Self {
-        Self::LabelTransform(value)
+        Self::Variant16(value)
     }
 }
 impl From<BinTransform> for TransformMark {
     fn from(value: BinTransform) -> Self {
-        Self::BinTransform(value)
+        Self::Variant17(value)
     }
 }
 impl From<CollectTransform> for TransformMark {
     fn from(value: CollectTransform) -> Self {
-        Self::CollectTransform(value)
+        Self::Variant18(value)
     }
 }
 impl From<DotbinTransform> for TransformMark {
     fn from(value: DotbinTransform) -> Self {
-        Self::DotbinTransform(value)
+        Self::Variant19(value)
     }
 }
 impl From<ExtentTransform> for TransformMark {
     fn from(value: ExtentTransform) -> Self {
-        Self::ExtentTransform(value)
+        Self::Variant20(value)
     }
 }
 impl From<FormulaTransform> for TransformMark {
     fn from(value: FormulaTransform) -> Self {
-        Self::FormulaTransform(value)
+        Self::Variant21(value)
     }
 }
 impl From<JoinaggregateTransform> for TransformMark {
     fn from(value: JoinaggregateTransform) -> Self {
-        Self::JoinaggregateTransform(value)
+        Self::Variant22(value)
     }
 }
 impl From<LookupTransform> for TransformMark {
     fn from(value: LookupTransform) -> Self {
-        Self::LookupTransform(value)
+        Self::Variant23(value)
     }
 }
 impl From<SampleTransform> for TransformMark {
     fn from(value: SampleTransform) -> Self {
-        Self::SampleTransform(value)
+        Self::Variant24(value)
     }
 }
 impl From<TimeunitTransform> for TransformMark {
     fn from(value: TimeunitTransform) -> Self {
-        Self::TimeunitTransform(value)
+        Self::Variant25(value)
     }
 }
 impl From<WindowTransform> for TransformMark {
     fn from(value: WindowTransform) -> Self {
-        Self::WindowTransform(value)
+        Self::Variant26(value)
     }
 }
 impl From<IdentifierTransform> for TransformMark {
     fn from(value: IdentifierTransform) -> Self {
-        Self::IdentifierTransform(value)
+        Self::Variant27(value)
     }
 }
 impl From<VoronoiTransform> for TransformMark {
     fn from(value: VoronoiTransform) -> Self {
-        Self::VoronoiTransform(value)
+        Self::Variant28(value)
     }
 }
 impl From<WordcloudTransform> for TransformMark {
     fn from(value: WordcloudTransform) -> Self {
-        Self::WordcloudTransform(value)
+        Self::Variant29(value)
     }
 }
 #[doc = "TreeTransform"]
@@ -103597,9 +103595,9 @@ impl From<SignalRef> for TreeTransformAsVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum TreeTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&TreeTransformField> for TreeTransformField {
     fn from(value: &TreeTransformField) -> Self {
@@ -103608,17 +103606,17 @@ impl From<&TreeTransformField> for TreeTransformField {
 }
 impl From<ScaleField> for TreeTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for TreeTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for TreeTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "TreeTransformMethod"]
@@ -104490,9 +104488,9 @@ impl From<SignalRef> for TreemapTransformAsVariant0Item {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum TreemapTransformField {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&TreemapTransformField> for TreemapTransformField {
     fn from(value: &TreemapTransformField) -> Self {
@@ -104501,17 +104499,17 @@ impl From<&TreemapTransformField> for TreemapTransformField {
 }
 impl From<ScaleField> for TreemapTransformField {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for TreemapTransformField {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for TreemapTransformField {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "TreemapTransformMethod"]
@@ -105532,9 +105530,9 @@ impl std::convert::TryFrom<String> for VoronoiTransformType {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum VoronoiTransformX {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&VoronoiTransformX> for VoronoiTransformX {
     fn from(value: &VoronoiTransformX) -> Self {
@@ -105543,17 +105541,17 @@ impl From<&VoronoiTransformX> for VoronoiTransformX {
 }
 impl From<ScaleField> for VoronoiTransformX {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for VoronoiTransformX {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for VoronoiTransformX {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "VoronoiTransformY"]
@@ -105579,9 +105577,9 @@ impl From<Expr> for VoronoiTransformX {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum VoronoiTransformY {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&VoronoiTransformY> for VoronoiTransformY {
     fn from(value: &VoronoiTransformY) -> Self {
@@ -105590,17 +105588,17 @@ impl From<&VoronoiTransformY> for VoronoiTransformY {
 }
 impl From<ScaleField> for VoronoiTransformY {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for VoronoiTransformY {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for VoronoiTransformY {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "WindowTransform"]
@@ -106229,9 +106227,9 @@ impl From<SignalRef> for WindowTransformGroupby {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum WindowTransformGroupbyVariant0Item {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&WindowTransformGroupbyVariant0Item> for WindowTransformGroupbyVariant0Item {
     fn from(value: &WindowTransformGroupbyVariant0Item) -> Self {
@@ -106240,17 +106238,17 @@ impl From<&WindowTransformGroupbyVariant0Item> for WindowTransformGroupbyVariant
 }
 impl From<ScaleField> for WindowTransformGroupbyVariant0Item {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for WindowTransformGroupbyVariant0Item {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for WindowTransformGroupbyVariant0Item {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "WindowTransformIgnorePeers"]
@@ -107810,9 +107808,9 @@ impl From<SignalRef> for WordcloudTransformSpiral {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum WordcloudTransformText {
-    ScaleField(ScaleField),
-    ParamField(ParamField),
-    Expr(Expr),
+    Variant0(ScaleField),
+    Variant1(ParamField),
+    Variant2(Expr),
 }
 impl From<&WordcloudTransformText> for WordcloudTransformText {
     fn from(value: &WordcloudTransformText) -> Self {
@@ -107821,17 +107819,17 @@ impl From<&WordcloudTransformText> for WordcloudTransformText {
 }
 impl From<ScaleField> for WordcloudTransformText {
     fn from(value: ScaleField) -> Self {
-        Self::ScaleField(value)
+        Self::Variant0(value)
     }
 }
 impl From<ParamField> for WordcloudTransformText {
     fn from(value: ParamField) -> Self {
-        Self::ParamField(value)
+        Self::Variant1(value)
     }
 }
 impl From<Expr> for WordcloudTransformText {
     fn from(value: Expr) -> Self {
-        Self::Expr(value)
+        Self::Variant2(value)
     }
 }
 #[doc = "WordcloudTransformType"]
@@ -108055,9 +108053,9 @@ pub mod defaults {
         super::GeoshapeTransformAs::Variant0("shape".to_string())
     }
     pub(super) fn geoshape_transform_field() -> super::GeoshapeTransformField {
-        super::GeoshapeTransformField::ScaleField(super::ScaleField(
-            super::StringOrSignal::Variant0("datum".to_string()),
-        ))
+        super::GeoshapeTransformField::Variant0(super::ScaleField(super::StringOrSignal::Variant0(
+            "datum".to_string(),
+        )))
     }
     pub(super) fn graticule_transform_precision() -> super::GraticuleTransformPrecision {
         super::GraticuleTransformPrecision::Variant0(2.5_f64)
@@ -108162,22 +108160,22 @@ pub mod defaults {
         super::LinkpathTransformShape::Variant0(super::LinkpathTransformShapeVariant0::Line)
     }
     pub(super) fn linkpath_transform_source_x() -> super::LinkpathTransformSourceX {
-        super::LinkpathTransformSourceX::ScaleField(super::ScaleField(
+        super::LinkpathTransformSourceX::Variant0(super::ScaleField(
             super::StringOrSignal::Variant0("source.x".to_string()),
         ))
     }
     pub(super) fn linkpath_transform_source_y() -> super::LinkpathTransformSourceY {
-        super::LinkpathTransformSourceY::ScaleField(super::ScaleField(
+        super::LinkpathTransformSourceY::Variant0(super::ScaleField(
             super::StringOrSignal::Variant0("source.y".to_string()),
         ))
     }
     pub(super) fn linkpath_transform_target_x() -> super::LinkpathTransformTargetX {
-        super::LinkpathTransformTargetX::ScaleField(super::ScaleField(
+        super::LinkpathTransformTargetX::Variant0(super::ScaleField(
             super::StringOrSignal::Variant0("target.x".to_string()),
         ))
     }
     pub(super) fn linkpath_transform_target_y() -> super::LinkpathTransformTargetY {
-        super::LinkpathTransformTargetY::ScaleField(super::ScaleField(
+        super::LinkpathTransformTargetY::Variant0(super::ScaleField(
             super::StringOrSignal::Variant0("target.y".to_string()),
         ))
     }

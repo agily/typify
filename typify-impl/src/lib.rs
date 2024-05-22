@@ -4,7 +4,7 @@
 
 #![deny(missing_docs)]
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::path::PathBuf;
 
 use conversions::SchemaCache;
@@ -214,6 +214,7 @@ pub struct TypeSpace {
     // Shared functions for generating default values
     defaults: BTreeSet<DefaultImpl>,
 
+    tree: HashMap<String, HashSet<String>>,
     file_path: PathBuf,
 }
 
@@ -241,6 +242,7 @@ impl Default for TypeSpace {
             cache: Default::default(),
             defaults: Default::default(),
             file_path: Default::default(),
+            tree: Default::default(),
         }
     }
 }
@@ -768,16 +770,22 @@ impl TypeSpace {
         if root_type {
             defs.push((RefKey::Root, schema_object.into()));
         }
-        
-        let mut external_references = BTreeMap::new();
 
-        for (_, def) in &defs {
+        let mut graph: HashMap<String, HashSet<String>> = HashMap::new();
+        let mut external_references = BTreeMap::new();
+        for (k, def) in &defs {
+            let key = match k {
+                RefKey::Root => "root".to_string(),
+                RefKey::Def(v) => v.clone(),
+            };
             fetch_external_definitions(
                 &schema,
                 def,
+                key,
                 &self.file_path,
                 &s_id,
                 &mut external_references,
+                &mut graph,
                 true,
             );
         }
@@ -790,7 +798,6 @@ impl TypeSpace {
         for (reference, (mut schema, path, id)) in external_references {
             let path = path.canonicalize().unwrap();
             if let RefKey::Def(reference) = reference {
-                let path = path.canonicalize().unwrap();
                 let relpath = diff_paths(&path, self.file_path.parent().unwrap())
                     .unwrap_or_default()
                     .to_string_lossy()
@@ -823,7 +830,9 @@ impl TypeSpace {
 
         defs.extend(ext_refs.into_iter());
 
-        self.add_ref_types_impl(defs)?;
+      self.tree = graph;
+
+      self.add_ref_types_impl(defs)?;
 
         if root_type {
             Ok(self.ref_to_id.get(&RefKey::Root).cloned())
@@ -923,6 +932,11 @@ impl TypeSpace {
             .for_each(|x| output.add_item(output::OutputSpaceMod::Defaults, "", x.into()));
 
         output.into_stream()
+    }
+
+    /// Return `&HashMap<String, HashSet<String>>` that's represent raw reference tree.
+    pub fn get_tree(&self) -> &HashMap<String, HashSet<String>> {
+        &self.tree
     }
 
     /// Allocated the next TypeId.
@@ -1213,17 +1227,21 @@ impl<'a> TypeNewtype<'a> {
 fn fetch_external_definitions(
     base_schema: &RootSchema,
     definition: &Schema,
+    key: String,
     base_path: &PathBuf,
     base_id: &Option<String>,
     external_references: &mut BTreeMap<RefKey, (Schema, PathBuf, Option<String>)>,
+    graph: &mut HashMap<String, HashSet<String>>,
     first_run: bool,
 ) {
+    let mut node = HashSet::new();
     for mut reference in get_references(&definition) {
         if reference.is_empty() {
             continue;
         }
         if reference.starts_with("#") {
             if first_run {
+                node.insert(reference.split("/").last().unwrap().to_string());
                 continue;
             }
 
@@ -1236,7 +1254,8 @@ fn fetch_external_definitions(
                 .collect();
             let definition_schema = fetch_defenition(base_schema, &reference, &fragment);
             let k = format!("{}{}", base_id.as_ref().unwrap(), reference);
-            let key = RefKey::Def(k);
+            node.insert(k.clone());
+            let key = RefKey::Def(k.clone());
             if external_references.contains_key(&key) {
                 continue;
             } else {
@@ -1251,9 +1270,11 @@ fn fetch_external_definitions(
                 fetch_external_definitions(
                     base_schema,
                     &definition_schema,
+                    k,
                     base_path,
                     base_id,
                     external_references,
+                    graph,
                     false,
                 );
             }
@@ -1292,16 +1313,24 @@ fn fetch_external_definitions(
                     key,
                     (definition_schema.clone(), file_path.clone(), s_id.clone()),
                 );
+                node.insert(reference.clone());
                 fetch_external_definitions(
                     &root_schema,
                     &definition_schema,
+                    reference,
                     &file_path,
                     &s_id,
                     external_references,
+                    graph,
                     false,
                 )
             }
         }
+    }
+    if let Some(n) = graph.get_mut(&key) {
+        n.extend(node);
+    } else {
+        graph.insert(key, node);
     }
 }
 
