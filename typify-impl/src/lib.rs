@@ -927,7 +927,7 @@ impl TypeSpace {
         output.into_stream()
     }
 
-    /// doc
+    /// Return `&HashMap<String, HashSet<String>>` that's represent raw reference tree.
     pub fn get_tree(&self) -> &HashMap<String, HashSet<String>> {
         &self.tree
     }

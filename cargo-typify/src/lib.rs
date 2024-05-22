@@ -164,11 +164,11 @@ impl std::str::FromStr for CrateSpec {
     }
 }
 
-/// doc
+/// Result of `convert` function.
 pub struct ConvertResult {
-    /// doc
+    /// Generated code.
     pub contents: String,
-    /// doc
+    /// Generated tree.
     pub tree: Option<String>,
 }
 
