@@ -823,7 +823,14 @@ impl TypeSpace {
         }
 
         defs.extend(ext_refs.into_iter());
+        let mut old = defs.len();
+        
         distinct_definitions(&mut defs);
+        while (old - defs.len()) != 0 {
+            old = defs.len();
+            distinct_definitions(&mut defs);
+        }
+        
         self.add_ref_types_impl(defs)?;
 
         if root_type {
@@ -1584,6 +1591,9 @@ fn distinct_definitions(definitions: &mut Vec<(RefKey, Schema)>) -> &mut Vec<(Re
     let mut delete_id = HashSet::new();
     let mut replace_from_to = BTreeMap::new();
     for i in 0..definitions.len() {
+        if delete_id.contains(&i) {
+            continue
+        }
         for j in (i + 1)..definitions.len() {
             if &definitions[i].1 == &definitions[j].1 {
                 delete_id.insert(j);
