@@ -4,7 +4,7 @@
 
 #![deny(missing_docs)]
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashSet};
 use std::path::PathBuf;
 
 use conversions::SchemaCache;
@@ -566,9 +566,10 @@ impl TypeSpace {
         // batch of types.
         for (index, (ref_name, schema)) in definitions.into_iter().enumerate() {
             info!(
-                "converting type: {:?} with schema {}",
+                "converting type: {:?} with schema {} {}",
                 ref_name,
-                serde_json::to_string(&schema).unwrap()
+                serde_json::to_string(&schema).unwrap(),
+                line!()
             );
 
             // Check for manually replaced types. Proceed with type conversion
@@ -768,7 +769,7 @@ impl TypeSpace {
         if root_type {
             defs.push((RefKey::Root, schema_object.into()));
         }
-        
+
         let mut external_references = BTreeMap::new();
 
         for (_, def) in &defs {
@@ -784,7 +785,7 @@ impl TypeSpace {
 
         let mut ext_refs = vec![];
         for (_, schema) in defs.iter_mut() {
-            replace_reference(schema, &s_id, &s_id);
+            format_reference(schema, &s_id, &s_id);
         }
 
         for (reference, (mut schema, path, id)) in external_references {
@@ -816,13 +817,13 @@ impl TypeSpace {
                     LINE_SEPARATOR,
                 )
                 .to_string();
-                replace_reference(&mut schema, &id, &s_id);
+                format_reference(&mut schema, &id, &s_id);
                 ext_refs.push((RefKey::Def(ref_name), schema));
             }
         }
 
         defs.extend(ext_refs.into_iter());
-
+        distinct_definitions(&mut defs);
         self.add_ref_types_impl(defs)?;
 
         if root_type {
@@ -1458,7 +1459,7 @@ fn get_references(schema: &Schema) -> Vec<String> {
                 );
             }
             result
-        },
+        }
         _ => vec![],
     }
 }
@@ -1475,7 +1476,7 @@ const LINE_SEPARATOR: &str = "/";
 #[cfg(not(target_os = "windows"))]
 const LINE_SEPARATOR_CHAR: char = '/';
 
-fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<String>) {
+fn format_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<String>) {
     match schema {
         Schema::Bool(_) => {}
         Schema::Object(obj) => {
@@ -1505,32 +1506,32 @@ fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<
             });
             if let Some(o) = obj.object.as_mut() {
                 for (_, s) in o.properties.iter_mut() {
-                    replace_reference(s, id, base_id);
+                    format_reference(s, id, base_id);
                 }
                 if let Some(additional_props) = o.additional_properties.as_mut() {
-                    replace_reference(additional_props, id, base_id);
+                    format_reference(additional_props, id, base_id);
                 }
 
                 for (_, s) in o.pattern_properties.iter_mut() {
-                    replace_reference(s, id, base_id);
+                    format_reference(s, id, base_id);
                 }
                 if let Some(property_names) = o.property_names.as_mut() {
-                    replace_reference(property_names, id, base_id);
+                    format_reference(property_names, id, base_id);
                 }
             }
             if let Some(o) = obj.array.as_mut() {
                 if let Some(s) = o.contains.as_mut() {
-                    replace_reference(s, id, base_id);
+                    format_reference(s, id, base_id);
                 }
                 if let Some(s) = o.additional_items.as_mut() {
-                    replace_reference(s, id, base_id);
+                    format_reference(s, id, base_id);
                 }
                 if let Some(s) = o.items.as_mut() {
                     match s {
-                        SingleOrVec::Single(s) => replace_reference(s, id, base_id),
+                        SingleOrVec::Single(s) => format_reference(s, id, base_id),
                         SingleOrVec::Vec(v) => {
                             for schema in v.iter_mut() {
-                                replace_reference(schema, id, base_id);
+                                format_reference(schema, id, base_id);
                             }
                         }
                     }
@@ -1549,30 +1550,143 @@ fn replace_reference(schema: &mut Schema, id: &Option<String>, base_id: &Option<
             {
                 if let Some(s) = all_of.as_mut() {
                     for s in s.iter_mut() {
-                        replace_reference(s, id, base_id);
+                        format_reference(s, id, base_id);
                     }
                 }
                 if let Some(s) = any_of.as_mut() {
                     for s in s.iter_mut() {
-                        replace_reference(s, id, base_id);
+                        format_reference(s, id, base_id);
                     }
                 }
                 if let Some(s) = one_of.as_mut() {
                     for s in s.iter_mut() {
-                        replace_reference(s, id, base_id);
+                        format_reference(s, id, base_id);
                     }
                 }
                 if let Some(s) = not.as_mut() {
-                    replace_reference(s, id, base_id);
+                    format_reference(s, id, base_id);
                 }
                 if let Some(s) = if_schema.as_mut() {
-                    replace_reference(s, id, base_id);
+                    format_reference(s, id, base_id);
                 }
                 if let Some(s) = then_schema.as_mut() {
-                    replace_reference(s, id, base_id);
+                    format_reference(s, id, base_id);
                 }
                 if let Some(s) = else_schema.as_mut() {
-                    replace_reference(s, id, base_id);
+                    format_reference(s, id, base_id);
+                }
+            }
+        }
+    }
+}
+
+fn distinct_definitions(definitions: &mut Vec<(RefKey, Schema)>) -> &mut Vec<(RefKey, Schema)> {
+    let mut delete_id = HashSet::new();
+    let mut replace_from_to = BTreeMap::new();
+    for i in 0..definitions.len() {
+        for j in (i + 1)..definitions.len() {
+            if &definitions[i].1 == &definitions[j].1 {
+                delete_id.insert(j);
+                if let (RefKey::Def(k), RefKey::Def(key)) = (&definitions[j].0, &definitions[i].0) {
+                    replace_from_to.insert(k.clone(), key.clone());
+                }
+            }
+        }
+    }
+    let mut d = std::mem::take(definitions);
+    d = d
+        .into_iter()
+        .enumerate()
+        .filter(|(index, _)| !delete_id.contains(index))
+        .map(|(_, v)| v)
+        .collect::<Vec<_>>();
+
+    d.iter_mut()
+        .for_each(|(_, schema)| replace_reference(schema, &replace_from_to));
+
+    *definitions = d;
+    definitions
+}
+
+fn replace_reference(schema: &mut Schema, dictionary: &BTreeMap<String, String>) {
+    match schema {
+        Schema::Bool(_) => {}
+        Schema::Object(obj) => {
+            obj.reference.as_mut().map(|reference| {
+                if let Some(r) = dictionary.get(reference) {
+                    *reference = r.to_string();
+                }
+            });
+            if let Some(o) = obj.object.as_mut() {
+                for (_, s) in o.properties.iter_mut() {
+                    replace_reference(s, dictionary);
+                }
+                if let Some(additional_props) = o.additional_properties.as_mut() {
+                    replace_reference(additional_props, dictionary);
+                }
+
+                for (_, s) in o.pattern_properties.iter_mut() {
+                    replace_reference(s, dictionary);
+                }
+                if let Some(property_names) = o.property_names.as_mut() {
+                    replace_reference(property_names, dictionary);
+                }
+            }
+            if let Some(o) = obj.array.as_mut() {
+                if let Some(s) = o.contains.as_mut() {
+                    replace_reference(s, dictionary);
+                }
+                if let Some(s) = o.additional_items.as_mut() {
+                    replace_reference(s, dictionary);
+                }
+                if let Some(s) = o.items.as_mut() {
+                    match s {
+                        SingleOrVec::Single(s) => replace_reference(s, dictionary),
+                        SingleOrVec::Vec(v) => {
+                            for schema in v.iter_mut() {
+                                replace_reference(schema, dictionary);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if let Some(SubschemaValidation {
+                all_of,
+                any_of,
+                one_of,
+                not,
+                if_schema,
+                then_schema,
+                else_schema,
+            }) = obj.subschemas.as_mut().map(AsMut::as_mut)
+            {
+                if let Some(s) = all_of.as_mut() {
+                    for s in s.iter_mut() {
+                        replace_reference(s, dictionary);
+                    }
+                }
+                if let Some(s) = any_of.as_mut() {
+                    for s in s.iter_mut() {
+                        replace_reference(s, dictionary);
+                    }
+                }
+                if let Some(s) = one_of.as_mut() {
+                    for s in s.iter_mut() {
+                        replace_reference(s, dictionary);
+                    }
+                }
+                if let Some(s) = not.as_mut() {
+                    replace_reference(s, dictionary);
+                }
+                if let Some(s) = if_schema.as_mut() {
+                    replace_reference(s, dictionary);
+                }
+                if let Some(s) = then_schema.as_mut() {
+                    replace_reference(s, dictionary);
+                }
+                if let Some(s) = else_schema.as_mut() {
+                    replace_reference(s, dictionary);
                 }
             }
         }
