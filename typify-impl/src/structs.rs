@@ -1,12 +1,9 @@
 // Copyright 2024 Oxide Computer Company
 
 use heck::ToSnakeCase;
-use proc_macro2::TokenStream;
-use quote::quote;
 use schemars::schema::{InstanceType, Metadata, ObjectValidation, Schema, SchemaObject};
 
 use crate::{
-    output::{OutputSpace, OutputSpaceMod},
     type_entry::{
         StructProperty, StructPropertyRename, StructPropertyState, TypeEntry, TypeEntryStruct,
         WrappedValue,
@@ -340,12 +337,6 @@ impl TypeSpace {
     }
 }
 
-pub(crate) enum DefaultFunction {
-    None,
-    Default,
-    Custom(String),
-}
-
 /// Generate the serde attribute parameters for the given property.
 ///
 /// This may include a default value that requires a generated function to
@@ -354,87 +345,6 @@ pub(crate) enum DefaultFunction {
 /// Note that if we have several serde attribute parameters, they could each
 /// appear in their own attribute. We choose to condense them for the sake of
 /// legibility.
-pub(crate) fn generate_serde_attr(
-    type_name: &str,
-    prop_name: &str,
-    naming: &StructPropertyRename,
-    state: &StructPropertyState,
-    prop_type: &TypeEntry,
-    type_space: &TypeSpace,
-    output: &mut OutputSpace,
-) -> (TokenStream, DefaultFunction) {
-    let mut serde_options = Vec::new();
-    match naming {
-        StructPropertyRename::Rename(s) => serde_options.push(quote! { rename = #s }),
-        StructPropertyRename::Flatten => serde_options.push(quote! { flatten }),
-        StructPropertyRename::None => (),
-    }
-
-    let default_fn = match (state, &prop_type.details) {
-        (StructPropertyState::Optional, TypeEntryDetails::Option(_)) => {
-            serde_options.push(quote! { default });
-            serde_options.push(quote! { skip_serializing_if = "Option::is_none" });
-            DefaultFunction::Default
-        }
-        (StructPropertyState::Optional, TypeEntryDetails::Vec(_)) => {
-            serde_options.push(quote! { default });
-            serde_options.push(quote! { skip_serializing_if = "Vec::is_empty" });
-            DefaultFunction::Default
-        }
-        (StructPropertyState::Optional, TypeEntryDetails::Map(key_id, value_id)) => {
-            serde_options.push(quote! { default });
-
-            let key_ty = type_space
-                .id_to_entry
-                .get(key_id)
-                .expect("unresolved key type id for map");
-            let value_ty = type_space
-                .id_to_entry
-                .get(value_id)
-                .expect("unresolved value type id for map");
-
-            if key_ty.details == TypeEntryDetails::String
-                && value_ty.details == TypeEntryDetails::JsonValue
-            {
-                serde_options.push(quote! {
-                    skip_serializing_if = "serde_json::Map::is_empty"
-                });
-            } else {
-                serde_options.push(quote! {
-                    skip_serializing_if = "std::collections::HashMap::is_empty"
-                });
-            }
-            DefaultFunction::Default
-        }
-        (StructPropertyState::Optional, _) => {
-            serde_options.push(quote! { default });
-            DefaultFunction::Default
-        }
-
-        (StructPropertyState::Default(WrappedValue(value)), _) => {
-            let (fn_name, default_fn) =
-                prop_type.default_fn(value, type_space, type_name, prop_name);
-            serde_options.push(quote! { default = #fn_name });
-
-            if let Some(default_fn) = default_fn {
-                output.add_item(OutputSpaceMod::Defaults, type_name, default_fn);
-            }
-            DefaultFunction::Custom(fn_name)
-        }
-
-        (StructPropertyState::Required, _) => DefaultFunction::None,
-    };
-
-    let serde = if serde_options.is_empty() {
-        quote! {}
-    } else {
-        quote! {
-            #[serde( #(#serde_options),*)]
-        }
-    };
-
-    (serde, default_fn)
-}
 
 /// See if this type is a type that we can omit with a serde directive; note
 /// that the type id lookup will fail only for references (and only during

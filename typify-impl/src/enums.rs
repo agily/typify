@@ -11,7 +11,6 @@ use schemars::schema::{
 
 use crate::{
     output::OutputSpace,
-    structs::generate_serde_attr,
     type_entry::{
         EnumTagType, TypeEntry, TypeEntryDetails, TypeEntryEnum, TypeEntryStruct, Variant,
         VariantDetails,
@@ -735,20 +734,14 @@ fn get_common_prefix(name: &str, prefix: &str) -> String {
 pub(crate) fn output_variant(
     variant: &Variant,
     type_space: &TypeSpace,
-    output: &mut OutputSpace,
-    type_name: &str,
+    _output: &mut OutputSpace,
+    _type_name: &str,
 ) -> TokenStream {
     let name = format_ident!("{}", variant.name);
-    let doc = variant.description.as_ref().map(|s| {
-        quote! { #[doc = #s] }
-    });
-    let serde = variant.rename.as_ref().map(|s| {
-        quote! { #[serde(rename = #s)] }
-    });
+   
+   
     match &variant.details {
         VariantDetails::Simple => quote! {
-            #doc
-            #serde
             #name,
         },
         VariantDetails::Item(type_id) => {
@@ -759,8 +752,7 @@ pub(crate) fn output_variant(
                 .type_ident(type_space, &None);
 
             quote! {
-                #doc
-                #serde
+              
                 #name(#item_type_ident),
             }
         }
@@ -776,8 +768,7 @@ pub(crate) fn output_variant(
 
             if tuple.len() != 1 {
                 quote! {
-                    #doc
-                    #serde
+                  
                     #name(#(#types),*),
                 }
             } else {
@@ -786,8 +777,7 @@ pub(crate) fn output_variant(
                 // ensure correct serialization and deserialization behavior.
                 // Note in particular the extra parentheses and trailing comma.
                 quote! {
-                    #doc
-                    #serde
+                   
                     #name((#(#types,)*)),
                 }
             }
@@ -795,31 +785,20 @@ pub(crate) fn output_variant(
 
         VariantDetails::Struct(props) => {
             let prop_streams = props.iter().map(|prop| {
-                let prop_doc = prop.description.as_ref().map(|s| quote! { #[doc = #s] });
 
                 let prop_type_entry = type_space.id_to_entry.get(&prop.type_id).unwrap();
-                let (prop_serde, _) = generate_serde_attr(
-                    &format!("{}{}", type_name, &variant.name),
-                    &prop.name,
-                    &prop.rename,
-                    &prop.state,
-                    prop_type_entry,
-                    type_space,
-                    output,
-                );
+               
 
                 let prop_name = format_ident!("{}", prop.name);
                 let prop_type = prop_type_entry.type_ident(type_space, &None);
 
                 quote! {
-                    #prop_doc
-                    #prop_serde
+                  
                     #prop_name: #prop_type,
                 }
             });
             quote! {
-                #doc
-                #serde
+
                 #name {
                     #(#prop_streams)*
                 },

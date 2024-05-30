@@ -14,8 +14,6 @@ pub struct OutputSpace {
 pub enum OutputSpaceMod {
     Error,
     Crate,
-    Builder,
-    Defaults,
 }
 
 impl OutputSpace {
@@ -46,18 +44,6 @@ impl OutputSpace {
         let mod_streams = mods.into_iter().map(|(location, items)| match location {
             OutputSpaceMod::Crate => quote! {
                 #items
-            },
-            OutputSpaceMod::Builder => quote! {
-                /// Types for composing complex structures.
-                pub mod builder {
-                    #items
-                }
-            },
-            OutputSpaceMod::Defaults => quote! {
-                /// Generation of default values for serde.
-                pub mod defaults {
-                    #items
-                }
             },
             OutputSpaceMod::Error => quote! {
                 /// Error types.

@@ -3,7 +3,7 @@
 use std::collections::BTreeMap;
 
 use proc_macro2::TokenStream;
-use quote::{format_ident, quote};
+use quote::quote;
 
 use crate::{
     type_entry::{
@@ -11,7 +11,6 @@ use crate::{
         TypeEntry, TypeEntryDetails, TypeEntryEnum, TypeEntryNewtype, TypeEntryStruct, Variant,
         VariantDetails, WrappedValue,
     },
-    util::{sanitize, Case},
     DefaultImpl, Error, Result, TypeId, TypeSpace,
 };
 
@@ -306,51 +305,15 @@ impl TypeEntry {
     /// the value for the given default. If there is no such built-in function,
     /// the .1 will be Some with a TokenStream for a function that can produce
     /// that value.
-    pub(crate) fn default_fn(
-        &self,
-        default: &serde_json::Value,
-        type_space: &TypeSpace,
-        type_name: &str,
-        prop_name: &str,
-    ) -> (String, Option<TokenStream>) {
-        let maybe_builtin = match &self.details {
-            // This can only be covered by the intrinsic default
-            TypeEntryDetails::Unit => unreachable!(),
-            TypeEntryDetails::Boolean => Some("defaults::default_bool::<true>".to_string()),
-            TypeEntryDetails::Integer(name) => {
-                if let Some(value) = default.as_u64() {
-                    Some(format!("defaults::default_u64::<{}, {}>", name, value))
-                } else if let Some(value) = default.as_i64() {
-                    Some(format!("defaults::default_i64::<{}, {}>", name, value))
-                } else {
-                    panic!()
-                }
-            }
-            _ => None,
-        };
 
-        if let Some(fn_name) = maybe_builtin {
-            (fn_name, None)
-        } else {
-            let n = self.type_ident(type_space, &Some("super".to_string()));
-            let value = self
-                .output_value(type_space, default, &quote! { super:: })
-                .unwrap_or_else(|| {
-                    panic!(
-                        "{}\nvalue: {}\ntype: {:#?}",
-                        "The default value could not be rendered for this type",
-                        serde_json::to_string_pretty(default).unwrap(),
-                        self,
-                    )
-                });
-            let fn_name = sanitize(&format!("{}_{}", type_name, prop_name), Case::Snake);
-            let fn_ident = format_ident!("{}", fn_name);
-            let def = quote! {
-                pub(super) fn #fn_ident() -> #n {
-                    #value
-                }
-            };
-            (format!("defaults::{}", fn_name), Some(def))
+    pub(crate) fn rename(&mut self, new_name: String) {
+        match &mut self.details {
+            TypeEntryDetails::Enum(TypeEntryEnum { name, .. })
+            | TypeEntryDetails::Struct(TypeEntryStruct { name, .. })
+            | TypeEntryDetails::Newtype(TypeEntryNewtype { name, .. }) => {
+                *name = new_name;
+            },
+            _ => {},
         }
     }
 }

@@ -1,16 +1,14 @@
 // Copyright 2023 Oxide Computer Company
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 
 use proc_macro2::{Punct, Spacing, TokenStream, TokenTree};
 use quote::{format_ident, quote, ToTokens};
 use schemars::schema::{Metadata, Schema};
-use syn::Path;
 
 use crate::{
     enums::output_variant,
     output::{OutputSpace, OutputSpaceMod},
-    structs::{generate_serde_attr, DefaultFunction},
     util::{get_type_name, metadata_description, type_patch},
     DefaultImpl, Name, Result, TypeId, TypeSpace, TypeSpaceImpl,
 };
@@ -630,7 +628,7 @@ impl TypeEntry {
     }
 
     pub(crate) fn output(&self, type_space: &TypeSpace, output: &mut OutputSpace) {
-        let derive_set = ["Serialize", "Deserialize", "Debug", "Clone"]
+        let derive_set = []
             .into_iter()
             .collect::<BTreeSet<_>>();
 
@@ -659,55 +657,20 @@ impl TypeEntry {
         type_space: &TypeSpace,
         output: &mut OutputSpace,
         enum_details: &TypeEntryEnum,
-        mut derive_set: BTreeSet<&str>,
+        mut _derive_set: BTreeSet<&str>,
     ) {
         let TypeEntryEnum {
             name,
-            rename,
-            description,
-            default,
+            rename: _,
+            description: _,
+            default: _,
             tag_type,
             variants,
-            deny_unknown_fields,
-            bespoke_impls,
-            schema: SchemaWrapper(schema),
+            deny_unknown_fields: _,
+            bespoke_impls: _,
+            schema: SchemaWrapper(_schema),
         } = enum_details;
 
-        let doc = make_doc(name, description.as_ref(), schema);
-
-        // TODO this is a one-off for some useful traits; this should move into
-        // the creation of the enum type.
-        if variants
-            .iter()
-            .all(|variant| matches!(variant.details, VariantDetails::Simple))
-        {
-            derive_set.extend(["Copy", "PartialOrd", "Ord", "PartialEq", "Eq", "Hash"]);
-        }
-
-        let mut serde_options = Vec::new();
-        if let Some(old_name) = rename {
-            serde_options.push(quote! { rename = #old_name });
-        }
-        match tag_type {
-            EnumTagType::External => {}
-            EnumTagType::Internal { tag } => {
-                serde_options.push(quote! { tag = #tag });
-            }
-            EnumTagType::Adjacent { tag, content } => {
-                serde_options.push(quote! { tag = #tag });
-                serde_options.push(quote! { content = #content });
-            }
-            EnumTagType::Untagged => {
-                serde_options.push(quote! { untagged });
-            }
-        }
-        if *deny_unknown_fields {
-            serde_options.push(quote! { deny_unknown_fields });
-        }
-
-        let serde = (!serde_options.is_empty()).then(|| {
-            quote! { #[serde( #( #serde_options ),* )] }
-        });
 
         let type_name = format_ident!("{}", name);
 
@@ -730,266 +693,12 @@ impl TypeEntry {
 
         // ToString and FromStr impls for enums that are made exclusively of
         // simple variants (and are not untagged).
-        let simple_enum_impl = bespoke_impls
-            .contains(&TypeEntryEnumImpl::AllSimpleVariants)
-            .then(|| {
-                let (match_variants, match_strs): (Vec<_>, Vec<_>) = variants
-                    .iter()
-                    .map(|variant| {
-                        let variant_name = format_ident!("{}", variant.name);
-                        let variant_str = match &variant.rename {
-                            Some(s) => s,
-                            None => &variant.name,
-                        };
-                        (variant_name, variant_str)
-                    })
-                    .unzip();
-
-                quote! {
-                    impl ToString for #type_name {
-                        fn to_string(&self) -> String {
-                            match *self {
-                                #(Self::#match_variants => #match_strs.to_string(),)*
-                            }
-                        }
-                    }
-                    impl std::str::FromStr for #type_name {
-                        type Err = self::error::ConversionError;
-
-                        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
-                            match value {
-                                #(#match_strs => Ok(Self::#match_variants),)*
-                                _ => Err("invalid value".into()),
-                            }
-                        }
-                    }
-                    impl std::convert::TryFrom<&str> for #type_name {
-                        type Error = self::error::ConversionError;
-
-                        fn try_from(value: &str) -> Result<Self, self::error::ConversionError> {
-                            value.parse()
-                        }
-                    }
-                    impl std::convert::TryFrom<&String> for #type_name {
-                        type Error = self::error::ConversionError;
-
-                        fn try_from(value: &String) -> Result<Self, self::error::ConversionError> {
-                            value.parse()
-                        }
-                    }
-                    impl std::convert::TryFrom<String> for #type_name {
-                        type Error = self::error::ConversionError;
-
-                        fn try_from(value: String) -> Result<Self, self::error::ConversionError> {
-                            value.parse()
-                        }
-                    }
-                }
-            });
-
-        let default_impl = default.as_ref().map(|value| {
-            let default_stream = self.output_value(type_space, &value.0, &quote! {}).unwrap();
-            quote! {
-                impl Default for #type_name {
-                    fn default() -> Self {
-                        #default_stream
-                    }
-                }
-            }
-        });
-
-        let untagged_newtype_from_string_impl = bespoke_impls
-            .contains(&TypeEntryEnumImpl::UntaggedFromStr)
-            .then(|| {
-                let variant_name = variants
-                    .iter()
-                    .map(|variant| format_ident!("{}", variant.name));
-
-                quote! {
-                    impl std::str::FromStr for #type_name {
-                        type Err = self::error::ConversionError;
-
-                        fn from_str(value: &str) ->
-                            Result<Self, self::error::ConversionError>
-                        {
-                            #(
-                                // Try to parse() into each variant.
-                                if let Ok(v) = value.parse() {
-                                    Ok(Self::#variant_name(v))
-                                } else
-                            )*
-                            {
-                                Err("string conversion failed for all variants".into())
-                            }
-                        }
-                    }
-                    impl std::convert::TryFrom<&str> for #type_name {
-                        type Error = self::error::ConversionError;
-
-                        fn try_from(value: &str) ->
-                            Result<Self, self::error::ConversionError>
-                        {
-                            value.parse()
-                        }
-                    }
-                    impl std::convert::TryFrom<&String> for #type_name {
-                        type Error = self::error::ConversionError;
-
-                        fn try_from(value: &String) ->
-                            Result<Self, self::error::ConversionError>
-                        {
-                            value.parse()
-                        }
-                    }
-                    impl std::convert::TryFrom<String> for #type_name {
-                        type Error = self::error::ConversionError;
-
-                        fn try_from(value: String) ->
-                            Result<Self, self::error::ConversionError>
-                        {
-                            value.parse()
-                        }
-                    }
-                }
-            });
-
-        let untagged_newtype_to_string_impl = bespoke_impls
-            .contains(&TypeEntryEnumImpl::UntaggedDisplay)
-            .then(|| {
-                let variant_name = variants
-                    .iter()
-                    .map(|variant| format_ident!("{}", variant.name));
-
-                quote! {
-                    impl ToString for #type_name {
-                        fn to_string(&self) -> String {
-                            match self {
-                                #(Self::#variant_name(x) => x.to_string(),)*
-                            }
-                        }
-                    }
-                }
-            });
-
-        let convenience_from = {
-            // Build a map whose key is the type ID or type IDs of the Item and
-            // Tuple variants, and whose value is a tuple of the original index
-            // and the variant itself. Any key that is seen multiple times has
-            // a value of None.
-            // TODO this requires more consideration to handle single-item
-            // tuples.
-            let unique_variants =
-                variants
-                    .iter()
-                    .enumerate()
-                    .fold(BTreeMap::new(), |mut map, (index, variant)| {
-                        let key = match &variant.details {
-                            VariantDetails::Item(type_id) => vec![type_id],
-                            VariantDetails::Tuple(type_ids) => type_ids.iter().collect(),
-                            _ => return map,
-                        };
-
-                        map.entry(key)
-                            .and_modify(|v| *v = None)
-                            .or_insert(Some((index, variant)));
-                        map
-                    });
-
-            // Remove any variants that are duplicates (i.e. the value is None)
-            // with the flatten(). Then order a new map according to the
-            // original order of variants. The allows for the order to be
-            // stable and for impl blocks to appear in the same order as their
-            // corresponding variants.
-            let ordered_variants = unique_variants
-                .into_values()
-                .flatten()
-                .collect::<BTreeMap<_, _>>();
-
-            // Generate a `From<VariantType>` impl block that converts the type
-            // into the appropriate variant of the enum.
-            let variant_from =
-                ordered_variants
-                    .into_values()
-                    .map(|variant| match &variant.details {
-                        VariantDetails::Item(type_id) => {
-                            let variant_type = type_space.id_to_entry.get(type_id).unwrap();
-
-                            // TODO Strings might conflict with the way we're
-                            // dealing with TryFrom<String> right now.
-                            (variant_type.details != TypeEntryDetails::String).then(|| {
-                                let variant_type_ident = variant_type.type_ident(type_space, &None);
-                                let variant_name = format_ident!("{}", variant.name);
-                                quote! {
-                                    impl From<#variant_type_ident> for #type_name {
-                                        fn from(value: #variant_type_ident)
-                                            -> Self
-                                        {
-                                            Self::#variant_name(value)
-                                        }
-                                    }
-                                }
-                            })
-                        }
-                        VariantDetails::Tuple(type_ids) => {
-                            let variant_type_idents = type_ids.iter().map(|type_id| {
-                                type_space
-                                    .id_to_entry
-                                    .get(type_id)
-                                    .unwrap()
-                                    .type_ident(type_space, &None)
-                            });
-                            let variant_type_ident = if type_ids.len() != 1 {
-                                quote! { ( #(#variant_type_idents),* ) }
-                            } else {
-                                // A single-item tuple requires a trailing
-                                // comma.
-                                quote! { ( #(#variant_type_idents,)* ) }
-                            };
-                            let variant_name = format_ident!("{}", variant.name);
-                            let ii = (0..type_ids.len()).map(syn::Index::from);
-                            Some(quote! {
-                                impl From<#variant_type_ident> for #type_name {
-                                    fn from(value: #variant_type_ident) -> Self {
-                                        Self::#variant_name(
-                                            #( value.#ii, )*
-                                        )
-                                    }
-                                }
-                            })
-                        }
-                        _ => None,
-                    });
-
-            quote! {
-                #( #variant_from )*
-            }
-        };
-
-        let derives = strings_to_derives(
-            derive_set,
-            &self.extra_derives,
-            &type_space.settings.extra_derives,
-        );
 
         let item = quote! {
-            #doc
-            #[derive(#(#derives),*)]
-            #serde
+        
             pub enum #type_name {
                 #(#variants_decl)*
             }
-
-            impl From<&#type_name> for #type_name {
-                fn from(value: &#type_name) -> Self {
-                    value.clone()
-                }
-            }
-
-            #simple_enum_impl
-            #default_impl
-            #untagged_newtype_from_string_impl
-            #untagged_newtype_to_string_impl
-            #convenience_from
         };
         output.add_item(OutputSpaceMod::Crate, name, item);
     }
@@ -999,209 +708,51 @@ impl TypeEntry {
         type_space: &TypeSpace,
         output: &mut OutputSpace,
         struct_details: &TypeEntryStruct,
-        derive_set: BTreeSet<&str>,
+        _derive_set: BTreeSet<&str>,
     ) {
         let TypeEntryStruct {
             name,
-            rename,
-            description,
-            default,
+            rename: _,
+            description: _,
+            default: _,
             properties,
-            deny_unknown_fields,
-            schema: SchemaWrapper(schema),
+            deny_unknown_fields: _,
+            schema: SchemaWrapper(_schema),
         } = struct_details;
-        let doc = make_doc(name, description.as_ref(), schema);
-
-        // Generate the serde directives as needed.
-        let mut serde_options = Vec::new();
-        if let Some(old_name) = rename {
-            serde_options.push(quote! { rename = #old_name });
-        }
-        if *deny_unknown_fields {
-            serde_options.push(quote! { deny_unknown_fields });
-        }
-        let serde =
-            (!serde_options.is_empty()).then(|| quote! { #[serde( #( #serde_options ),* )] });
+       
 
         let type_name = format_ident!("{}", name);
 
         // Gather the various components for all properties.
-        let mut prop_doc = Vec::new();
-        let mut prop_serde = Vec::new();
-        let mut prop_default = Vec::new();
+       
         let mut prop_name = Vec::new();
-        let mut prop_error = Vec::new();
         let mut prop_type = Vec::new();
         let mut prop_type_scoped = Vec::new();
 
         properties.iter().for_each(|prop| {
-            prop_doc.push(prop.description.as_ref().map(|d| quote! { #[doc = #d] }));
             prop_name.push(format_ident!("{}", prop.name));
-            prop_error.push(format!(
-                "error converting supplied value for {}: {{}}",
-                prop.name,
-            ));
-
+            
             let prop_type_entry = type_space.id_to_entry.get(&prop.type_id).unwrap();
             prop_type.push(prop_type_entry.type_ident(type_space, &None));
             prop_type_scoped
                 .push(prop_type_entry.type_ident(type_space, &Some("super".to_string())));
-
-            let (serde, default_fn) = generate_serde_attr(
-                name,
-                &prop.name,
-                &prop.rename,
-                &prop.state,
-                prop_type_entry,
-                type_space,
-                output,
-            );
-
-            prop_serde.push(serde);
-            prop_default.push(match default_fn {
-                DefaultFunction::Default => {
-                    quote! {
-                        Ok(Default::default())
-                    }
-                }
-                DefaultFunction::Custom(fn_name) => {
-                    let default_fn = syn::parse_str::<Path>(&fn_name).unwrap();
-                    quote! {
-                        Ok(super::#default_fn())
-                    }
-                }
-                DefaultFunction::None => {
-                    let err_msg = format!("no value supplied for {}", prop.name);
-                    quote! {
-                        Err(#err_msg.to_string())
-                    }
-                }
-            });
         });
-
-        let derives = strings_to_derives(
-            derive_set,
-            &self.extra_derives,
-            &type_space.settings.extra_derives,
-        );
 
         output.add_item(
             OutputSpaceMod::Crate,
             name,
             quote! {
-                #doc
-                #[derive(#(#derives),*)]
-                #serde
+               
                 pub struct #type_name {
                     #(
-                        #prop_doc
-                        #prop_serde
                         pub #prop_name: #prop_type,
                     )*
-                }
-
-                impl From<&#type_name> for #type_name {
-                    fn from(value: &#type_name) -> Self {
-                        value.clone()
-                    }
                 }
             },
         );
 
         // If there's a default value, generate an impl Default
-        if let Some(value) = default {
-            let default_stream = self.output_value(type_space, &value.0, &quote! {}).unwrap();
-            output.add_item(
-                OutputSpaceMod::Crate,
-                name,
-                quote! {
-                    impl Default for #type_name {
-                        fn default() -> Self {
-                            #default_stream
-                        }
-                    }
-                },
-            );
-        }
-
-        if type_space.settings.struct_builder {
-            output.add_item(
-                OutputSpaceMod::Crate,
-                name,
-                quote! {
-                    impl #type_name {
-                        pub fn builder() -> builder::#type_name {
-                            Default::default()
-                        }
-                    }
-                },
-            );
-
-            output.add_item(
-                OutputSpaceMod::Builder,
-                name,
-                quote! {
-                    #[derive(Clone, Debug)]
-                    pub struct #type_name {
-                        #(
-                            #prop_name: Result<#prop_type_scoped, String>,
-                        )*
-                    }
-
-                    impl Default for #type_name {
-                        fn default() -> Self {
-                            Self {
-                                #(
-                                    #prop_name: #prop_default,
-                                )*
-                            }
-                        }
-                    }
-
-                    impl #type_name {
-                        #(
-                            pub fn #prop_name<T>(mut self, value: T) -> Self
-                                where
-                                    T: std::convert::TryInto<#prop_type_scoped>,
-                                    T::Error: std::fmt::Display,
-                            {
-                                self.#prop_name = value.try_into()
-                                    .map_err(|e| format!(#prop_error, e));
-                                self
-                            }
-                        )*
-                    }
-
-                    // This is how the item is built.
-                    impl std::convert::TryFrom<#type_name>
-                        for super::#type_name
-                    {
-                        type Error = super::error::ConversionError;
-
-                        fn try_from(value: #type_name)
-                            -> Result<Self, super::error::ConversionError>
-                        {
-                            Ok(Self {
-                                #(
-                                    #prop_name: value.#prop_name?,
-                                )*
-                            })
-                        }
-                    }
-
-                    // Construct a builder from the item.
-                    impl From<super::#type_name> for #type_name {
-                        fn from(value: super::#type_name) -> Self {
-                            Self {
-                                #(
-                                    #prop_name: Ok(value.#prop_name),
-                                )*
-                            }
-                        }
-                    }
-                },
-            );
-        }
+    
     }
 
     fn output_newtype(
@@ -1209,288 +760,23 @@ impl TypeEntry {
         type_space: &TypeSpace,
         output: &mut OutputSpace,
         newtype_details: &TypeEntryNewtype,
-        mut derive_set: BTreeSet<&str>,
+        mut _derive_set: BTreeSet<&str>,
     ) {
         let TypeEntryNewtype {
             name,
-            rename,
-            description,
-            default,
+            rename: _,
+            description: _,
+            default: _,
             type_id,
             constraints,
-            schema: SchemaWrapper(schema),
+            schema: SchemaWrapper(_schema),
         } = newtype_details;
-        let doc = make_doc(name, description.as_ref(), schema);
 
-        let serde = rename.as_ref().map(|old_name| {
-            quote! {
-                #[serde(rename = #old_name)]
-            }
-        });
+       
 
         let type_name = format_ident!("{}", name);
         let inner_type = type_space.id_to_entry.get(type_id).unwrap();
         let inner_type_name = inner_type.type_ident(type_space, &None);
-
-        let is_str = matches!(inner_type.details, TypeEntryDetails::String);
-
-        // If this is just a wrapper around a string, we can derive some more
-        // useful traits.
-        if is_str {
-            derive_set.extend(["PartialOrd", "Ord", "PartialEq", "Eq", "Hash"]);
-        }
-
-        let constraint_impl = match constraints {
-            // In the unconstrained case we proxy impls through the inner type.
-            TypeEntryNewtypeConstraints::None => {
-                let str_impl = is_str.then(|| {
-                    quote! {
-                        impl std::str::FromStr for #type_name {
-                            type Err = std::convert::Infallible;
-
-                            fn from_str(value: &str) ->
-                                Result<Self, Self::Err>
-                            {
-                                Ok(Self(value.to_string()))
-                            }
-                        }
-                    }
-                });
-
-                // TODO see the comment in has_impl related to this case.
-                let from_str_impl = (inner_type.has_impl(type_space, TypeSpaceImpl::FromStr)
-                    && !is_str)
-                    .then(|| {
-                        quote! {
-                            impl std::str::FromStr for #type_name {
-                                type Err = <#inner_type_name as
-                                    std::str::FromStr>::Err;
-
-                                fn from_str(value: &str) ->
-                                    Result<Self, Self::Err>
-                                {
-                                    Ok(Self(value.parse()?))
-                                }
-                            }
-                            impl std::convert::TryFrom<&str> for #type_name {
-                                type Error = <#inner_type_name as
-                                    std::str::FromStr>::Err;
-
-                                fn try_from(value: &str) ->
-                                    Result<Self, Self::Error>
-                                {
-                                    value.parse()
-                                }
-                            }
-                            impl std::convert::TryFrom<&String> for #type_name {
-                                type Error = <#inner_type_name as
-                                    std::str::FromStr>::Err;
-
-                                fn try_from(value: &String) ->
-                                    Result<Self, Self::Error>
-                                {
-                                    value.parse()
-                                }
-                            }
-                            impl std::convert::TryFrom<String> for #type_name {
-                                type Error = <#inner_type_name as
-                                    std::str::FromStr>::Err;
-
-                                fn try_from(value: String) ->
-                                    Result<Self, Self::Error>
-                                {
-                                    value.parse()
-                                }
-                            }
-                        }
-                    });
-
-                let display_impl = inner_type
-                    .has_impl(type_space, TypeSpaceImpl::Display)
-                    .then(|| {
-                        quote! {
-                            impl ToString for #type_name {
-                                fn to_string(&self) -> String {
-                                    self.0.to_string()
-                                }
-                            }
-                        }
-                    });
-
-                quote! {
-                    impl From<#inner_type_name> for #type_name {
-                        fn from(value: #inner_type_name) -> Self {
-                            Self(value)
-                        }
-                    }
-
-                    #str_impl
-                    #from_str_impl
-                    #display_impl
-                }
-            }
-
-            TypeEntryNewtypeConstraints::DenyValue(enum_values)
-            | TypeEntryNewtypeConstraints::EnumValue(enum_values) => {
-                let not = matches!(constraints, TypeEntryNewtypeConstraints::EnumValue(_))
-                    .then(|| quote! { ! });
-                // Note that string types with enumerated values are converted
-                // into simple enums rather than newtypes so we would not
-                // expect to see a string as the inner type here.
-                assert!(
-                    matches!(constraints, TypeEntryNewtypeConstraints::DenyValue(_))
-                        || !matches!(&inner_type.details, TypeEntryDetails::String)
-                );
-
-                // We're going to impl Deserialize so we can remove it
-                // from the set of derived impls.
-                derive_set.remove("Deserialize");
-
-                // TODO: if a user were to derive schemars::JsonSchema, it
-                // wouldn't be accurate.
-
-                let value_output = enum_values
-                    .iter()
-                    .map(|value| inner_type.output_value(type_space, &value.0, &quote! {}));
-                // TODO if the sub_type is a string we could probably impl
-                // TryFrom<&str> as well and FromStr.
-                // TODO maybe we want to handle JsonSchema here
-                quote! {
-                    // This is effectively the constructor for this type.
-                    impl std::convert::TryFrom<#inner_type_name> for #type_name {
-                        type Error = self::error::ConversionError;
-
-                        fn try_from(
-                            value: #inner_type_name
-                        ) -> Result<Self, self::error::ConversionError>
-                        {
-                            if #not [
-                                #(#value_output,)*
-                            ].contains(&value) {
-                                Err("invalid value".into())
-                            } else {
-                                Ok(Self(value))
-                            }
-                        }
-                    }
-
-                    impl<'de> serde::Deserialize<'de> for #type_name {
-                        fn deserialize<D>(
-                            deserializer: D,
-                        ) -> Result<Self, D::Error>
-                        where
-                            D: serde::Deserializer<'de>,
-                        {
-                            Self::try_from(
-                                <#inner_type_name>::deserialize(deserializer)?,
-                            )
-                            .map_err(|e| {
-                                <D::Error as serde::de::Error>::custom(
-                                    e.to_string(),
-                                )
-                            })
-                        }
-                    }
-                }
-            }
-
-            TypeEntryNewtypeConstraints::String {
-                max_length,
-                min_length,
-                pattern,
-            } => {
-                let max = max_length.map(|v| {
-                    let v = v as usize;
-                    let err = format!("longer than {} characters", v);
-                    quote! {
-                        if value.len() > #v {
-                            return Err(#err.into());
-                        }
-                    }
-                });
-                let min = min_length.map(|v| {
-                    let v = v as usize;
-                    let err = format!("shorter than {} characters", v);
-                    quote! {
-                        if value.len() < #v {
-                            return Err(#err.into());
-                        }
-                    }
-                });
-                let pat = pattern.as_ref().map(|p| {
-                    let err = format!("doesn't match pattern \"{}\"", p);
-                    quote! {
-                        if regress::Regex::new(#p).unwrap().find(value).is_none() {
-                            return Err(#err.into());
-                        }
-                    }
-                });
-
-                // We're going to impl Deserialize so we can remove it
-                // from the set of derived impls.
-                derive_set.remove("Deserialize");
-
-                // TODO: if a user were to derive schemars::JsonSchema, it
-                // wouldn't be accurate.
-                quote! {
-                    impl std::str::FromStr for #type_name {
-                        type Err = self::error::ConversionError;
-
-                        fn from_str(value: &str) -> Result<Self, self::error::ConversionError> {
-                            #max
-                            #min
-                            #pat
-
-                            Ok(Self(value.to_string()))
-                        }
-                    }
-                    impl std::convert::TryFrom<&str> for #type_name {
-                        type Error = self::error::ConversionError;
-
-                        fn try_from(value: &str) ->
-                            Result<Self, self::error::ConversionError>
-                        {
-                            value.parse()
-                        }
-                    }
-                    impl std::convert::TryFrom<&String> for #type_name {
-                        type Error = self::error::ConversionError;
-
-                        fn try_from(value: &String) ->
-                            Result<Self, self::error::ConversionError>
-                        {
-                            value.parse()
-                        }
-                    }
-                    impl std::convert::TryFrom<String> for #type_name {
-                        type Error = self::error::ConversionError;
-
-                        fn try_from(value: String) ->
-                            Result<Self, self::error::ConversionError>
-                        {
-                            value.parse()
-                        }
-                    }
-
-                    impl<'de> serde::Deserialize<'de> for #type_name {
-                        fn deserialize<D>(
-                            deserializer: D,
-                        ) -> Result<Self, D::Error>
-                        where
-                            D: serde::Deserializer<'de>,
-                        {
-                            String::deserialize(deserializer)?
-                                .parse()
-                                .map_err(|e: self::error::ConversionError| {
-                                    <D::Error as serde::de::Error>::custom(
-                                        e.to_string(),
-                                    )
-                                })
-                        }
-                    }
-                }
-            }
-        };
 
         // If there are no constraints, let consumers directly access the value.
         let vis = match constraints {
@@ -1498,50 +784,8 @@ impl TypeEntry {
             _ => None,
         };
 
-        let default_impl = default.as_ref().map(|value| {
-            let default_stream = self.output_value(type_space, &value.0, &quote! {}).unwrap();
-            quote! {
-                impl Default for #type_name {
-                    fn default() -> Self {
-                        #default_stream
-                    }
-                }
-            }
-        });
-
-        let derives = strings_to_derives(
-            derive_set,
-            &self.extra_derives,
-            &type_space.settings.extra_derives,
-        );
-
-        let item = quote! {
-            #doc
-            #[derive(#(#derives),*)]
-            #serde
+        let item = quote! {           
             pub struct #type_name(#vis #inner_type_name);
-
-            impl std::ops::Deref for #type_name {
-                type Target = #inner_type_name;
-                fn deref(&self) -> &#inner_type_name {
-                    &self.0
-                }
-            }
-
-            impl From<#type_name> for #inner_type_name {
-                fn from(value: #type_name) -> Self {
-                    value.0
-                }
-            }
-
-            impl From<&#type_name> for #type_name {
-                fn from(value: &#type_name) -> Self {
-                    value.clone()
-                }
-            }
-
-            #default_impl
-            #constraint_impl
         };
         output.add_item(OutputSpaceMod::Crate, name, item);
     }
@@ -1837,38 +1081,6 @@ impl TypeEntry {
     }
 }
 
-fn make_doc(name: &str, description: Option<&String>, schema: &Schema) -> TokenStream {
-    let desc = description.map_or(name, |desc| desc.as_str());
-    let schema_json = serde_json::to_string_pretty(schema).unwrap();
-    let schema_lines = schema_json.lines();
-    quote! {
-        #[doc = #desc]
-        ///
-        /// <details><summary>JSON schema</summary>
-        ///
-        /// ```json
-        #(
-            #[doc = #schema_lines]
-        )*
-        /// ```
-        /// </details>
-    }
-}
-
-fn strings_to_derives<'a>(
-    derive_set: BTreeSet<&'a str>,
-    type_derives: &'a BTreeSet<String>,
-    extra_derives: &'a [String],
-) -> impl Iterator<Item = TokenStream> + 'a {
-    let mut combined_derives = derive_set.clone();
-    combined_derives.extend(extra_derives.iter().map(String::as_str));
-    combined_derives.extend(type_derives.iter().map(String::as_str));
-    combined_derives.into_iter().map(|derive| {
-        syn::parse_str::<syn::Path>(derive)
-            .unwrap()
-            .into_token_stream()
-    })
-}
 
 /// Returns true iff...
 /// - the enum is untagged
