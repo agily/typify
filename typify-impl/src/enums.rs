@@ -29,6 +29,7 @@ impl TypeSpace {
         type_name: Name,
         metadata: &Option<Box<schemars::schema::Metadata>>,
         subschemas: &[Schema],
+        refs: &mut Option<Vec<String>>
     ) -> Option<TypeEntry> {
         if subschemas.len() == 1 {
             return None;
@@ -51,7 +52,7 @@ impl TypeSpace {
 
         let non_null = non_nulls.into_iter().next()?;
 
-        let (type_entry, _) = self.convert_option(type_name, metadata, non_null).ok()?;
+        let (type_entry, _) = self.convert_option(type_name, metadata, non_null, refs).ok()?;
 
         Some(type_entry)
     }
@@ -62,6 +63,7 @@ impl TypeSpace {
         original_schema: &Schema,
         enum_metadata: &Option<Box<schemars::schema::Metadata>>,
         subschemas: &[Schema],
+        refs: &mut Option<Vec<String>>,
     ) -> Option<TypeEntry> {
         enum ProtoVariant<'a> {
             Simple {
@@ -229,7 +231,7 @@ impl TypeSpace {
                     // Append the variant name to the type_name for our new
                     // type name hint.
                     let (details, deny) = self
-                        .external_variant(type_name.append(variant_name), schema)
+                        .external_variant(type_name.append(variant_name), schema, refs)
                         .ok()?;
                     deny_unknown_fields |= deny;
 
@@ -261,8 +263,9 @@ impl TypeSpace {
         &mut self,
         prop_type_name: Name,
         variant_schema: &Schema,
+        refs: &mut Option<Vec<String>>,
     ) -> Result<(VariantDetails, bool)> {
-        let (ty, _) = self.convert_schema(prop_type_name, variant_schema)?;
+        let (ty, _) = self.convert_schema(prop_type_name, variant_schema, refs)?;
 
         match ty {
             TypeEntry {
@@ -450,6 +453,7 @@ impl TypeSpace {
         original_schema: &Schema,
         metadata: &Option<Box<schemars::schema::Metadata>>,
         subschemas: &[Schema],
+        refs: &mut Option<Vec<String>>,
     ) -> Option<TypeEntry> {
         // All subschemas need to be objects with at most two properties: a
         // constant, required property (the tag) and an optional property for
@@ -514,7 +518,7 @@ impl TypeSpace {
                     unreachable!();
                 };
                 let (variant, deny) =
-                    self.adjacent_variant(type_name.clone(), metadata, validation, &tag, &content)?;
+                    self.adjacent_variant(type_name.clone(), metadata, validation, &tag, &content, refs)?;
                 deny_unknown_fields |= deny;
                 Ok(variant)
             })
@@ -539,6 +543,7 @@ impl TypeSpace {
         validation: &ObjectValidation,
         tag: &str,
         content: &str,
+        refs: &mut Option<Vec<String>>,
     ) -> Result<(Variant, bool)> {
         if validation.properties.len() == 1 {
             let (tag_name, schema) = validation.properties.iter().next().unwrap();
@@ -580,7 +585,7 @@ impl TypeSpace {
             };
 
             let content_schema = validation.properties.get(content).unwrap();
-            let (details, deny) = self.external_variant(sub_type_name, content_schema)?;
+            let (details, deny) = self.external_variant(sub_type_name, content_schema, refs)?;
 
             let variant = Variant {
                 name,
@@ -627,6 +632,7 @@ impl TypeSpace {
         original_schema: &Schema,
         metadata: &Option<Box<schemars::schema::Metadata>>,
         subschemas: &[Schema],
+        refs: &mut Option<Vec<String>>,
     ) -> Result<TypeEntry> {
         let tmp_type_name = get_type_name(&type_name, metadata);
 
@@ -680,7 +686,7 @@ impl TypeSpace {
                 }
                 .append(&variant_name);
 
-                let (details, deny) = self.external_variant(prop_type_name, schema)?;
+                let (details, deny) = self.external_variant(prop_type_name, schema, refs)?;
                 // Note that this is really only relevant for in-line schemas;
                 // referenced schemas will enforce their own policy on their
                 // generated types.
@@ -875,6 +881,7 @@ mod tests {
                 &original_schema,
                 &None,
                 &subschemas,
+                &mut None,
             )
             .is_some());
         assert!(type_space
@@ -883,6 +890,7 @@ mod tests {
                 &original_schema,
                 &None,
                 &subschemas,
+                &mut None,
             )
             .is_none());
         assert!(type_space
@@ -928,6 +936,7 @@ mod tests {
                 &original_schema,
                 &None,
                 &subschemas,
+                &mut None,
             )
             .is_some());
         assert!(type_space
@@ -936,6 +945,7 @@ mod tests {
                 &original_schema,
                 &None,
                 &subschemas,
+                &mut None,
             )
             .is_none());
     }
@@ -981,6 +991,7 @@ mod tests {
                 &original_schema,
                 &None,
                 &subschemas,
+                &mut None,
             )
             .is_none());
         assert!(type_space
@@ -989,6 +1000,7 @@ mod tests {
                 &original_schema,
                 &None,
                 &subschemas,
+                &mut None,
             )
             .is_none());
     }
@@ -1025,6 +1037,7 @@ mod tests {
                 &original_schema,
                 &None,
                 &subschemas,
+                &mut None,
             )
             .unwrap();
 
@@ -1101,6 +1114,7 @@ mod tests {
                 &original_schema,
                 &None,
                 &subschemas,
+                &mut None,
             )
             .unwrap();
 
@@ -1198,6 +1212,7 @@ mod tests {
                 Name::Unknown,
                 &schemars::schema::Schema::Object(schema.schema.clone()),
                 &schema.schema,
+                &mut None,
             )
             .unwrap();
 
@@ -1237,7 +1252,7 @@ mod tests {
 
         let mut type_space = TypeSpace::default();
         let type_entry = type_space
-            .maybe_option(Name::Unknown, &None, &subschemas)
+            .maybe_option(Name::Unknown, &None, &subschemas, &mut None)
             .unwrap();
 
         assert_eq!(type_entry.details, TypeEntryDetails::Option(TypeId(1)))
@@ -1449,6 +1464,7 @@ mod tests {
                 &original_schema,
                 &None,
                 &subschemas,
+                &mut None,
             )
             .unwrap();
         let mut output = OutputSpace::default();
@@ -1505,6 +1521,7 @@ mod tests {
                 &schemars::schema::Schema::Bool(true),
                 &None,
                 &subschemas,
+                &mut None
             )
             .unwrap();
         let mut output = OutputSpace::default();
